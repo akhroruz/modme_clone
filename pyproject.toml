@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Ahror <uzkod136@mail.ru>"]
 readme = "README.md"
-packages = [{include = "modme_clone"}]
+packages = [{include = "core"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
