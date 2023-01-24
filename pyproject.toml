@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "modme-clone"
+version = "0.1.0"
+description = ""
+authors = ["Ahror <uzkod136@mail.ru>"]
+readme = "README.md"
+packages = [{include = "modme_clone"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^4.1.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
