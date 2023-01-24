@@ -74,7 +74,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
+AUTH_USER_MODEL = 'apps.User'
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
