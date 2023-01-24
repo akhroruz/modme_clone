@@ -1,26 +1,24 @@
-from pathlib import Path
 import os
+from pathlib import Path
+
 import environ
 import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 from django.utils.translation import gettext_lazy as _
+from sentry_sdk.integrations.django import DjangoIntegration
 
 env = environ.Env(
-    # set casting, default value
     DEBUG=(bool, False)
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-# SECURITY WARNING: keep the secret key used in production secret!
+
 SECRET_KEY = env('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
-# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -28,8 +26,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.apps.AppsConfig',
+    'users.apps.UsersConfig',
     'drf_yasg',
-    'apps.apps.UsersConfig',
     'parler'
 ]
 
@@ -70,12 +69,12 @@ DATABASES = {
         'NAME': env('DB_NAME'),
         'USER': env('DB_USER'),
         'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST', default='localhost'),
-        'PORT': '5432',
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
 }
 AUTH_USER_MODEL = 'apps.User'
-# Password validation
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -91,7 +90,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
 LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Asia/Tashkent'
@@ -104,8 +102,8 @@ USE_TZ = True
 
 LANGUAGES = (
     ('en', _('English')),
-    ('uz', _('Uzbek')),
     ('ru', _('Russian')),
+    ('uz', _('Uzbek')),
 )
 
 LOCALE_PATHS = [
@@ -116,17 +114,15 @@ PARLER_DEFAULT_LANGUAGE_CODE = 'en'
 
 PARLER_LANGUAGES = {
     None: (
-        {'code': 'en', },
-        {'code': 'uz', },
-        {'code': 'ru', },
+        {'code': 'en'},
+        {'code': 'uz'},
+        {'code': 'ru'},
     ),
     'default': {
-        'fallbacks': ['en'],  # defaults to PARLER_DEFAULT_LANGUAGE_CODE
-        'hide_untranslated': False,  # the default; let .active_translations() return fallbacks too.
+        'fallbacks': ['en'],
+        'hide_untranslated': False
     }
 }
-
-# Static files (CSS, JavaScript, Images)
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR / 'static')
@@ -134,21 +130,13 @@ STATIC_ROOT = os.path.join(BASE_DIR / 'static')
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 sentry_sdk.init(
     dsn=env('DNS'),
-    integrations=[
+    integrations=(
         DjangoIntegration(),
-    ],
-
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
+    ),
     traces_sample_rate=1.0,
-
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
     send_default_pii=True
 )

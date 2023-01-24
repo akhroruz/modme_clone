@@ -255,5 +255,5 @@ cython_debug/
 .idea/
 .environment
 .env
-
+poetry.lock
 
