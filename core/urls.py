@@ -8,11 +8,11 @@ from core import settings
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Snippets API",
+        title="ModMe API",
         default_version='v1',
-        description="Test description",
+        description="Backend API for ModMe",
         terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@snippets.local"),
+        contact=openapi.Contact(email="modme@service"),
         license=openapi.License(name="BSD License"),
     ),
     public=True,
