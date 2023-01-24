@@ -46,8 +46,8 @@ class User(AbstractUser):
     objects = MyUserManager()
 
     class Meta:
-        verbose_name = _('Manager')
-        verbose_name_plural = _('Managers')
+        verbose_name = 'Manager'
+        verbose_name_plural = 'Managers'
 
     def __str__(self) -> str:
         return str(self.phone_number)
