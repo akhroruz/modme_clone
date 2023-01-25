@@ -236,4 +236,4 @@ core/.env
 
 **/media/**
 !**/media/
-!**/media/default.png
+!**/media/profile.jpg
