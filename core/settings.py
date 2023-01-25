@@ -108,11 +108,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-sentry_sdk.init(
-    dsn=env('DNS'),
-    integrations=[
-        DjangoIntegration(),
-    ],
-    traces_sample_rate=1.0,
-    send_default_pii=True
-)
+# sentry_sdk.init(
+#     dsn=env('DNS'),
+#     integrations=[
+#         DjangoIntegration(),
+#     ],
+#     traces_sample_rate=1.0,
+#     send_default_pii=True
+# )
