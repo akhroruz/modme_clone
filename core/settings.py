@@ -10,6 +10,7 @@ env = environ.Env(
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, 'core/.env'))
+
 SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = True
@@ -98,8 +99,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR / 'static')
 
@@ -116,3 +115,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     traces_sample_rate=1.0,
 #     send_default_pii=True
 # )
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}

@@ -17,6 +17,7 @@ sentry-sdk = "^1.14.0"
 requests = "^2.28.2"
 pendulum = "^2.1.2"
 pillow = "^9.4.0"
+djangorestframework-simplejwt = "^5.2.2"
 
 
 [build-system]
