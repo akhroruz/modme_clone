@@ -1,5 +1,5 @@
 from django.db.models import IntegerField, CharField, Model, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
-    TimeField
+    TimeField, DecimalField, DateField, BooleanField
 
 from shared.models import BaseModel
 
@@ -20,16 +20,26 @@ class Room(BaseModel):
     name = CharField(max_length=255)
 
 
-class Course(Model):
+class Course(BaseModel):
     name = CharField(max_length=255)
+    price = DecimalField(max_digits=10, decimal_places=2)
 
 
-# class Group(BaseModel):
-#     class DaysChoice(TextChoices):
-#         ODD_DAYS = 'odd_days', 'Odd days'
-#         EVEN_DAYS = 'even days', 'Even Days'
-#         DAY_OFF = 'day_off', 'Day off'
-#
-#     name = CharField(max_length=255)
-#     teacher = ForeignKey('users.User', SET_NULL, null=True)
-#     start_time = TimeField(null=True, blank=True)
+class Weekend(BaseModel):  # dam olish kunlari
+    name = CharField(max_length=255)
+    weekend_day = DateField(null=True, blank=True)
+    affects_payment = BooleanField(default=False)  # to'lovga tasir qilishi
+
+
+class Group(BaseModel):
+    class DaysChoice(TextChoices):
+        ODD_DAYS = 'odd_days', 'Odd days'
+        EVEN_DAYS = 'even days', 'Even Days'
+        DAY_OFF = 'day_off', 'Day off'
+
+    name = CharField(max_length=255)
+    days = CharField(max_length=50, choices=DaysChoice.choices)  # dars bo'lis kunlari
+    room = ForeignKey('apps.Room', SET_NULL, null=True)
+    teacher = ForeignKey('users.User', SET_NULL, null=True)
+    start_time = TimeField(null=True, blank=True)  # dars boshlanish vaqti
+    group_time = DateField(null=True, blank=True)  # guruh ochilish sanasi

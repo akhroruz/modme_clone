@@ -233,4 +233,7 @@ cython_debug/
 .idea/
 .environment
 core/.env
-media
+
+**/media/**
+!**/media/
+!**/media/default.png
