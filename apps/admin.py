@@ -1,19 +1,20 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from apps.models import User, Role, Branch
+from apps.models import Role, Branch
+from users.models import User
 
 
-# @admin.register(User)
-# class UserModelAdmin(ModelAdmin):
-#     list_display = ['id', 'full_name', 'role']
-#
-#
-# @admin.register(Role)
-# class RoleModelAdmin(ModelAdmin):
-#     list_display = ['id', 'name']
-#
-#
-# @admin.register(Branch)
-# class BranchModelAdmin(ModelAdmin):
-#     list_display = ['id', 'phone_number']
+@admin.register(User)
+class UserAdmin(ModelAdmin):
+    pass
+
+
+@admin.register(Role)
+class RoleAdmin(ModelAdmin):
+    pass
+
+
+@admin.register(Branch)
+class BranchAdmin(ModelAdmin):
+    pass

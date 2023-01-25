@@ -1,91 +1,24 @@
-import uuid
+from django.db.models import IntegerField, CharField, Model, ImageField, TextField
 
-from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
-from django.db import models
-from django.db.models import IntegerField, CharField, Model, DateTimeField, DateField, UUIDField, TextChoices, \
-    ImageField, TextField, ForeignKey, ManyToManyField, CASCADE, SET_NULL
-from django.utils.translation import gettext_lazy as _
-
-
-class BaseModel(Model):
-    uuid = UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-
-
-class MyUserManager(BaseUserManager):
-
-    def create_user(self, full_name, phone_number, password=None):
-        if not phone_number:
-            raise ValueError('Users must have an phone number')
-        user = self.model(
-            full_name=full_name,
-            phone_number=phone_number
-        )
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, phone_number, password):
-        user = self.create_user(phone_number, password)
-        user.is_staff = True
-        user.is_superuser = True
-        user.save(using=self._db)
-
-        return user
-
-
-class User(AbstractBaseUser, PermissionsMixin):
-    class GenderChoose(TextChoices):
-        MALE = 'male', 'Male'
-        FEMALE = 'female', 'Female'
-
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
-    full_name = CharField(_('full_name'), max_length=64)
-    phone_number = IntegerField(_('phone_number'), unique=True)
-    birth = DateField(_('birth_date'), blank=True, null=True)
-    gender = CharField(_('gender'), max_length=25, choices=GenderChoose.choices, blank=True, null=True)
-    photo = ImageField(_('photo_of_profile'), max_length=100, upload_to='profiles/', default='media/profile.jpg',
-                       blank=True, null=True)
-    role = ManyToManyField('apps.Role')
-    branch = ForeignKey('apps.Branch', SET_NULL, null=True)
-
-    USERNAME_FIELD = 'phone_number'
-    REQUIRED_FIELDS = ['full_name']
-
-    objects = MyUserManager()
-
-    class Meta:
-        db_table = 'users'
-        verbose_name = _('Manager')
-        verbose_name_plural = _('Managers')
-
-    def __str__(self) -> str:
-        return str(self.phone_number)
+from shared.models import BaseModel
 
 
 class Role(BaseModel):
-    name = CharField(_('role_name'), max_length=255)
+    name = CharField(max_length=255)
 
     class Meta:
         db_table = 'roles'
-        verbose_name = _('Role')
-        verbose_name_plural = _('Role')
+        verbose_name = 'Role'
+        verbose_name_plural = 'Role'
 
 
 class Branch(BaseModel):
-    name = CharField(_('branch_name'), max_length=255)
-    address = CharField(_('branch_location'), max_length=255)
-    phone_number = IntegerField(_('phone_number_of_branch'), unique=True)
+    name = CharField(max_length=255)
+    address = CharField(max_length=255)
+    phone_number = IntegerField(unique=True)
     about = TextField()
     image = ImageField(max_length=100, upload_to='images/')
 
     class Meta:
-        db_table = 'branches'
-        verbose_name = _('Branch')
-        verbose_name_plural = _('Branch')
+        verbose_name = 'Branch'
+        verbose_name_plural = 'Branch'
