@@ -25,40 +25,43 @@ class MyUserManager(BaseUserManager):
         user = self.model(
             full_name=full_name,
             phone_number=phone_number
-
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, full_name, phone_number, password):
-        user = self.create_user(full_name, phone_number, password=password)
-        user.is_admin = True
+    def create_superuser(self, phone_number, password):
+        user = self.create_user(phone_number, password)
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
+
         return user
 
 
-class User(AbstractBaseUser, PermissionsMixin, BaseModel):
+class User(AbstractBaseUser, PermissionsMixin):
     class GenderChoose(TextChoices):
         MALE = 'male', 'Male'
         FEMALE = 'female', 'Female'
 
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
     full_name = CharField(_('full_name'), max_length=64)
     phone_number = IntegerField(_('phone_number'), unique=True)
-    birth = DateField(_('birth_date'))
-    gender = CharField(_('gender'), max_length=25, choices=GenderChoose.choices)
-    photo = ImageField(_('photo_of_profile'), max_length=100, upload_to='profiles/', default='/media/profile.jpg')
-    role = ManyToManyField('apps.Role', CASCADE)
+    birth = DateField(_('birth_date'), blank=True, null=True)
+    gender = CharField(_('gender'), max_length=25, choices=GenderChoose.choices, blank=True, null=True)
+    photo = ImageField(_('photo_of_profile'), max_length=100, upload_to='profiles/', default='media/profile.jpg',
+                       blank=True, null=True)
+    role = ManyToManyField('apps.Role')
     branch = ForeignKey('apps.Branch', SET_NULL, null=True)
 
     USERNAME_FIELD = 'phone_number'
-    REQUIRED_FIELDS = ['phone_number']
+    REQUIRED_FIELDS = ['full_name']
 
     objects = MyUserManager()
 
     class Meta:
+        db_table = 'users'
         verbose_name = _('Manager')
         verbose_name_plural = _('Managers')
 
@@ -69,6 +72,11 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
 class Role(BaseModel):
     name = CharField(_('role_name'), max_length=255)
 
+    class Meta:
+        db_table = 'roles'
+        verbose_name = _('Role')
+        verbose_name_plural = _('Role')
+
 
 class Branch(BaseModel):
     name = CharField(_('branch_name'), max_length=255)
@@ -76,3 +84,8 @@ class Branch(BaseModel):
     phone_number = IntegerField(_('phone_number_of_branch'), unique=True)
     about = TextField()
     image = ImageField(max_length=100, upload_to='images/')
+
+    class Meta:
+        db_table = 'branches'
+        verbose_name = _('Branch')
+        verbose_name_plural = _('Branch')
