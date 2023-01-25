@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'drf_yasg',
     'rest_framework',
-    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
