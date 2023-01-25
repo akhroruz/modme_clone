@@ -10,5 +10,5 @@ local:
 compile:
 	python3 manage.py compilemessages
 
-create:
+user:
 	python3 manage.py createsuperuser
