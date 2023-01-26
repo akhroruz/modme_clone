@@ -9,6 +9,10 @@ class Migration(migrations.Migration):
 
     initial = True
 
+    dependencies = [
+        ('apps', '0001_initial'),
+    ]
+
     operations = [
         migrations.CreateModel(
             name='User',
