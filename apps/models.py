@@ -7,6 +7,9 @@ from shared.models import BaseModel
 class Role(BaseModel):
     name = CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
 
 class Branch(BaseModel):
     name = CharField(max_length=255)
@@ -14,6 +17,9 @@ class Branch(BaseModel):
     phone_number = IntegerField(unique=True)
     about = TextField()
     image = ImageField(max_length=100, upload_to='images/')
+
+    def __str__(self):
+        return self.name
 
 
 class Room(BaseModel):
