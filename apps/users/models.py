@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, ManyToManyField, SET_NULL, \
     ForeignKey, DateTimeField
 
-from users.managers import MyUserManager
+from apps.users.managers import MyUserManager
 
 
 class User(AbstractUser):
@@ -17,8 +17,8 @@ class User(AbstractUser):
     birth = DateField(blank=True, null=True)
     gender = CharField(max_length=25, choices=GenderChoose.choices, blank=True, null=True)
     photo = ImageField(max_length=100, upload_to='profiles/', default='media/profile.jpg', blank=True, null=True)
-    role = ManyToManyField('apps.Role')
-    branch = ForeignKey('apps.Branch', SET_NULL, null=True)
+    role = ManyToManyField('groups.Role')
+    branch = ForeignKey('groups.Branch', SET_NULL, null=True)
     updated_at = DateTimeField(auto_now=True)
     created_at = DateTimeField(auto_now_add=True)
 

@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from apps.models import Role, Branch, Room, Course, Weekend, Group
+from apps.groups.models import Role, Branch, Room, Course, Weekend, Group
 
 
 class RoleModelSerializer(ModelSerializer):

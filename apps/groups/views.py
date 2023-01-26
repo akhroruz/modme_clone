@@ -1,8 +1,7 @@
-from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 
-from apps.models import Role, Branch, Room, Course, Weekend, Group
-from apps.serializers import RoleModelSerializer, BranchModelSerializer, RoomModelSerializer, CourseModelSerializer, \
+from apps.groups.models import Role, Branch, Room, Course, Weekend, Group
+from apps.groups.serializers import RoleModelSerializer, BranchModelSerializer, RoomModelSerializer, CourseModelSerializer, \
     WeekendModelSerializer, GroupModelSerializer
 
 

@@ -1,7 +1,7 @@
 from django.db.models import IntegerField, CharField, Model, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
     TimeField, DecimalField, DateField, BooleanField
 
-from shared.models import BaseModel
+from apps.shared.models import BaseModel
 
 
 class Role(BaseModel):
@@ -45,7 +45,7 @@ class Group(BaseModel):
 
     name = CharField(max_length=255)
     days = CharField(max_length=50, choices=DaysChoice.choices)  # dars bo'lis kunlari
-    room = ForeignKey('apps.Room', SET_NULL, null=True)
+    room = ForeignKey('groups.Room', SET_NULL, null=True)
     teacher = ForeignKey('users.User', SET_NULL, null=True)
     start_time = TimeField(null=True, blank=True)  # dars boshlanish vaqti
     group_time = DateField(null=True, blank=True)  # guruh ochilish sanasi

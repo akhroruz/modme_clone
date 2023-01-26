@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from apps.models import Role, Branch
-from users.models import User
+from apps.groups.models import Role, Branch
+from apps.users.models import User
 
 
 @admin.register(User)

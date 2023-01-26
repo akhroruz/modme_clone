@@ -10,7 +10,7 @@ env = environ.Env(
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-environ.Env.read_env(os.path.join(BASE_DIR, 'core/.env'))
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = env('SECRET_KEY')
 
@@ -26,8 +26,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # my apps
-    'apps.apps.AppsConfig',
+    # my groups
+    'groups.apps.AppsConfig',
     'users.apps.UsersConfig',
     'payments.apps.PaymentsConfig',
     'crm.apps.CrmConfig',
@@ -133,7 +133,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-    )
+    ),
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S'
 }
 
 LOGIN_URL = '/admin'
@@ -157,4 +158,5 @@ SWAGGER_SETTINGS = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(seconds=25),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'UPDATE_LAST_LOGIN': True,
 }
