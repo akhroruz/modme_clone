@@ -27,3 +27,6 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = MyUserManager()
+
+    def __str__(self):
+        return f'{self.phone}'
