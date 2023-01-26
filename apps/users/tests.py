@@ -7,5 +7,8 @@ from apps.users.models import User
 class TestUserAPIView:
     @pytest.fixture
     def users(self, db, client):
-        user = User.objects.create(name='User 1')
+        user = User.objects.create(
+            name='User 1'
+        )
         return user
+
