@@ -8,6 +8,9 @@ class Migration(migrations.Migration):
 
     initial = True
 
+    dependencies = [
+    ]
+
     operations = [
         migrations.CreateModel(
             name='Branch',
@@ -37,7 +40,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Role',
                 'verbose_name_plural': 'Role',
-                'db_table': 'apps_role',
+                'db_table': 'role',
             },
         ),
     ]
