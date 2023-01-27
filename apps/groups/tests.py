@@ -1,7 +1,7 @@
 import pytest
 from django.test import TestCase
 
-from groups.models import Role
+from apps.groups.models import Role
 
 
 @pytest.mark.django_db
