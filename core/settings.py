@@ -29,10 +29,10 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     # my groups
-    'groups.apps.AppsConfig',
-    'users.apps.UsersConfig',
-    'payments.apps.PaymentsConfig',
-    'crm.apps.CrmConfig',
+    'apps.groups.apps.AppsConfig',
+    'apps.users.apps.UsersConfig',
+    'apps.payments.apps.PaymentsConfig',
+    'apps.crm.apps.CrmConfig',
 
     # third - party
     'drf_yasg',
