@@ -31,11 +31,6 @@ class WeekendModelViewSet(ModelViewSet):
     queryset = Weekend.objects.all()
 
 
-class GroupModelViewSet(ModelViewSet):
-    serializer_class = GroupModelSerializer
-    queryset = Group.objects.all()
-
-
 class RoomModelViewSet(ModelViewSet):
     serializer_class = RoomCreateModelSerializer
     queryset = Room.objects.all()

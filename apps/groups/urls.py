@@ -3,8 +3,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.viewsets import ModelViewSet
 
 from apps.groups.views import RoleModelViewSet, BranchModelViewSet, RoomModelViewSet, CourseModelViewSet, \
-    WeekendModelViewSet, \
-    GroupModelViewSet
+    WeekendModelViewSet
 
 router = DefaultRouter()
 # router.register('role', RoleModelViewSet, basename='role')
