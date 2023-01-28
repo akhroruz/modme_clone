@@ -21,6 +21,8 @@ class User(AbstractUser):
     branch = ForeignKey('groups.Branch', SET_NULL, null=True)
     updated_at = DateTimeField(auto_now=True)
     created_at = DateTimeField(auto_now_add=True)
+    password = CharField(max_length=255,)
+    confirm_password = CharField(max_length=255,)
 
     EMAIL_FIELD = None
     USERNAME_FIELD = 'phone'

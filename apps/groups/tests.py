@@ -1,5 +1,4 @@
 import pytest
-from django.test import TestCase
 
 from groups.models import Role
 
