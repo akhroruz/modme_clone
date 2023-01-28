@@ -1,5 +1,5 @@
 from django.db.models import IntegerField, CharField, Model, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
-    TimeField, DecimalField, DateField, BooleanField
+    TimeField, DecimalField, DateField, BooleanField, CASCADE
 
 from apps.shared.models import BaseModel
 
@@ -24,6 +24,7 @@ class Branch(BaseModel):
 
 class Room(BaseModel):
     name = CharField(max_length=255)
+    branch = ForeignKey('groups.Branch', CASCADE)
 
 
 class Course(BaseModel):

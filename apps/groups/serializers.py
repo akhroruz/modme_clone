@@ -15,10 +15,16 @@ class BranchModelSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class RoomModelSerializer(ModelSerializer):
+class RoomListModelSerializer(ModelSerializer):
     class Meta:
         model = Room
-        fields = '__all__'
+        fields = ('name',)
+
+
+class RoomCreateModelSerializer(ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ('name', 'branch')
 
 
 class CourseModelSerializer(ModelSerializer):
