@@ -18,7 +18,7 @@ class BranchModelSerializer(ModelSerializer):
 class RoomListModelSerializer(ModelSerializer):
     class Meta:
         model = Room
-        fields = ('name',)
+        fields = ('uuid', 'name')
 
 
 class RoomCreateModelSerializer(ModelSerializer):

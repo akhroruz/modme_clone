@@ -40,7 +40,7 @@ class RoomModelViewSet(ModelViewSet):
     serializer_class = RoomCreateModelSerializer
     queryset = Room.objects.all()
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('branch',)
+    filterset_fields = ('branch__uuid',)
 
     def get_serializer_class(self):
         if self.action == 'list':
