@@ -61,4 +61,4 @@ class TestUserModel:
         assert serializer.data['gender'] == users.gender
         assert serializer.data['birth'] == users.birth
         assert serializer.data['branch'] == branches.pk
-        assert len(serializer.data) == 20
+        assert len(serializer.data) == 21

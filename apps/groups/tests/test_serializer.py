@@ -33,7 +33,7 @@ def temporary_image():
     bts = BytesIO()
     img = Image.new("RGB", (100, 100))
     img.save(bts, 'png')
-    return SimpleUploadedFile("media/images/test.png", bts.getvalue())
+    return SimpleUploadedFile("media/images/images/test.jpg", bts.getvalue())
 
 
 @pytest.mark.django_db
