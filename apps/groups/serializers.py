@@ -18,13 +18,13 @@ class BranchModelSerializer(ModelSerializer):
 class RoomListModelSerializer(ModelSerializer):
     class Meta:
         model = Room
-        fields = ('name',)
+        fields = ('uuid', 'name')
 
 
 class RoomCreateModelSerializer(ModelSerializer):
     class Meta:
         model = Room
-        fields = ('name', 'branch')
+        fields = '__all__'
 
 
 class CourseModelSerializer(ModelSerializer):

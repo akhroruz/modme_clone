@@ -22,7 +22,6 @@ class TestUserModel:
             about='hello from',
             image=image,
         )
-
         return branch
 
     @pytest.fixture
@@ -62,4 +61,4 @@ class TestUserModel:
         assert serializer.data['gender'] == users.gender
         assert serializer.data['birth'] == users.birth
         assert serializer.data['branch'] == branches.pk
-        assert len(serializer.data) == 19
+        assert len(serializer.data) == 21

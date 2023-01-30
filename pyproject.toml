@@ -23,6 +23,7 @@ pytest-django = "^4.5.2"
 timedelta = "^2020.12.3"
 django-rest-auth = "^0.9.5"
 django-rest-knox = "^4.2.0"
+parler = "^1.0.1"
 
 
 [build-system]

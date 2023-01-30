@@ -19,10 +19,13 @@ class User(AbstractUser):
     photo = ImageField(max_length=100, upload_to='profiles/', default='media/profile.jpg', blank=True, null=True)
     role = ManyToManyField('groups.Role')
     branch = ForeignKey('groups.Branch', SET_NULL, null=True)
+    balance = IntegerField(default=0)
+    group = ManyToManyField('groups.Group')
     updated_at = DateTimeField(auto_now=True)
     created_at = DateTimeField(auto_now_add=True)
     password = CharField(max_length=255,)
     confirm_password = CharField(max_length=255,)
+
 
     EMAIL_FIELD = None
     USERNAME_FIELD = 'phone'
