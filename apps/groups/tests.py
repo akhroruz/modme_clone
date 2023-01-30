@@ -1,8 +1,8 @@
-# import pytest
-#
-# from apps.groups.models import Course, Role, Branch, Weekend, Room, Group
-# from apps.users.models import User
-#
+import pytest
+
+from apps.groups.models import Course, Role, Branch, Weekend, Room, Group
+from apps.users.models import User
+
 #
 # @pytest.mark.django_db
 # class TestRoleModel:
@@ -62,20 +62,20 @@
 #         assert image == branch.image
 #
 #
-# @pytest.mark.django_db
-# class TestRoom:
-#     @pytest.fixture
-#     def room(self):
-#         room = Room.objects.create(name='Apple')
-#         return room
-#
-#     def test_room_create_model(self, room):
-#         name = 'Cisco'
-#         count = Room.objects.count()
-#         room = Room.objects.create(name=name)
-#         assert Room.objects.count() - 1 == count
-#         assert name == room.name
-#
+@pytest.mark.django_db
+class TestRoom:
+    @pytest.fixture
+    def room(self):
+        room = Room.objects.create(name='Apple')
+        return room
+
+    def test_room_create_model(self, room):
+        name = 'Cisco'
+        count = Room.objects.count()
+        room = Room.objects.create(name=name)
+        assert Room.objects.count() - 1 == count
+        assert name == room.name
+
 #
 # @pytest.mark.django_db
 # class TestWeekend:
