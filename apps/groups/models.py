@@ -50,3 +50,4 @@ class Group(BaseModel):
     teacher = ForeignKey('users.User', SET_NULL, null=True, related_name='teachers')
     start_time = TimeField(null=True, blank=True)  # dars boshlanish vaqti
     group_time = DateField(null=True, blank=True)  # guruh ochilish sanasi
+

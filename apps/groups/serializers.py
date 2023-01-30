@@ -24,7 +24,7 @@ class RoomListModelSerializer(ModelSerializer):
 class RoomCreateModelSerializer(ModelSerializer):
     class Meta:
         model = Room
-        fields = ('name', 'branch')
+        fields = '__all__'
 
 
 class CourseModelSerializer(ModelSerializer):

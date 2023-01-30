@@ -20,9 +20,10 @@ class User(AbstractUser):
     role = ManyToManyField('groups.Role')
     branch = ForeignKey('groups.Branch', SET_NULL, null=True)
     balance = IntegerField(default=0)
-    group = ManyToManyField('groups.Group', related_name='groups')
+    group = ManyToManyField('groups.Group')
     updated_at = DateTimeField(auto_now=True)
     created_at = DateTimeField(auto_now_add=True)
+
 
     EMAIL_FIELD = None
     USERNAME_FIELD = 'phone'
