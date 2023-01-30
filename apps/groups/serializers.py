@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from apps.groups.models import Role, Branch, Room, Course, Weekend, Group
+from apps.groups.models import Role, Branch, Room, Course, Holiday, Group
 
 
 class RoleModelSerializer(ModelSerializer):
@@ -33,13 +33,19 @@ class CourseModelSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class WeekendModelSerializer(ModelSerializer):
-    class Meta:
-        model = Weekend
-        fields = '__all__'
-
-
 class GroupModelSerializer(ModelSerializer):
     class Meta:
         model = Group
         fields = '__all__'
+
+
+class HolidayListModelSerializer(ModelSerializer):
+    class Meta:
+        model = Holiday
+        fields = ('name', 'holiday_date', 'affect_payment', 'branch', 'created_at')
+
+
+class HolidayCreateModelSerializer(ModelSerializer):
+    class Meta:
+        model = Holiday
+        fields = ('name', 'holiday_date', 'affect_payment')

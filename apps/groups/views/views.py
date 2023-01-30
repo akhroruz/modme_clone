@@ -1,12 +1,9 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.generics import ListCreateAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
 
-from apps.groups.models import Role, Branch, Room, Course, Weekend, Group
-from apps.groups.serializers import RoleModelSerializer, BranchModelSerializer, \
-    CourseModelSerializer, \
-    WeekendModelSerializer, GroupModelSerializer
+from apps.groups.models import Role, Branch, Room, Course
+from apps.groups.serializers import RoleModelSerializer, BranchModelSerializer, CourseModelSerializer
 from groups.serializers import RoomListModelSerializer, RoomCreateModelSerializer
 
 
@@ -24,11 +21,6 @@ class BranchModelViewSet(ModelViewSet):
 class CourseModelViewSet(ModelViewSet):
     serializer_class = CourseModelSerializer
     queryset = Course.objects.all()
-
-
-class WeekendModelViewSet(ModelViewSet):
-    serializer_class = WeekendModelSerializer
-    queryset = Weekend.objects.all()
 
 
 class RoomModelViewSet(ModelViewSet):

@@ -14,7 +14,7 @@ class Role(BaseModel):
 class Branch(BaseModel):
     name = CharField(max_length=255)
     address = CharField(max_length=255)
-    phone_number = IntegerField(unique=True)
+    phone = IntegerField(unique=True)
     about = TextField()
     image = ImageField(max_length=100, upload_to='images/')
 
@@ -32,10 +32,11 @@ class Course(BaseModel):
     price = DecimalField(max_digits=10, decimal_places=2)
 
 
-class Weekend(BaseModel):  # dam olish kunlari
+class Holiday(BaseModel):  # dam olish kunlari
     name = CharField(max_length=255)
-    weekend_day = DateField(null=True, blank=True)
-    affects_payment = BooleanField(default=False)  # to'lovga tasir qilishi
+    holiday_date = DateField(null=True, blank=True)
+    affect_payment = BooleanField(default=False)  # to'lovga tasir qilishi
+    branch = ForeignKey('groups.Branch', CASCADE)
 
 
 class Group(BaseModel):
