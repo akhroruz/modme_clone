@@ -34,7 +34,6 @@ class Course(BaseModel):
     name = CharField(max_length=255)
     price = DecimalField(max_digits=10, decimal_places=2)
     branch = ForeignKey('groups.Branch', SET_NULL, null=True)
-    group = ForeignKey('groups.Group', SET_NULL, null=True, related_name='course_group')
 
 
 class Holiday(BaseModel):  # dam olish kunlari
@@ -77,6 +76,6 @@ class Group(BaseModel):
     def students_count(self):
         return self.user_set.count()
 
-    @property
-    def get_course(self):
-        return self.course_set.all()
+    # @property
+    # def get_course(self):
+    #     return self.course_set.all()

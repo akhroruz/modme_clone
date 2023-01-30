@@ -18,7 +18,6 @@ class User(AbstractUser, BaseModel):
     birth = DateField(blank=True, null=True)
     gender = CharField(max_length=25, choices=GenderChoose.choices, blank=True, null=True)
     photo = ImageField(max_length=100, upload_to='profiles/', default='media/profile.jpg', blank=True, null=True)
-    branch = ForeignKey('groups.Branch', SET_NULL, null=True)
     balance = IntegerField(default=0)
     group = ManyToManyField('groups.Group')
 
