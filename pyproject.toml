@@ -21,10 +21,8 @@ djangorestframework-simplejwt = "^5.2.2"
 django-filter = "^22.1"
 pytest-django = "^4.5.2"
 timedelta = "^2020.12.3"
-pytest = "^7.2.1"
-django-parler = "^2.3"
-django-rest-knox = "^4.2.0"
 django-rest-auth = "^0.9.5"
+django-rest-knox = "^4.2.0"
 
 
 [build-system]
