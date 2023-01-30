@@ -39,21 +39,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
-    'knox',
-
 )
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'knox.auth.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
-    ),
-    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S'
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -140,7 +126,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     send_default_pii=True
 # )
 
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ),
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S'
+}
 
 LOGIN_URL = '/admin'
 LOGIN_REDIRECT_URL = '/admin'
