@@ -8,8 +8,6 @@ router = DefaultRouter()
 router.register('role', RoleModelViewSet, basename='role')
 router.register('course', CourseModelViewSet, basename='course')
 router.register('group', GroupModelViewSet, basename='group')
-# router.register('weekend', WeekendModelViewSet, basename='weekend')
-# router.register('group', GroupModelViewSet, basename='group')
 router.register('branch', BranchModelViewSet, basename='branch')
 router.register('room', RoomModelViewSet, basename='room')
 
