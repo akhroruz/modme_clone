@@ -1,2 +1,1 @@
-
-from groups.views.groups import GroupAPIVIew
+from groups.views.groups import GroupModelViewSet

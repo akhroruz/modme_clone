@@ -1,5 +1,8 @@
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
+from apps.groups.models import Role, Branch, Room, Course, Holiday, Group
+from apps.users.models import User
 from apps.groups.models import Role, Branch, Room, Course, Holiday, Group
 
 
@@ -33,7 +36,15 @@ class CourseModelSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class HolidayModelSerializer(ModelSerializer):
+    class Meta:
+        model = Holiday
+        fields = '__all__'
+
+
 class GroupModelSerializer(ModelSerializer):
+    teacher = SerializerMethodField()
+
     class Meta:
         model = Group
         fields = '__all__'
