@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
-from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, ManyToManyField, SET_NULL, \
-    ForeignKey, DateTimeField
+from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, ManyToManyField, JSONField, \
+    TextField
 
 from apps.users.managers import MyUserManager
 from shared.models import BaseModel
@@ -18,8 +18,13 @@ class User(AbstractUser, BaseModel):
     birth = DateField(blank=True, null=True)
     gender = CharField(max_length=25, choices=GenderChoose.choices, blank=True, null=True)
     photo = ImageField(max_length=100, upload_to='profiles/', default='media/profile.jpg', blank=True, null=True)
-    balance = IntegerField(default=0)
+    balance = IntegerField(default=0, null=True, blank=True)
     group = ManyToManyField('groups.Group')
+    password = CharField(max_length=255, )
+    confirm_password = CharField(max_length=255, )
+    # student
+    datas = JSONField(null=True, blank=True)
+    comment = TextField(blank=True, null=True)  # izoh # noqa
 
     EMAIL_FIELD = None
     USERNAME_FIELD = 'phone'
