@@ -20,6 +20,7 @@ class RegisterView(CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
+    lookup_url_kwarg = 'uuid'
 
 
 class ChangePasswordView(UpdateAPIView):
