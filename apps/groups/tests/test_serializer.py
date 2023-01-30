@@ -1,20 +1,11 @@
-from io import BytesIO
-
 import pytest
-from PIL import Image
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from apps.groups.models import Role
-from apps.groups.serializers import RoleModelSerializer
-from apps.groups.models import Branch
-from apps.groups.serializers import BranchModelSerializer
-from core.settings import MEDIA_ROOT
-from apps.groups.models import Room
-from apps.groups.serializers import RoomModelSerializer
-from apps.groups.models import Course
-from apps.groups.serializers import CourseModelSerializer, WeekendModelSerializer, GroupModelSerializer
-from apps.groups.models import Weekend, Group
+from apps.groups.models import Branch, Course, Role, Room, Group
+from apps.groups.serializers import BranchModelSerializer, CourseModelSerializer, RoleModelSerializer, \
+    RoomCreateModelSerializer, GroupModelSerializer
 from apps.users.models import User
+from core.settings import MEDIA_ROOT
 
 
 @pytest.mark.django_db
@@ -29,13 +20,6 @@ class TestRoleModelSerializer:
         assert serializer.data['name'] == role_fixture.name
 
 
-def temporary_image():
-    bts = BytesIO()
-    img = Image.new("RGB", (100, 100))
-    img.save(bts, 'png')
-    return SimpleUploadedFile("media/images/test.png", bts.getvalue())
-
-
 @pytest.mark.django_db
 class TestBranchModelSerializer:
     @pytest.fixture
@@ -45,7 +29,7 @@ class TestBranchModelSerializer:
         return Branch.objects.create(
             name='Branch 1',
             address='Address 1',
-            phone_number=990675624,
+            phone=990675624,
             about='Text 1',
             image=image
         )
@@ -54,7 +38,7 @@ class TestBranchModelSerializer:
         serializer = BranchModelSerializer(branch_fixture)
         assert serializer.data['name'] == branch_fixture.name
         assert serializer.data['address'] == branch_fixture.address
-        assert serializer.data['phone_number'] == branch_fixture.phone_number
+        assert serializer.data['phone'] == branch_fixture.phone
         assert serializer.data['about'] == branch_fixture.about
         assert serializer.data['image'] == branch_fixture.image.url
 
@@ -62,12 +46,26 @@ class TestBranchModelSerializer:
 @pytest.mark.django_db
 class TestRoomModelSerializer:
     @pytest.fixture
-    def room_fixture(self):
-        return Room.objects.create(name='Room 1')
+    def branch_fixture(self):
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        return Branch.objects.create(
+            name='Branch 1',
+            address='Address 1',
+            phone=990675624,
+            about='Text 1',
+            image=image
+        )
 
-    def test_room_model_serializer(self, room_fixture):
-        serializer = RoomModelSerializer(room_fixture)
+    @pytest.fixture
+    def room_fixture(self, branch_fixture):
+        return Room.objects.create(name='Room 1',
+                                   branch_id=branch_fixture.uuid)
+
+    def test_room_model_serializer(self, room_fixture, branch_fixture):
+        serializer = RoomCreateModelSerializer(room_fixture)
         assert serializer.data['name'] == room_fixture.name
+        assert serializer.data['branch'] == branch_fixture.uuid
 
 
 @pytest.mark.django_db
@@ -86,33 +84,30 @@ class TestCourseModelSerializer:
 
 
 @pytest.mark.django_db
-class TestWeekendModelSerializer:
+class TestGroupModelSerializer:
+
     @pytest.fixture
-    def weekend_fixture(self):
-        return Weekend(
-            name='Wednesday',
-            weekend_day='2022-10-10',
-            affects_payment=True
+    def branch_fixture(self):
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        return Branch.objects.create(
+            name='Branch 1',
+            address='Address 1',
+            phone=990675624,
+            about='Text 1',
+            image=image
         )
 
-    def test_weekend_model_serializer(self, weekend_fixture):
-        serializer = WeekendModelSerializer(weekend_fixture)
-        assert serializer.data['name'] == weekend_fixture.name
-        assert serializer.data['weekend_day'] == weekend_fixture.weekend_day
-        assert serializer.data['affects_payment'] == weekend_fixture.affects_payment
-
-
-@pytest.mark.django_db
-class TestGroupModelSerializer:
     @pytest.fixture
-    def room_fixture(self):
-        room = Room.objects.create(name='Room 1')
-        return room
+    def room_fixture(self, branch_fixture):
+        return Room.objects.create(name='Room 1',
+                                   branch_id=branch_fixture.uuid)
 
     @pytest.fixture
     def user_fixture(self, db, client):
         image_path = MEDIA_ROOT + '/test.png'
-        image = SimpleUploadedFile('test_image.jpg', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        image = SimpleUploadedFile('test_image.jpg', content=open(image_path, 'rb').read(),
+                                   content_type='image/jpeg')
 
         user = User.objects.create(
             full_name='User 1',
