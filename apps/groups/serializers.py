@@ -55,7 +55,22 @@ class GroupModelSerializer(ModelSerializer):
         data['teacher'] = [UserModelSerializer(instance.teacher).data]
         data['room'] = [RoomListModelSerializer(instance.room).data]
         data['course'] = [CourseModelSerializer(instance.course).data]
+        return data
 
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+
+class RetrieveGroupModelSerializer(ModelSerializer):
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        data['teacher'] = [UserModelSerializer(instance.teacher).data]
+        data['room'] = [RoomListModelSerializer(instance.room).data]
+        data['course'] = [CourseModelSerializer(instance.course).data]
+        data['students'] = [UserModelSerializer(obj).data for obj in instance.get_students]
+        data['students_count'] = instance.students_count
         return data
 
     class Meta:

@@ -33,4 +33,4 @@ class User(AbstractUser, BaseModel):
     objects = MyUserManager()
 
     def __str__(self):
-        return f'{self.phone}'
+        return f'{self.full_name}:{self.phone}'

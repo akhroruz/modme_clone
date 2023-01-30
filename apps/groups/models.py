@@ -29,11 +29,17 @@ class Room(BaseModel):
     name = CharField(max_length=255)
     branch = ForeignKey(to='groups.Branch', on_delete=CASCADE)
 
+    def __str__(self):
+        return self.name
+
 
 class Course(BaseModel):
     name = CharField(max_length=255)
     price = DecimalField(max_digits=10, decimal_places=2)
     branch = ForeignKey('groups.Branch', SET_NULL, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Holiday(BaseModel):  # dam olish kunlari
@@ -41,6 +47,9 @@ class Holiday(BaseModel):  # dam olish kunlari
     holiday_date = DateField(null=True, blank=True)
     affect_payment = BooleanField(default=False)  # to'lovga tasir qilishi
     branch = ForeignKey('groups.Branch', CASCADE)
+
+    def __str__(self):
+        return self.name
 
 
 class Group(BaseModel):
@@ -68,6 +77,9 @@ class Group(BaseModel):
     tags = ArrayField(CharField(max_length=255))
     comment = TextField(null=True, blank=True)
 
+    def __str__(self):
+        return self.name
+
     @property
     def get_students(self):
         return self.user_set.all()
@@ -75,7 +87,3 @@ class Group(BaseModel):
     @property
     def students_count(self):
         return self.user_set.count()
-
-    # @property
-    # def get_course(self):
-    #     return self.course_set.all()
