@@ -7,6 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from apps.groups.models import Group
 from apps.groups.serializers import GroupModelSerializer
+from groups.serializers import RetrieveGroupModelSerializer
 
 
 class GroupModelViewSet(ModelViewSet):
@@ -20,5 +21,7 @@ class GroupModelViewSet(ModelViewSet):
         }
         return Response(data, status.HTTP_200_OK)
 
-    # def retrieve(self, request, *args, **kwargs):
-
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = RetrieveGroupModelSerializer(instance=instance)
+        return Response(serializer.data)

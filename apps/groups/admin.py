@@ -11,12 +11,12 @@ admin.site.unregister(models.Group)
 
 @admin.register(Group)
 class GroupAdmin(ModelAdmin):
-    list_filter = 'name',
+    pass
 
 
 @admin.register(Room)
 class RoomAdmin(ModelAdmin):
-    list_filter = 'name', 'branch'
+    pass
 
 
 @admin.register(Course)
