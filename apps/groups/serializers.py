@@ -3,7 +3,6 @@ from rest_framework.serializers import ModelSerializer
 
 from apps.groups.models import Role, Branch, Room, Course, Holiday, Group
 from apps.users.models import User
-from apps.groups.models import Role, Branch, Room, Course, Holiday, Group
 
 
 class RoleModelSerializer(ModelSerializer):
@@ -42,8 +41,37 @@ class HolidayModelSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class UserModelSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = 'uuid', 'full_name', 'phone'
+
+
 class GroupModelSerializer(ModelSerializer):
-    teacher = SerializerMethodField()
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        data['teacher'] = [UserModelSerializer(instance.teacher).data]
+        data['room'] = [RoomListModelSerializer(instance.room).data]
+        data['course'] = [CourseModelSerializer(instance.course).data]
+        return data
+
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+
+class RetrieveGroupModelSerializer(ModelSerializer):
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        data['teacher'] = [UserModelSerializer(instance.teacher).data]
+        data['room'] = [RoomListModelSerializer(instance.room).data]
+        data['course'] = [CourseModelSerializer(instance.course).data]
+        data['students'] = [UserModelSerializer(obj).data for obj in instance.get_students]
+        data['students_count'] = instance.students_count
+        return data
 
     class Meta:
         model = Group
@@ -53,10 +81,10 @@ class GroupModelSerializer(ModelSerializer):
 class HolidayListModelSerializer(ModelSerializer):
     class Meta:
         model = Holiday
-        fields = ('name', 'holiday_date', 'affect_payment', 'branch', 'created_at')
+        fields = 'name', 'holiday_date', 'affect_payment', 'branch', 'created_at'
 
 
 class HolidayCreateModelSerializer(ModelSerializer):
     class Meta:
         model = Holiday
-        fields = ('name', 'holiday_date', 'affect_payment')
+        fields = 'name', 'holiday_date', 'affect_payment'

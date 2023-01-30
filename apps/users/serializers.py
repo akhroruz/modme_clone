@@ -70,3 +70,13 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
         return result
 
+
+
+class StudentModelSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['phone', 'full_name', 'birth', 'gender', 'comment', 'datas', 'balance']
+        extra_kwargs = {
+            'birth': {'required': False}, 'datas': {'required': False},
+            'full_name': {'required': True},
+            'phone': {'required': True}, }

@@ -1,5 +1,5 @@
 from django.contrib.postgres.fields import ArrayField
-from django.db.models import IntegerField, CharField, Model, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
+from django.db.models import IntegerField, CharField, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
     TimeField, DecimalField, DateField, BooleanField, CASCADE, ManyToManyField
 
 from apps.shared.models import BaseModel
@@ -7,7 +7,7 @@ from apps.shared.models import BaseModel
 
 class Role(BaseModel):
     name = CharField(max_length=255)
-    user = ManyToManyField('users.User')
+    user = ManyToManyField('users.User', related_name='user_role')
 
     def __str__(self):
         return self.name
@@ -29,12 +29,17 @@ class Room(BaseModel):
     name = CharField(max_length=255)
     branch = ForeignKey(to='groups.Branch', on_delete=CASCADE)
 
+    def __str__(self):
+        return self.name
+
 
 class Course(BaseModel):
     name = CharField(max_length=255)
     price = DecimalField(max_digits=10, decimal_places=2)
     branch = ForeignKey('groups.Branch', SET_NULL, null=True)
-    group = ForeignKey('groups.Group', SET_NULL, null=True, related_name='course_group')
+
+    def __str__(self):
+        return self.name
 
 
 class Holiday(BaseModel):  # dam olish kunlari
@@ -42,6 +47,9 @@ class Holiday(BaseModel):  # dam olish kunlari
     holiday_date = DateField(null=True, blank=True)
     affect_payment = BooleanField(default=False)  # to'lovga tasir qilishi
     branch = ForeignKey('groups.Branch', CASCADE)
+
+    def __str__(self):
+        return self.name
 
 
 class Group(BaseModel):
@@ -69,6 +77,9 @@ class Group(BaseModel):
     tags = ArrayField(CharField(max_length=255))
     comment = TextField(null=True, blank=True)
 
+    def __str__(self):
+        return self.name
+
     @property
     def get_students(self):
         return self.user_set.all()
@@ -76,7 +87,3 @@ class Group(BaseModel):
     @property
     def students_count(self):
         return self.user_set.count()
-
-    @property
-    def get_course(self):
-        return self.course_set.all()
