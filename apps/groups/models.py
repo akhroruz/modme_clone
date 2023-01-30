@@ -1,5 +1,5 @@
 from django.contrib.postgres.fields import ArrayField
-from django.db.models import IntegerField, CharField, Model, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
+from django.db.models import IntegerField, CharField, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
     TimeField, DecimalField, DateField, BooleanField, CASCADE, ManyToManyField
 
 from apps.shared.models import BaseModel
@@ -7,7 +7,7 @@ from apps.shared.models import BaseModel
 
 class Role(BaseModel):
     name = CharField(max_length=255)
-    user = ManyToManyField('users.User')
+    user = ManyToManyField('users.User', related_name='user_role')
 
     def __str__(self):
         return self.name
