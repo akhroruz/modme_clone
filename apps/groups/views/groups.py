@@ -1,13 +1,9 @@
 from rest_framework import status
-from rest_framework.generics import GenericAPIView
-from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from apps.groups.models import Group
-from apps.groups.serializers import GroupModelSerializer
-from groups.serializers import RetrieveGroupModelSerializer
+from apps.groups.serializers import GroupModelSerializer, RetrieveGroupModelSerializer
 
 
 class GroupModelViewSet(ModelViewSet):

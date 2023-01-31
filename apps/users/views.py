@@ -1,8 +1,9 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.generics import CreateAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.users.models import User
 from users.pagination import StudentPagination
@@ -40,9 +41,10 @@ class StudentModelViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['full_name', 'phone']
 
-    def get_permissions(self):
-        if self.action in ['POST', 'PUT', 'PATCH', 'DELETE']:
-            self.permission_classes = [IsAuthenticated]
-        else:
-            self.permission_classes = [AllowAny]
-        return super().get_permissions()
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    lookup_field = 'uuid'
+
+
+class CustomTokenRefreshView(TokenRefreshView):
+    lookup_field = 'uuid'

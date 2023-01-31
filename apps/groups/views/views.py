@@ -1,15 +1,9 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
 
-from apps.groups.models import Role, Branch, Room, Course, Holiday, Group
-from apps.groups.serializers import RoleModelSerializer, BranchModelSerializer, \
-    CourseModelSerializer, \
-    HolidayModelSerializer, GroupModelSerializer
-from apps.groups.serializers import RoomListModelSerializer, RoomCreateModelSerializer
-from apps.groups.models import Role, Branch, Room, Course
-from apps.groups.serializers import RoleModelSerializer, BranchModelSerializer, CourseModelSerializer
-from groups.serializers import RoomListModelSerializer, RoomCreateModelSerializer
+from apps.groups.models import Role, Branch, Room, Course, Holiday
+from apps.groups.serializers import RoleModelSerializer, BranchModelSerializer, CourseModelSerializer, \
+    HolidayModelSerializer, RoomListModelSerializer, RoomCreateModelSerializer
 
 
 class RoleModelViewSet(ModelViewSet):

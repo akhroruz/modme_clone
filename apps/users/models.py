@@ -1,12 +1,12 @@
 from django.contrib.auth.models import AbstractUser
 from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, ManyToManyField, JSONField, \
-    TextField
+    TextField, DateTimeField
 
 from apps.users.managers import MyUserManager
 from shared.models import BaseModel
 
 
-class User(AbstractUser, BaseModel):
+class User(AbstractUser):
     class GenderChoose(TextChoices):
         MALE = 'male', 'Male'
         FEMALE = 'female', 'Female'
@@ -25,6 +25,9 @@ class User(AbstractUser, BaseModel):
     # student
     datas = JSONField(null=True, blank=True)
     comment = TextField(blank=True, null=True)  # izoh # noqa
+
+    updated_at = DateTimeField(auto_now=True)
+    created_at = DateTimeField(auto_now_add=True)
 
     EMAIL_FIELD = None
     USERNAME_FIELD = 'phone'
