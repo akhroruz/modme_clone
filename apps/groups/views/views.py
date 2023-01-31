@@ -1,7 +1,7 @@
 from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
 
-from groups.models import Branch, Room, Course
+from apps.groups.models import Branch, Room, Course
 from apps.groups.serializers import BranchModelSerializer, CourseModelSerializer, \
     RoomListModelSerializer, RoomCreateModelSerializer
 
