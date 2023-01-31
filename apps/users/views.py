@@ -3,8 +3,8 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+import users.urls
 from apps.users.models import User
 from apps.users.serializers import StudentModelSerializer, UserModelSerializer, RegisterSerializer
 from users.pagination import StudentPagination
@@ -27,16 +27,9 @@ class StudentModelViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = StudentModelSerializer
     permission_classes = [AllowAny]
-    lookup_url_kwarg = 'uuid'
+    lookup_url_kwarg = 'id'
     parser_classes = (MultiPartParser, FormParser,)
     pagination_class = StudentPagination
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['full_name', 'phone']
-
-
-class CustomTokenObtainPairView(TokenObtainPairView):
-    lookup_field = 'uuid'
-
-
-class CustomTokenRefreshView(TokenRefreshView):
-    lookup_field = 'uuid'
+    filterset_fields = ['id', 'full_name', 'phone']
+    ordering = ['full_name']

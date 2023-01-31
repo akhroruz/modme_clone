@@ -3,7 +3,6 @@ from django.db.models import TextChoices, CharField, IntegerField, DateField, Im
     TextField, DateTimeField
 
 from apps.users.managers import MyUserManager
-from shared.models import BaseModel
 
 
 class User(AbstractUser):
@@ -20,8 +19,6 @@ class User(AbstractUser):
     photo = ImageField(max_length=100, upload_to='profiles/', default='media/profile.jpg', blank=True, null=True)
     balance = IntegerField(default=0, null=True, blank=True)
     group = ManyToManyField('groups.Group')
-    password = CharField(max_length=255, )
-    confirm_password = CharField(max_length=255, )
     # student
     datas = JSONField(null=True, blank=True)
     comment = TextField(blank=True, null=True)  # izoh # noqa
@@ -37,3 +34,5 @@ class User(AbstractUser):
 
     def __str__(self):
         return f'{self.full_name}:{self.phone}'
+
+
