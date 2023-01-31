@@ -1,11 +1,8 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
-from django.contrib.auth import models
 
 from apps.groups.models import Room, Branch, Group, Course
 from apps.users.models import User
-
-admin.site.unregister(models.Group)
 
 
 @admin.register(Group)

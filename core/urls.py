@@ -19,7 +19,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = i18n_patterns(
-    path('api/v1/', include('apps.urls')),
+    path('api/v1/', include(('apps.urls', 'apps'), 'v1')),
+    # path('api/v1/', include('apps.urls')),
     path('i18n/', include('django.conf.urls.i18n')),
     path('admin/', admin.site.urls),
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
