@@ -1,14 +1,10 @@
 from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
 
-from apps.groups.models import Role, Branch, Room, Course, Holiday
-from apps.groups.serializers import RoleModelSerializer, BranchModelSerializer, CourseModelSerializer, \
+from apps.groups.models import Branch, Room, Course, Holiday
+from apps.groups.serializers import BranchModelSerializer, CourseModelSerializer, \
     HolidayModelSerializer, RoomListModelSerializer, RoomCreateModelSerializer
 
-
-class RoleModelViewSet(ModelViewSet):
-    serializer_class = RoleModelSerializer
-    queryset = Role.objects.all()
 
 
 class BranchModelViewSet(ModelViewSet):

@@ -5,21 +5,12 @@ from django.db.models import IntegerField, CharField, ImageField, TextField, For
 from apps.shared.models import BaseModel
 
 
-class Role(BaseModel):
-    name = CharField(max_length=255)
-    user = ManyToManyField('users.User', related_name='user_role')
-
-    def __str__(self):
-        return self.name
-
-
 class Branch(BaseModel):
     name = CharField(max_length=255)
     address = CharField(max_length=255)
     phone = IntegerField(unique=True)
     about = TextField()
     image = ImageField(max_length=100, upload_to='images/')
-    ceo = ManyToManyField('users.User', related_name='branch_ceo')
 
     def __str__(self):
         return self.name
@@ -27,7 +18,7 @@ class Branch(BaseModel):
 
 class Room(BaseModel):
     name = CharField(max_length=255)
-    branch = ForeignKey(to='groups.Branch', on_delete=CASCADE)
+    branch = ForeignKey('groups.Branch', CASCADE)
 
     def __str__(self):
         return self.name
@@ -67,6 +58,8 @@ class Group(BaseModel):
     days = CharField(max_length=50, choices=DaysChoice.choices)  # dars bo'lis kunlari
     status = CharField(max_length=25, choices=StatusChoice.choices, default=StatusChoice.ACTIVE)
     room = ForeignKey('groups.Room', SET_NULL, null=True, related_name='group_room')
+    students = ManyToManyField('groups.Group')
+
     teacher = ForeignKey('users.User', SET_NULL, null=True, related_name='teacher')
     start_time = TimeField(null=True, blank=True)  # dars boshlanish vaqti
     end_time = TimeField(null=True, blank=True)

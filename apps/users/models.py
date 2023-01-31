@@ -1,6 +1,6 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, GroupManager, Permission
 from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, ManyToManyField, JSONField, \
-    TextField, DateTimeField
+    TextField, DateTimeField, Model
 
 from apps.users.managers import MyUserManager
 
@@ -12,13 +12,12 @@ class User(AbstractUser):
 
     email = None
     username = None
-    full_name = CharField(max_length=64)
     phone = IntegerField(unique=True)
-    birth = DateField(blank=True, null=True)
+    birth_date = DateField(blank=True, null=True)
     gender = CharField(max_length=25, choices=GenderChoose.choices, blank=True, null=True)
     photo = ImageField(max_length=100, upload_to='profiles/', default='media/profile.jpg', blank=True, null=True)
     balance = IntegerField(default=0, null=True, blank=True)
-    group = ManyToManyField('groups.Group')
+
     # student
     datas = JSONField(null=True, blank=True)
     comment = TextField(blank=True, null=True)  # izoh # noqa
@@ -33,6 +32,4 @@ class User(AbstractUser):
     objects = MyUserManager()
 
     def __str__(self):
-        return f'{self.full_name}:{self.phone}'
-
-
+        return f'{self.phone}'

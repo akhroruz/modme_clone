@@ -1,13 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 
-from apps.groups.models import Role, Branch, Room, Course, Holiday, Group
+from apps.groups.models import Branch, Room, Course, Holiday, Group
 from apps.users.models import User
-
-
-class RoleModelSerializer(ModelSerializer):
-    class Meta:
-        model = Role
-        fields = '__all__'
 
 
 class BranchModelSerializer(ModelSerializer):
