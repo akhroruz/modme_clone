@@ -5,6 +5,7 @@ from apps.groups.models import Branch
 from apps.groups.models import Holiday
 from core.settings import MEDIA_ROOT
 from groups.serializers import HolidayListModelSerializer
+from users.models import User
 
 
 @pytest.mark.django_db
@@ -39,6 +40,15 @@ class TestModelSerializer:
         assert serializer.data['affect_payment'] == holidays.affect_payment
         assert serializer.data['name'] == holidays.name
         assert len(serializer.data) == 5
+    #
+    # @pytest.fixture
+    # def register(self):
+    #     create_user = User.objects.create(
+    #         first_name='Javlon',
+    #         last_name='Baxtiyorov',
+    #         phone=933934050,
+    #
+    #     )
 
 # @pytest.mark.django_db
 # class TestUserModel:

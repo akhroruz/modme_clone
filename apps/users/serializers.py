@@ -1,6 +1,7 @@
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
+from rest_framework.response import Response
+from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
 from apps.users.models import User
 
@@ -41,6 +42,36 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    old_password = CharField(write_only=True, required=True)
+    new_password = CharField(write_only=True, required=True, validators=[validate_password])
+    new_confirm_password = CharField(write_only=True, required=True)
+
+    class Meta:
+        model = User
+        fields = ('old_password', 'new_password', 'new_confirm_password')
+
+    def validate(self, obj):
+        if obj['new_password'] != obj['new_confirm_password']:
+            raise ValidationError({'new_password': "Password fields didn't match"})
+
+        return obj
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise ValidationError({'old_password': "Old password is not correct"})
+
+        return value
+
+    def update(self, result, validated_data):
+
+        result.set_password(validated_data['new_password'])
+        result.save()
+
+        return Response({'successfully updated password'})
 
 
 class StudentModelSerializer(ModelSerializer):
