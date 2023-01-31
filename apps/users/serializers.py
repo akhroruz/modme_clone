@@ -1,5 +1,6 @@
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
 from apps.users.models import User
@@ -70,8 +71,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         result.set_password(validated_data['new_password'])
         result.save()
 
-        return result
-
+        return Response({'successfully updated password'})
 
 
 class StudentModelSerializer(ModelSerializer):
