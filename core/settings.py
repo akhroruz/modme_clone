@@ -155,9 +155,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
@@ -194,24 +192,24 @@ JAZZMIN_SETTINGS = {
     "site_title": "Library Admin",
     "site_header": "Library",
     "site_brand": "Library",
-    "site_logo": "books/img/logo.png",
+    "site_logo": "img.png",
     "login_logo": None,
     "login_logo_dark": None,
     "site_logo_classes": "img-circle",
     "site_icon": None,
     "welcome_sign": "Welcome to the library",
     "copyright": "Acme Library Ltd",
-    "search_model": ["auth.User", "auth.Group"],
+    "search_model": ["users.User", "auth.Group"],
     "user_avatar": None,
     "topmenu_links": [
         {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
         {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
-        {"model": "auth.User"},
+        {"model": "users.User"},
         {"app": "books"},
     ],
     "usermenu_links": [
         {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
-        {"model": "auth.user"}
+        {"model": "users.user"}
     ],
     "show_sidebar": True,
     "navigation_expanded": True,

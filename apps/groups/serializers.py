@@ -1,4 +1,3 @@
-from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
 from apps.groups.models import Role, Branch, Room, Course, Holiday, Group

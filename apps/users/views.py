@@ -6,10 +6,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.users.models import User
-from apps.users.serializers import RegisterSerializer
-from apps.users.serializers import UserModelSerializer
+from apps.users.serializers import StudentModelSerializer, UserModelSerializer, RegisterSerializer
 from users.pagination import StudentPagination
-from users.serializers import StudentModelSerializer
 
 
 class UserModelViewSet(ModelViewSet):
