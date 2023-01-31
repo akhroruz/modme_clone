@@ -12,4 +12,7 @@ local:
 	python3 manage.py compilemessages
 
 admin:
-	python3 manage.py createsuperuser --username admin --email admin@example.com
+	python3 manage.py createsuperuser --username admin --password admin@example.com
+
+cs:
+	python3 manage.py createsuperuser

@@ -71,7 +71,7 @@ class TestModelSerializer:
 #         user = User.objects.create(
 #             full_name='User 1',
 #             phone='934923327',
-#             birth='2002-11-27',
+#             birth_date='2002-11-27',
 #             gender='Female',
 #             branch=branches,
 #             password=make_password('1234')
@@ -85,7 +85,7 @@ class TestModelSerializer:
 #         user = User.objects.create(
 #             full_name='User 1',
 #             phone='934923327',
-#             birth='2002-11-27',
+#             birth_date='2002-11-27',
 #             gender=User.GenderChoose.FEMALE,
 #             photo=image,
 #             password=make_password('1234')
@@ -101,6 +101,6 @@ class TestModelSerializer:
 #         assert serializer.data['full_name'] == users.full_name
 #         assert serializer.data['phone'] == int(users.phone)
 #         assert serializer.data['gender'] == users.gender
-#         assert serializer.data['birth'] == users.birth
+#         assert serializer.data['birth_date'] == users.birth_date
 #         assert serializer.data['branch'] == branches.pk
 #         assert len(serializer.data) == 21

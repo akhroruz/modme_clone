@@ -58,7 +58,7 @@ class Group(BaseModel):
     days = CharField(max_length=50, choices=DaysChoice.choices)  # dars bo'lis kunlari
     status = CharField(max_length=25, choices=StatusChoice.choices, default=StatusChoice.ACTIVE)
     room = ForeignKey('groups.Room', SET_NULL, null=True, related_name='group_room')
-    students = ManyToManyField('groups.Group')
+    students = ManyToManyField('users.User')
 
     teacher = ForeignKey('users.User', SET_NULL, null=True, related_name='teacher')
     start_time = TimeField(null=True, blank=True)  # dars boshlanish vaqti

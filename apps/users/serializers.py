@@ -77,8 +77,10 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 class StudentModelSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['phone', 'full_name', 'birth', 'gender', 'comment', 'datas', 'balance']
+        fields = ['first_name', 'last_name', 'phone', 'birth_date', 'gender', 'comment', 'datas', 'balance']
         extra_kwargs = {
-            'birth': {'required': False}, 'datas': {'required': False},
-            'full_name': {'required': True},
-            'phone': {'required': True}, }
+            'birth_date': {'required': False}, 'datas': {'required': False},
+            'phone': {'required': True},
+            'first_name': {'required': True},
+            'last_name': {'required': True},
+        }

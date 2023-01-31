@@ -13,7 +13,7 @@ class BranchModelSerializer(ModelSerializer):
 class RoomListModelSerializer(ModelSerializer):
     class Meta:
         model = Room
-        fields = ('uuid', 'name')
+        fields = ('id', 'name')
 
 
 class RoomCreateModelSerializer(ModelSerializer):
@@ -37,7 +37,7 @@ class HolidayModelSerializer(ModelSerializer):
 class UserModelSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = 'uuid', 'full_name', 'phone'
+        fields = 'uuid', 'phone'
 
 
 class GroupModelSerializer(ModelSerializer):

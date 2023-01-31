@@ -37,4 +37,5 @@ class StudentModelViewSet(ModelViewSet):
     parser_classes = (MultiPartParser, FormParser,)
     pagination_class = StudentPagination
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['phone']
+    filterset_fields = ['first_name', 'last_name', 'id', 'phone']
+    ordering = ['first_name', 'last_name']
