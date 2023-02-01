@@ -25,3 +25,4 @@
 - ```make unmig``` delete migrations files 
 - ```make admin``` create admin superuser
 - ```make load``` collect all datas
+- ```make local``` i18n compile messages
