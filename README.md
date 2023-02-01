@@ -12,3 +12,16 @@
 8. [ ] github actions
 9. [ ] server
 
+## Don't Required
+
+1. [ ] cache
+2. [ ] celery
+3. [ ] redis
+4. [ ] rabbitmq
+5. [ ] cron
+
+## Makefile
+- ```make mig``` makemigrations & migrate 
+- ```make unmig``` delete migrations files 
+- ```make admin``` create admin superuser
+- ```make load``` collect all datas
