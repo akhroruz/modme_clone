@@ -1,15 +1,83 @@
+from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from rest_framework.fields import ListField
+from rest_framework.relations import SlugRelatedField
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
-from users.models import User
+from groups.models import CourseGroup, Branch
+from users.models import User, Comment, LidIncrement, Lid
 
 
-class UserModelSerializer(ModelSerializer):
+class LidModelSerializer(ModelSerializer):
+    class Meta:
+        model = Lid
+        fields = ('phone', 'full_name', 'comment', 'lid_increment')
+
+
+class LidIncrementModelSerializer(ModelSerializer):
+    class Meta:
+        model = LidIncrement
+        fields = ('name',)
+
+
+class UserBranchListModelSerializer(ModelSerializer):
+    class Meta:
+        model = Branch
+        fields = ('id', 'name')
+
+
+class UserGroupListModelSerializer(ModelSerializer):
+    class Meta:
+        model = CourseGroup
+        fields = ('id', 'name')
+
+    def to_representation(self, instance: CourseGroup):
+        rep = super().to_representation(instance)
+        rep['branches'] = UserBranchListModelSerializer(instance.branch, many=True).data
+
+        return rep
+
+
+class UserListCommentModelSerializer(ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('id', 'text')
+
+
+class UserListModelSerializer(ModelSerializer):
+    role = SlugRelatedField(many=True, read_only=True, slug_field='name')
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'email')
+        fields = (
+            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'datas', 'role',
+            'datas')
+
+    def to_representation(self, instance: User):
+        rep = super().to_representation(instance)
+        rep['groups'] = UserGroupListModelSerializer(instance.coursegroup_set.all(), many=True).data
+        rep['comments'] = UserListCommentModelSerializer(instance.comment, many=True).data
+        return rep
+
+
+class UserCreateRoleModelSerializer(ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('name',)
+
+
+class UserCreateModelSerializer(ModelSerializer):
+    role = ListField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('phone', 'first_name', 'gender', 'birth_date', 'photo', 'comment', 'datas', 'role')
+
+    def create(self, validated_data):
+        validated_data['role'] = Group.objects.filter(name__in=validated_data['role'][0].split(','))
+        return super().create(validated_data)
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -72,15 +140,3 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         result.save()
 
         return Response({'successfully updated password'})
-
-
-class StudentModelSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'phone', 'birth_date', 'gender', 'comment', 'datas', 'balance']
-        extra_kwargs = {
-            'birth_date': {'required': False}, 'datas': {'required': False},
-            'phone': {'required': True},
-            'first_name': {'required': True},
-            'last_name': {'required': True},
-        }

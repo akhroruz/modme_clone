@@ -12,4 +12,7 @@ local:
 	python3 manage.py compilemessages
 
 admin:
-	python3 manage.py createsuperuser --username admin --password admin@example.com
+	python3 manage.py createsuperuser --phone 931001010
+
+load:
+	python3 manage.py loaddata role

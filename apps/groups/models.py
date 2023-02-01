@@ -2,7 +2,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.db.models import IntegerField, CharField, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
     TimeField, DecimalField, DateField, BooleanField, CASCADE, ManyToManyField
 
-from apps.shared.models import BaseModel
+from shared.models import BaseModel
 
 
 class Branch(BaseModel):
@@ -27,7 +27,7 @@ class Room(BaseModel):
 class Course(BaseModel):
     name = CharField(max_length=255)
     price = DecimalField(max_digits=10, decimal_places=2)
-    branch = ForeignKey('groups.Branch', SET_NULL, null=True)
+    branch = ManyToManyField('groups.Branch')
 
     def __str__(self):
         return self.name
@@ -43,7 +43,7 @@ class Holiday(BaseModel):  # dam olish kunlari
         return self.name
 
 
-class Group(BaseModel):
+class CourseGroup(BaseModel):
     class DaysChoice(TextChoices):
         ODD_DAYS = 'odd_days', 'Odd days'
         EVEN_DAYS = 'even days', 'Even Days'
@@ -57,14 +57,14 @@ class Group(BaseModel):
     name = CharField(max_length=255)
     days = CharField(max_length=50, choices=DaysChoice.choices)  # dars bo'lis kunlari
     status = CharField(max_length=25, choices=StatusChoice.choices, default=StatusChoice.ACTIVE)
-    room = ForeignKey('groups.Room', SET_NULL, null=True, related_name='group_room')
+    room = ManyToManyField('groups.Room', 'group_room')
     students = ManyToManyField('users.User')
 
     teacher = ForeignKey('users.User', SET_NULL, null=True, related_name='teacher')
     start_time = TimeField(null=True, blank=True)  # dars boshlanish vaqti
     end_time = TimeField(null=True, blank=True)
     course = ForeignKey('groups.Course', SET_NULL, null=True, related_name='group_course')
-    branch = ForeignKey('groups.Branch', CASCADE, related_name='group_branch')
+    branch = ManyToManyField('groups.Branch')
     start_date = DateField(null=True, blank=True)
     end_date = DateField(null=True, blank=True)
     tags = ArrayField(CharField(max_length=255))
@@ -75,8 +75,8 @@ class Group(BaseModel):
 
     @property
     def get_students(self):
-        return self.user_set.all()
+        return self.students.all()
 
     @property
     def students_count(self):
-        return self.user_set.count()
+        return self.students.count()

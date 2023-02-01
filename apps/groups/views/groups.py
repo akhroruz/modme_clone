@@ -2,14 +2,13 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from groups.models import Group
+from groups.models import CourseGroup
 from groups.serializers import GroupModelSerializer, RetrieveGroupModelSerializer
 
 
 class GroupModelViewSet(ModelViewSet):
-    queryset = Group.objects.order_by('-created_at')
+    queryset = CourseGroup.objects.order_by('-created_at')
     serializer_class = GroupModelSerializer
-    lookup_field = 'uuid'
 
     def list(self, request, *args, **kwargs):
         data = {

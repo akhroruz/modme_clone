@@ -1,0 +1,21 @@
+- model: auth.Group
+  fields:
+    name: teacher
+- model: auth.Group
+  fields:
+    name: student
+- model: auth.Group
+  fields:
+    name: branch_director
+- model: auth.Group
+  fields:
+    name: admin
+- model: auth.Group
+  fields:
+    name: limited_admin
+- model: auth.Group
+  fields:
+    name: marketer
+- model: auth.Group
+  fields:
+    name: cashier
