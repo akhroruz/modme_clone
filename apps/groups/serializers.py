@@ -1,7 +1,8 @@
 from rest_framework.serializers import ModelSerializer
 
 from groups.models import Branch, Room, Course, Holiday, CourseGroup
-from users.serializers import UserListModelSerializer, UserBranchListModelSerializer
+from users.models import User
+from users.serializers import UserBranchListModelSerializer
 
 
 class BranchModelSerializer(ModelSerializer):
@@ -39,35 +40,30 @@ class HolidayModelSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class GroupModelSerializer(ModelSerializer):
+class CourseListModelSerializer(ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('name', 'price')
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
 
-        data['teacher'] = [UserListModelSerializer(instance.teacher).data]
-        data['room'] = [RoomListModelSerializer(instance.room).data]
-        data['course'] = [CourseModelSerializer(instance.course).data]
-        return data
+class GroupTeacherListModelSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'full_name', 'phone')
 
+
+class GroupListModelSerializer(ModelSerializer):
     class Meta:
         model = CourseGroup
         fields = '__all__'
 
-
-class RetrieveGroupModelSerializer(ModelSerializer):
-    def to_representation(self, instance):
+    def to_representation(self, instance: CourseGroup):
         data = super().to_representation(instance)
-
-        data['teacher'] = [UserListModelSerializer(instance.teacher).data]
-        data['room'] = [RoomListModelSerializer(instance.room).data]
-        data['course'] = [CourseModelSerializer(instance.course).data]
-        data['students'] = [UserListModelSerializer(obj).data for obj in instance.get_students]
         data['students_count'] = instance.students_count
+        data['teachers'] = GroupTeacherListModelSerializer(instance.teachers, many=True).data
+        data['room'] = RoomListModelSerializer(instance.room, many=True).data
+        data['course'] = CourseListModelSerializer(instance.course).data
         return data
-
-    class Meta:
-        model = CourseGroup
-        fields = '__all__'
 
 
 class HolidayListModelSerializer(ModelSerializer):
@@ -80,3 +76,9 @@ class HolidayCreateModelSerializer(ModelSerializer):
     class Meta:
         model = Holiday
         fields = 'name', 'holiday_date', 'affect_payment'
+
+
+class CourseGroupModelSerializer(ModelSerializer):
+    class Meta:
+        model = CourseGroup
+        fields = '__all__'

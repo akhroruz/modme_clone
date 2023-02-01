@@ -31,7 +31,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
 
     # my groups
     'groups.apps.AppsConfig',
@@ -46,8 +45,6 @@ INSTALLED_APPS = (
     'django_filters',
     'parler',
 )
-
-SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
