@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from apps.groups.models import Group
-from apps.groups.serializers import GroupModelSerializer, RetrieveGroupModelSerializer
+from groups.models import Group
+from groups.serializers import GroupModelSerializer, RetrieveGroupModelSerializer
 
 
 class GroupModelViewSet(ModelViewSet):

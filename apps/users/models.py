@@ -1,5 +1,5 @@
-from django.contrib.auth.models import AbstractUser, Group, GroupManager, Permission
-from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, ManyToManyField, JSONField, \
+from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, JSONField, \
     TextField, DateTimeField, Model
 
 from apps.users.managers import MyUserManager

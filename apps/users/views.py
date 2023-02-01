@@ -1,14 +1,13 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.generics import CreateAPIView, UpdateAPIView
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-import users.urls
-from apps.users.models import User
+from users.models import User
+from users.serializers import RegisterSerializer, UserModelSerializer, ChangePasswordSerializer
 from users.pagination import StudentPagination
 from users.serializers import StudentModelSerializer
-from apps.users.serializers import RegisterSerializer, UserModelSerializer, ChangePasswordSerializer
 
 
 class UserModelViewSet(ModelViewSet):

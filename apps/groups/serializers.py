@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 
-from apps.groups.models import Branch, Room, Course, Holiday, Group
-from apps.users.models import User
+from groups.models import Branch, Room, Course, Holiday, Group
+from users.models import User
 
 
 class BranchModelSerializer(ModelSerializer):

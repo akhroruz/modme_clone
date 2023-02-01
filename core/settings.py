@@ -24,13 +24,14 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = (
-    'jazzmin',
+    'jazzmin',  # noqa
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     # my groups
     'groups.apps.AppsConfig',
@@ -45,6 +46,8 @@ INSTALLED_APPS = (
     'django_filters',
     'parler',
 )
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -77,7 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -89,7 +91,6 @@ DATABASES = {
     }
 }
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -193,7 +194,7 @@ JAZZMIN_SETTINGS = {
     "site_title": "Modme",
     "site_header": "Modme",
     "site_brand": "Modme",
-    "site_logo": "img.png",
+    "site_logo": "users/img.png",
     "login_logo": None,
     "login_logo_dark": None,
     "site_logo_classes": "img-circle",

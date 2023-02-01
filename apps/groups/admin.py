@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from apps.groups.models import Room, Branch, Group, Course
-from apps.users.models import User
+from groups.models import Room, Branch, Group, Course
+from users.models import User
 
 
 @admin.register(Group)

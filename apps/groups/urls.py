@@ -1,8 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from groups.views.groups import GroupModelViewSet
-from groups.views.views import BranchModelViewSet, RoomModelViewSet, CourseModelViewSet
+from groups.views import GroupModelViewSet, CourseModelViewSet, BranchModelViewSet, RoomModelViewSet
 from users.views import StudentModelViewSet
 
 router = DefaultRouter()
