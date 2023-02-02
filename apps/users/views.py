@@ -4,9 +4,10 @@ from drf_yasg.openapi import Schema
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, DjangoObjectPermissions
 from rest_framework.viewsets import ModelViewSet
 
+from shared.permissions import IsAdministrator
 from users.models import User, LidIncrement, Lid
 from users.serializers import UserListModelSerializer, ChangePasswordSerializer, \
     UserCreateModelSerializer, LidIncrementModelSerializer, LidModelSerializer
@@ -15,7 +16,7 @@ from users.serializers import UserListModelSerializer, ChangePasswordSerializer,
 class UserModelViewSet(ModelViewSet):
     serializer_class = UserListModelSerializer
     queryset = User.objects.all()
-    permission_classes = AllowAny,
+    # permission_classes = AllowAny,
     parser_classes = (MultiPartParser,)
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['first_name', 'last_name', 'id', 'phone', 'role__name']
@@ -46,6 +47,7 @@ class LidIncrementModelViewSet(ModelViewSet):
 class LidModelViewSet(ModelViewSet):
     serializer_class = LidModelSerializer
     queryset = Lid.objects.all()
+    permission_classes = (DjangoObjectPermissions, IsAdministrator)
 
 
 class ChangePasswordView(UpdateAPIView):

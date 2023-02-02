@@ -2,6 +2,12 @@
 
 ## TODO - Required
 
+1. permissions
+   - administrator - (crud) student, (crud) course, (crud) teacher, (crud) room
+   - 
+
+
+
 1. [x] custom admin
 2. [x] sentry
 3. [x] github

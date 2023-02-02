@@ -19,6 +19,7 @@ class User(AbstractUser, BaseModel):
     photo = ImageField(max_length=100, upload_to='profiles/', default='media/profile.jpg', blank=True, null=True)
     balance = IntegerField(default=0, null=True, blank=True)
     role = ManyToManyField('auth.Group', 'roles')
+    # TODO add branch
 
     # student
     datas = JSONField(null=True, blank=True)
@@ -36,6 +37,11 @@ class User(AbstractUser, BaseModel):
 
     def __str__(self):
         return f'{self.phone}'
+
+
+    # @property
+    # def branches(self):
+    #     return self.teachers.all()
 
     @property
     def full_name(self):

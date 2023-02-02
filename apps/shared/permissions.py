@@ -15,3 +15,15 @@ class IsTeacher(BasePermission):
         if hasattr(obj, 'teachers') and request.user.teachers.filter(id__in=obj.id).exists():
             return True
         return False
+
+
+class IsAdministrator(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+        if user.is_superuser or user.is_staff:
+            return True
+
+        # user.branch
+
+        return False
