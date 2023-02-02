@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from rest_framework.fields import ListField
+from rest_framework.fields import ListField, IntegerField
 from rest_framework.relations import SlugRelatedField
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
@@ -36,7 +36,6 @@ class UserGroupListModelSerializer(ModelSerializer):
     def to_representation(self, instance: CourseGroup):
         rep = super().to_representation(instance)
         rep['branches'] = UserBranchListModelSerializer(instance.branch, many=True).data
-
         return rep
 
 
@@ -80,10 +79,10 @@ class UserCreateModelSerializer(ModelSerializer):
         return super().create(validated_data)
 
 
-class RegisterSerializer(serializers.ModelSerializer):
-    phone = serializers.IntegerField(required=True)
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    confirm_password = serializers.CharField(write_only=True, required=True)
+class RegisterSerializer(ModelSerializer):
+    phone = IntegerField(required=True)
+    password = CharField(write_only=True, required=True, validators=[validate_password])
+    confirm_password = CharField(write_only=True, required=True)
 
     class Meta:
         model = User
@@ -93,11 +92,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             'last_name': {'required': True}
         }
 
-    # TODO
-    # SHOULD WRITE VALIDATE FOR PHONE
     def validate(self, attrs):
         if attrs['password'] != attrs['confirm_password']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+            raise ValidationError({"password": "Password fields didn't match."})
         return attrs
 
     def create(self, validated_data):
@@ -108,7 +105,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
-
         return user
 
 
@@ -124,7 +120,6 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
     def validate(self, obj):
         if obj['new_password'] != obj['new_confirm_password']:
             raise ValidationError({'new_password': "Password fields didn't match"})
-
         return obj
 
     def validate_old_password(self, value):
@@ -135,8 +130,6 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, result, validated_data):
-
         result.set_password(validated_data['new_password'])
         result.save()
-
         return Response({'successfully updated password'})
