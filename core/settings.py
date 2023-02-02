@@ -183,7 +183,7 @@ SWAGGER_SETTINGS = {
             'in': 'header',
             'description': 'Type in the *\'Value\'* input box below: **\'Bearer &lt;JWT&gt;\'**, where JWT is the JSON web token you get back when logging in.'
         }
-    }
+    },
 }
 
 SIMPLE_JWT = {
