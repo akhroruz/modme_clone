@@ -2,7 +2,10 @@
 
 ## TODO - Required
 
-1. [ ] permissions
+1. [x] custom admin
+2. [x] sentry
+3. [x] github
+4. [ ] permissions
    - ceo - all permissions
    - administrator - (crud) student, (crud) course, (crud) teacher, (crud) room, (crud) lead, (crud) holiday, (crud) archive, branch itself
    - branch director - (crud) student, (crud) course, (crud) teacher, (crud) room, (crud) lead, (crud) holiday, (crud) archive, branch itself
@@ -10,9 +13,6 @@
    - limited administrator - (crud) teacher, (crud) course, (crud) group, branch itself
    - marketer - (crud) leads
    - cashier - (crud) students, reports
-2. [x] custom admin
-3. [x] sentry
-4. [x] github
 5. [ ] test (pytest coverage 80% ^)
 6. [ ] docker/docker compose
 7. [ ] elasticsearch
