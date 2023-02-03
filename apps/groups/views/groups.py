@@ -1,5 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.permissions import DjangoObjectPermissions, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -10,6 +11,7 @@ from groups.serializers import GroupListModelSerializer
 class GroupModelViewSet(ModelViewSet):
     queryset = CourseGroup.objects.order_by('-created_at')
     serializer_class = GroupListModelSerializer
+    permission_classes = DjangoObjectPermissions, IsAuthenticated
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('branch', 'status', 'teachers__first_name', 'course', 'days', 'start_date', 'end_date')
 
@@ -23,5 +25,3 @@ class GroupModelViewSet(ModelViewSet):
         instance = self.get_object()
         serializer = GroupListModelSerializer(instance=instance)
         return Response(serializer.data)
-
-

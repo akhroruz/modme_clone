@@ -9,9 +9,9 @@ from shared.models import BaseModel
 class Branch(BaseModel):
     name = CharField(max_length=255)
     address = CharField(max_length=255)
-    phone = IntegerField(unique=True)
-    about = TextField()
-    image = ImageField(max_length=100, upload_to='images/')
+    phone = CharField(max_length=10, unique=True)
+    about = TextField(null=True, blank=True)
+    image = ImageField(max_length=100, upload_to='images/', default='media/img.png')
 
     def __str__(self):
         return self.name

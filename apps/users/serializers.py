@@ -1,24 +1,25 @@
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from rest_framework.fields import ListField, IntegerField
+from rest_framework.fields import ListField
 from rest_framework.relations import SlugRelatedField
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
 from groups.models import CourseGroup, Branch
-from users.models import User, Comment, LidIncrement, Lid
+from users.models import User, Comment, LeadIncrement, Lead
 
 
 class LidModelSerializer(ModelSerializer):
     class Meta:
-        model = Lid
+        model = Lead
         fields = ('phone', 'full_name', 'comment', 'lid_increment')
 
 
 class LidIncrementModelSerializer(ModelSerializer):
     class Meta:
-        model = LidIncrement
+        model = LeadIncrement
         fields = ('name',)
 
 
@@ -51,8 +52,8 @@ class UserListModelSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'datas', 'role',
-            'datas')
+            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'data', 'role',
+        )
 
     def to_representation(self, instance: User):
         rep = super().to_representation(instance)
@@ -69,43 +70,45 @@ class UserCreateRoleModelSerializer(ModelSerializer):
 
 class UserCreateModelSerializer(ModelSerializer):
     role = ListField(write_only=True)
+    password = CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ('phone', 'first_name', 'gender', 'birth_date', 'photo', 'comment', 'datas', 'role')
+        fields = ('phone', 'first_name', 'gender', 'birth_date', 'photo', 'comment', 'data', 'role', 'password')
 
     def create(self, validated_data):
         validated_data['role'] = Group.objects.filter(name__in=validated_data['role'][0].split(','))
+        validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
 
 
-class RegisterSerializer(ModelSerializer):
-    phone = IntegerField(required=True)
-    password = CharField(write_only=True, required=True, validators=[validate_password])
-    confirm_password = CharField(write_only=True, required=True)
-
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'phone', 'password', 'confirm_password')
-        extra_kwargs = {
-            'first_name': {'required': True},
-            'last_name': {'required': True}
-        }
-
-    def validate(self, attrs):
-        if attrs['password'] != attrs['confirm_password']:
-            raise ValidationError({"password": "Password fields didn't match."})
-        return attrs
-
-    def create(self, validated_data):
-        user = User.objects.create(
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            phone=validated_data['phone']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
+# class RegisterSerializer(ModelSerializer):
+#     phone = IntegerField(required=True)
+#     password = CharField(write_only=True, required=True, validators=[validate_password])
+#     confirm_password = CharField(write_only=True, required=True)
+#
+#     class Meta:
+#         model = User
+#         fields = ('first_name', 'last_name', 'phone', 'password', 'confirm_password')
+#         extra_kwargs = {
+#             'first_name': {'required': True},
+#             'last_name': {'required': True}
+#         }
+#
+#     def validate(self, attrs):
+#         if attrs['password'] != attrs['confirm_password']:
+#             raise ValidationError({"password": "Password fields didn't match."})
+#         return attrs
+#
+#     def create(self, validated_data):
+#         user = User.objects.create(
+#             first_name=validated_data['first_name'],
+#             last_name=validated_data['last_name'],
+#             phone=validated_data['phone']
+#         )
+#         user.set_password(validated_data['password'])
+#         user.save()
+#         return user
 
 
 class ChangePasswordSerializer(serializers.ModelSerializer):

@@ -16,16 +16,14 @@ class User(AbstractUser, BaseModel):
     phone = IntegerField(unique=True)
     birth_date = DateField(blank=True, null=True)
     gender = CharField(max_length=25, choices=GenderChoose.choices, blank=True, null=True)
-    photo = ImageField(max_length=100, upload_to='profiles/', default='media/profile.jpg', blank=True, null=True)
-    balance = IntegerField(default=0, null=True, blank=True)
+    photo = ImageField(max_length=100, upload_to='profiles/', default='media/img.png', blank=True, null=True)
+    balance = IntegerField(default=0)
     role = ManyToManyField('auth.Group', 'roles')
-    # TODO add branch
-
-    # student
-    datas = JSONField(null=True, blank=True)
-    comment = TextField(blank=True, null=True)  # izoh # noqa
-
+    branch = ManyToManyField('groups.Branch', 'branches')
+    data = JSONField(null=True, blank=True)  # social account
+    comment = TextField(blank=True, null=True)
     deleted_at = DateTimeField(null=True)
+
     EMAIL_FIELD = None
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = []
@@ -38,11 +36,6 @@ class User(AbstractUser, BaseModel):
     def __str__(self):
         return f'{self.phone}'
 
-
-    # @property
-    # def branches(self):
-    #     return self.teachers.all()
-
     @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
@@ -53,17 +46,17 @@ class Comment(BaseModel):
     user = ForeignKey('users.User', CASCADE, 'comments')
 
 
-class Lid(BaseModel):
+class Lead(BaseModel):
     full_name = CharField(max_length=255)
     comment = TextField()
     phone = IntegerField()
-    lid_increment = ForeignKey('users.LidIncrement', CASCADE)
+    lid_increment = ForeignKey('users.LeadIncrement', CASCADE)
 
     def __str__(self):
         return f'{self.full_name} | {self.phone}'
 
 
-class LidIncrement(BaseModel):
+class LeadIncrement(BaseModel):
     name = CharField(max_length=255)
 
     def __str__(self):

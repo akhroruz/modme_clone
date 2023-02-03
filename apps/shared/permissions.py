@@ -23,7 +23,6 @@ class IsAdministrator(BasePermission):
         user = request.user
         if user.is_superuser or user.is_staff:
             return True
-
-        # user.branch
-
+        if user.branch == obj.branch:
+            return True
         return False

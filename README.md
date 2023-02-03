@@ -2,21 +2,21 @@
 
 ## TODO - Required
 
-1. permissions
-   - administrator - (crud) student, (crud) course, (crud) teacher, (crud) room
-   - 
-
-
-
-1. [x] custom admin
-2. [x] sentry
-3. [x] github
-4. [ ] test (pytest coverage 80% ^)
-5. [ ] docker/docker compose
-6. [ ] elasticsearch
-7. [ ] security
-8. [ ] github actions
-9. [ ] server
+1. [ ] permissions
+   - ceo - all permissions
+   - administrator - (crud) student, (crud) course, (crud) teacher, (crud) room, (crud) lead, (crud) holiday, (crud)
+     archive
+   - branch director - (crud) student, (crud) course, (crud) teacher, (crud) room, (crud) lead, (crud) holiday, (crud)
+     archive,
+2. [x] custom admin
+3. [x] sentry
+4. [x] github
+5. [ ] test (pytest coverage 80% ^)
+6. [ ] docker/docker compose
+7. [ ] elasticsearch
+8. [ ] security
+9.[ ] github actions
+10.[ ] server
 
 ## Don't Required
 
@@ -33,3 +33,4 @@
 - ```make admin``` create admin superuser
 - ```make load``` collect all datas
 - ```make local``` i18n compile messages
+- ```make poetry``` install poetry for linux

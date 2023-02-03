@@ -16,3 +16,12 @@ admin:
 
 load:
 	python3 manage.py loaddata role
+
+create:
+	python3 manage.py create -b 10
+
+setup:
+	pip install -r requirements.txt
+
+poetry:
+	curl -sSL https://install.python-poetry.org | python3 -

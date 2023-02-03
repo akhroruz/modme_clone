@@ -2,12 +2,12 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from users.views import UserModelViewSet, LidIncrementModelViewSet, LidModelViewSet
+from users.views import UserModelViewSet, LeadIncrementModelViewSet, LeadModelViewSet
 
 router = DefaultRouter()
 router.register('auth/user', UserModelViewSet, basename='user')
-router.register('lid', LidModelViewSet, basename='lid')
-router.register('lid-increment', LidIncrementModelViewSet, basename='lid_increment')
+router.register('lead', LeadModelViewSet, basename='lead')
+router.register('lead-increment', LeadIncrementModelViewSet, basename='lead_increment')
 
 urlpatterns = [
     path('', include(router.urls)),
