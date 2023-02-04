@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from rest_framework.fields import ListField
+from rest_framework.fields import ListField, IntegerField
 from rest_framework.relations import SlugRelatedField
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
@@ -136,3 +136,48 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         result.set_password(validated_data['new_password'])
         result.save()
         return Response({'successfully updated password'})
+
+
+'''
+name
+phone
+role
+birthday date
+gender
+photo
+password
+
+'''
+
+
+class UpdateProfileSerializer(ModelSerializer):
+    phone = IntegerField(required=True)
+
+    class Meta:
+        fields = ('first_name', 'phone', 'role', 'birth_date', 'gender', 'photo', 'password')
+        model = User
+
+    def validate_phone(self, phone):
+        user = User.objects.context['request'].user
+        if User.objects.exclude(pk=user.pk).filter(phone=phone).exists():
+            raise ValidationError({'phone': "This phone is already in use."})
+        return phone
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+
+        if user.pk != instance.pk:
+            raise ValidationError({'authorize': "You dont have permission for this user."})
+        instance.set_password(validated_data['password'])
+
+        instance.first_name = validated_data['first_name']
+        instance.phone = validated_data['phone']
+        instance.role = validated_data['role']
+        instance.birth_date = validated_data['birth_date']
+        instance.gender = validated_data['gender']
+        instance.photo = validated_data['photo']
+        instance.password = validated_data['password']
+
+        instance.save()
+
+        return instance
