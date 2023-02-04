@@ -30,8 +30,9 @@
 
 ## Makefile
 
-- ```make mig``` makemigrations & migrate
+- ```make mig``` make migrations and migrate
 - ```make unmig``` delete migrations files
+- ```make remig``` delete migrations files and make migrations and migrate
 - ```make admin``` create admin superuser
 - ```make load``` collect all datas
 - ```make local``` i18n compile messages
