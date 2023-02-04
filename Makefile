@@ -18,7 +18,7 @@ load:
 	python3 manage.py loaddata role
 
 create:
-	python3 manage.py create -b 10
+	python3 manage.py create -c 5
 
 setup:
 	pip install -r requirements.txt

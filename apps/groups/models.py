@@ -16,7 +16,7 @@ class Company(BaseModel):
 class Branch(BaseModel):
     name = CharField(max_length=255)
     address = CharField(max_length=255)
-    company = ForeignKey(Company, CASCADE)
+    company = ForeignKey('groups.Company', CASCADE)
     phone = CharField(max_length=10, unique=True)
     about = TextField(null=True, blank=True)
     image = ImageField(max_length=100, upload_to='images/', default='media/img.png')
