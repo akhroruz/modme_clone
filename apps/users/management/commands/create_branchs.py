@@ -16,11 +16,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         total = options.get('total')
         faker = Faker()
-        for i in range(total):
-            baker.make('groups.Branch',
-                       name=faker.company(),
-                       address=faker.address(),
-                       phone_number="9" + str(faker.random_number(digits=8, fix_len=False)),
-                       about=faker.text(max_nb_chars=160),
-                       image=faker.image_url(),
-                       )
+        baker.make('groups.Branch',
+                   name=faker.company(),
+                   address=faker.address(),
+                   phone_number="9" + str(faker.random_number(digits=8, fix_len=False)),
+                   about=faker.text(max_nb_chars=160),
+                   image=faker.image_url(),
+                   _quantity=total
+                   )

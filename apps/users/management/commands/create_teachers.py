@@ -16,24 +16,24 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         total = options.get('total')
         faker = Faker()
-        role = Role.objects.filter(name='Teacher')
-        for i in range(total):
-            full_name = faker.name()
-            baker.make('users.User', make_m2m=True,
-                       full_name=full_name,
-                       first_name=full_name.split()[0],
-                       last_name=full_name.split()[-1],
-                       birth=faker.date_of_birth(),
-                       phone="9" + str(faker.random_number(digits=8, fix_len=False)),
-                       gender=faker.random_element(User.GenderChoose),
-                       role=role
-                       )
+        # role = Role.objects.filter(name='Teacher')
+        baker.make(
+            'users.User',
+            first_name=faker.first_name(),
+            last_name=faker.last_name(),
+            birth=faker.date_of_birth(),
+            phone=faker.random_number(digits=9, fix_len=False),
+            gender=faker.random_element(User.GenderChoose),
+            # role=role,
+            make_m2m=True,
+            _quantity=total
+        )
 
-            # User.objects.get_or_create(
-            #     role=faker.random_choices(Role.objects.all()),
-            #     branch=faker,
-            #     balance=faker,
-            #     created_at=faker.date_time_between_dates(),
-            #     # status=User.StatusChoise.ACTIVE,
-            #
-            # )
+        # User.objects.get_or_create(
+        #     role=faker.random_choices(Role.objects.all()),
+        #     branch=faker,
+        #     balance=faker,
+        #     created_at=faker.date_time_between_dates(),
+        #     # status=User.StatusChoise.ACTIVE,
+        #
+        # )
