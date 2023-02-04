@@ -1,13 +1,13 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions
+from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions, AllowAny
 from rest_framework.viewsets import ModelViewSet
 
 from shared.permissions import IsAdministrator
 from users.models import User, LeadIncrement, Lead
 from users.serializers import UserListModelSerializer, UserCreateModelSerializer, LidIncrementModelSerializer, \
-    LidModelSerializer, ChangePasswordSerializer
+    LidModelSerializer, ChangePasswordSerializer, UpdateProfileSerializer
 
 
 class UserModelViewSet(ModelViewSet):
@@ -43,3 +43,9 @@ class ChangePasswordView(UpdateAPIView):
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
+
+
+class UpdateProfileView(UpdateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UpdateProfileSerializer
