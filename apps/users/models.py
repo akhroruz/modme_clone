@@ -1,10 +1,17 @@
 from ckeditor_uploader.fields import RichTextUploadingField
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, JSONField, \
-    TextField, DateTimeField, ManyToManyField, ForeignKey, CASCADE, Model, BooleanField, SET_NULL
+    TextField, DateTimeField, Model, ManyToManyField, ForeignKey, CASCADE, BooleanField, SET_NULL
 
 from shared.models import BaseModel, UUIDBaseModel
 from users.managers import MyUserManager
+
+
+class Archive(BaseModel):
+    name = CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 
 class User(AbstractUser, BaseModel):
@@ -14,19 +21,19 @@ class User(AbstractUser, BaseModel):
 
     email = None
     username = None
-    phone = IntegerField(unique=True)
+    phone = CharField(max_length=15, unique=True)
+    is_archive = BooleanField(default=False)
+    archive = ForeignKey(Archive, SET_NULL, null=True, blank=True)
     birth_date = DateField(blank=True, null=True)
     gender = CharField(max_length=25, choices=GenderChoose.choices, blank=True, null=True)
-    photo = ImageField(max_length=100, upload_to='profiles/', default='media/profile.jpg', blank=True, null=True)
-    balance = IntegerField(default=0, null=True, blank=True)
+    photo = ImageField(max_length=100, upload_to='profiles/', default='media/img.png', blank=True, null=True)
+    balance = IntegerField(default=0, blank=True)
     role = ManyToManyField('auth.Group', 'roles')
-    # TODO add branch
-
-    # student
-    datas = JSONField(null=True, blank=True)
-    comment = TextField(blank=True, null=True)  # izoh # noqa
-
+    branch = ManyToManyField('groups.Branch', 'branches')
+    data = JSONField(null=True, blank=True)  # social account
+    comment = TextField(blank=True, null=True)
     deleted_at = DateTimeField(null=True)
+
     EMAIL_FIELD = None
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = []
@@ -38,7 +45,6 @@ class User(AbstractUser, BaseModel):
 
     def __str__(self):
         return f'{self.phone}'
-
 
     # @property
     # def branches(self):
@@ -54,17 +60,17 @@ class Comment(BaseModel):
     user = ForeignKey('users.User', CASCADE, 'comments')
 
 
-class Lid(BaseModel):
+class Lead(BaseModel):
     full_name = CharField(max_length=255)
     comment = TextField()
     phone = IntegerField()
-    lid_increment = ForeignKey('users.LidIncrement', CASCADE)
+    lid_increment = ForeignKey('users.LeadIncrement', CASCADE)
 
     def __str__(self):
         return f'{self.full_name} | {self.phone}'
 
 
-class LidIncrement(BaseModel):
+class LeadIncrement(BaseModel):
     name = CharField(max_length=255)
 
     def __str__(self):

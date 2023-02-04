@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from groups.models import Room, Branch, CourseGroup, Course
-from users.models import User
+from groups.models import Room, Branch, CourseGroup, Course, Company
 
 
 @admin.register(CourseGroup)
@@ -20,11 +19,11 @@ class CourseAdmin(ModelAdmin):
     pass
 
 
-@admin.register(User)
-class UserAdmin(ModelAdmin):
+@admin.register(Branch)
+class BranchAdmin(ModelAdmin):
     pass
 
 
-@admin.register(Branch)
-class BranchAdmin(ModelAdmin):
+@admin.register(Company)
+class CompanyAdmin(ModelAdmin):
     pass
