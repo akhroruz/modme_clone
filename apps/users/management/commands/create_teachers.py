@@ -23,8 +23,8 @@ class Command(BaseCommand):
         branch = Branch.objects.all()
         baker.make(
             'users.User',
-            first_name=cycle(faker.first_name()),
-            last_name=cycle(faker.last_name()),
+            first_name=faker.first_name(),
+            last_name=faker.last_name(),
             birth_date=faker.date_of_birth(),
             phone=faker.random_number(digits=9),
             gender=faker.random_element(User.GenderChoose),

@@ -20,9 +20,10 @@ class User(AbstractUser, BaseModel):
 
     email = None
     username = None
+    phone = CharField(max_length=15, unique=True)
     is_archive = BooleanField(default=False)
     archive = ForeignKey(Archive, SET_NULL, null=True, blank=True)
-    phone = IntegerField(unique=True)
+    phone = CharField(max_length=15, unique=True)
     birth_date = DateField(blank=True, null=True)
     gender = CharField(max_length=25, choices=GenderChoose.choices, blank=True, null=True)
     photo = ImageField(max_length=100, upload_to='profiles/', default='media/img.png', blank=True, null=True)

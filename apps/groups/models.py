@@ -1,7 +1,10 @@
+from itertools import cycle
+
 from django.contrib.auth.models import Group as Gr
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import IntegerField, CharField, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
     TimeField, DecimalField, DateField, BooleanField, CASCADE, ManyToManyField
+from model_bakery import baker
 
 from shared.models import BaseModel
 

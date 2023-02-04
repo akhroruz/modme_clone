@@ -1,9 +1,12 @@
+from itertools import cycle
+
 from django.core.management import BaseCommand
 from faker import Faker
 from model_bakery import baker
 
+from groups.models import Branch
 
-# from groups.models import Branch
+faker = Faker()
 
 
 class Command(BaseCommand):
@@ -14,10 +17,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         total = options.get('total')
-        faker = Faker()
+        branch = Branch.objects.all()
+
         baker.make(
             'groups.Room',
-            name=faker.building_number(), make_m2m=False,
-            # branch=faker.choise_element(Branch)
+            name=cycle(faker.building_number()),
+            branch=faker.random_element(branch),
+
+            make_m2m=False,
             _quantity=total
         )
