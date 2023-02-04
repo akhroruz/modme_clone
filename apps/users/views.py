@@ -3,8 +3,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions
 from rest_framework.viewsets import ModelViewSet
 
 from shared.permissions import IsAdministrator
@@ -44,8 +44,8 @@ class UserModelViewSet(ModelViewSet):
             balance = request.data.get('balance')
             deleted_at = request.data.get('deleted_at')
             datas = request.data.get('datas')
-            user = User.objects.create(gender=gender, birth_date=birth_date, phone=phone, photo=photo, balance=balance,
-                                       deleted_at=deleted_at, datas=datas, is_archive=True)
+            User.objects.create(gender=gender, birth_date=birth_date, phone=phone, photo=photo, balance=balance,
+                                deleted_at=deleted_at, datas=datas, is_archive=True)
 
 
 class LeadIncrementModelViewSet(ModelViewSet):
