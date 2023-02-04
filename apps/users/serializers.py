@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
 from groups.models import CourseGroup, Branch
-from users.models import User, Comment, LidIncrement, Lid
+from users.models import User, Comment, LidIncrement, Lid, Blog
 
 
 class LidModelSerializer(ModelSerializer):
@@ -133,3 +133,14 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         result.set_password(validated_data['new_password'])
         result.save()
         return Response({'successfully updated password'})
+
+
+class BlogModelSerializer(ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = ('title', 'text', 'public', 'visible_all', 'view_count')
+        extra_kwargs = {
+            'created_by': {'required': False},
+            'updated_by': {'required': False},
+            'view_count': {'required': False},
+        }

@@ -1,16 +1,14 @@
+from django.db.models import F
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_yasg import openapi
-from drf_yasg.openapi import Schema
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import IsAuthenticated, AllowAny, DjangoObjectPermissions
+from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions
 from rest_framework.viewsets import ModelViewSet
 
 from shared.permissions import IsAdministrator
-from users.models import User, LidIncrement, Lid
+from users.models import User, LidIncrement, Lid, Blog
 from users.serializers import UserListModelSerializer, ChangePasswordSerializer, \
-    UserCreateModelSerializer, LidIncrementModelSerializer, LidModelSerializer
+    UserCreateModelSerializer, LidIncrementModelSerializer, LidModelSerializer, BlogModelSerializer
 
 
 class UserModelViewSet(ModelViewSet):
@@ -54,3 +52,14 @@ class ChangePasswordView(UpdateAPIView):
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
+
+
+class BlogModelViewSet(ModelViewSet):
+    queryset = Blog.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = BlogModelSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs.update(view_count=F('view_count') + 1)
+        return qs
