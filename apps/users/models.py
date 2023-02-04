@@ -1,9 +1,16 @@
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, JSONField, \
-    TextField, DateTimeField, Model, ManyToManyField, ForeignKey, CASCADE
+    TextField, DateTimeField, Model, ManyToManyField, ForeignKey, CASCADE, BooleanField, SET_NULL
 
 from shared.models import BaseModel
 from users.managers import MyUserManager
+
+
+class Archive(BaseModel):
+    name = CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 
 class User(AbstractUser, BaseModel):
@@ -13,11 +20,13 @@ class User(AbstractUser, BaseModel):
 
     email = None
     username = None
+    is_archive = BooleanField(default=False)
+    archive = ForeignKey(Archive, SET_NULL, null=True, blank=True)
     phone = IntegerField(unique=True)
     birth_date = DateField(blank=True, null=True)
     gender = CharField(max_length=25, choices=GenderChoose.choices, blank=True, null=True)
     photo = ImageField(max_length=100, upload_to='profiles/', default='media/img.png', blank=True, null=True)
-    balance = IntegerField(default=0)
+    balance = IntegerField(default=0, blank=True)
     role = ManyToManyField('auth.Group', 'roles')
     branch = ManyToManyField('groups.Branch', 'branches')
     data = JSONField(null=True, blank=True)  # social account
@@ -35,6 +44,10 @@ class User(AbstractUser, BaseModel):
 
     def __str__(self):
         return f'{self.phone}'
+
+    # @property
+    # def branches(self):
+    #     return self.teachers.all()
 
     @property
     def full_name(self):

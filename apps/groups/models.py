@@ -6,9 +6,17 @@ from django.db.models import IntegerField, CharField, ImageField, TextField, For
 from shared.models import BaseModel
 
 
+class Company(BaseModel):
+    name = CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
 class Branch(BaseModel):
     name = CharField(max_length=255)
     address = CharField(max_length=255)
+    company = ForeignKey(Company, CASCADE)
     phone = CharField(max_length=10, unique=True)
     about = TextField(null=True, blank=True)
     image = ImageField(max_length=100, upload_to='images/', default='media/img.png')

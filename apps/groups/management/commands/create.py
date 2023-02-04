@@ -1,11 +1,8 @@
-import random
 from itertools import cycle
 
 from django.core.management import BaseCommand
 from faker import Faker
 from model_bakery import baker
-
-from groups.models import Branch
 
 fake = Faker()
 
@@ -33,10 +30,10 @@ class Command(BaseCommand):
         print(b, 'Branches is being addded')
         baker.make(
             'groups.Branch',
-            name=cycle(fake.sentences(nb=1)),
-            address=cycle(fake.sentences(nb=100)),
-            phone=cycle(fake.ean(length=8, prefixes=('94', '93'))),
-            about=cycle(fake.sentences(nb=310050)),
+            name=fake.company(),
+            address=fake.address(),
+            phone=fake.random_number(),
+            about=fake.text(max_nb_chars=250),
             image='media/img.png',
             _quantity=b,
             # make_m2m=True
