@@ -1,5 +1,6 @@
 from itertools import cycle
 
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
 from django.core.management import BaseCommand
 from faker import Faker
@@ -7,6 +8,11 @@ from model_bakery import baker
 
 from groups.models import Branch
 from users.models import User
+import environ
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 
 faker = Faker()
 
@@ -31,6 +37,7 @@ class Command(BaseCommand):
             role=role,
             branch=cycle(faker.random_element(branch) for _ in range(total)),
             comment=cycle(faker.text() for _ in range(total)),
+            password=make_password(env('USER_PR')),
             make_m2m=False,
             _quantity=total
         )
