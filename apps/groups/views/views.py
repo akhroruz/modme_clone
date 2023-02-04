@@ -1,14 +1,12 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import ListAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions
 from rest_framework.viewsets import ModelViewSet
 
-# from groups.filters import BranchFilter
-from groups.models import Branch, Room, Course
+from groups.models import Branch, Room, Course, Company
 from groups.serializers import BranchModelSerializer, \
-    RoomListModelSerializer, RoomCreateModelSerializer, HomeModelSerializer
-from shared.permissions import IsAdministrator, CustomDjangoObjectPermissions
+    RoomListModelSerializer, RoomCreateModelSerializer, HomeModelSerializer, CompanyModelSerializer
+from shared.permissions import IsAdministrator
 
 
 class BranchModelViewSet(ModelViewSet):
@@ -37,4 +35,9 @@ class RoomModelViewSet(ModelViewSet):
 class HomeListAPIView(ListAPIView):
     queryset = Course.objects.all()
     serializer_class = HomeModelSerializer
+
+
+class CompanyModelViewSet(ModelViewSet):
+    queryset = Company.objects.all()
+    serializer_class = CompanyModelSerializer
     permission_classes = IsAuthenticated, DjangoObjectPermissions, IsAdministrator
