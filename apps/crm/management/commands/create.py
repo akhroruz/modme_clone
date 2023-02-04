@@ -16,8 +16,16 @@ fake = Faker()
 class Command(BaseCommand):
     help = '''
         You can create dummy data. Like this:
-    * Company      -> 2
-    * Branch    -> 5
+    * Company           -> 2
+    * Branch            -> 15
+    * Course            -> 15
+    * Room              -> 15
+    * Holiday           -> 15
+    * Course group      -> 15
+    * User              -> 15
+    * Archive           -> 15
+    * Lead              -> 15
+    * Lead increment    -> 15
     '''
 
     def add_arguments(self, parser):
@@ -33,6 +41,7 @@ class Command(BaseCommand):
         parser.add_argument('-l', '--lead', type=int, help='Define a lead number prefix', )
 
     def handle(self, *args, **options):
+        company_code = ('90', '99', '98', '93', '94')
         # companies
         c = options.get('company', 15)
         baker.make(
@@ -44,7 +53,6 @@ class Command(BaseCommand):
 
         # branches
         b = options.get('branch', 15)
-        company_code = ('90', '99', '98', '93', '94')
         company = Company.objects.all()
         baker.make(
             'groups.Branch',
@@ -107,7 +115,6 @@ class Command(BaseCommand):
 
         # user
         u = options.get('user', 15)
-        company_code = ('90', '99', '98', '93', '94')
         baker.make(
             'users.User',
             first_name=cycle(fake.first_name() for _ in range(u)),

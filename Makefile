@@ -21,10 +21,10 @@ admin:
 load:
 	python3 manage.py loaddata role
 
-create:
-	python3 manage.py create -c 5 -b 8 -course 5 -r 10 -hd 10 -u 10 -a 10 -li 10 -l 10 -gr 10
+faker:
+	python3 manage.py create -c 2 -b 5 -course 5 -r 10 -hd 10 -u 10 -a 10 -li 10 -l 10 -gr 10
 
-setup:
+setup:s
 	pip install -r requirements.txt
 
 poetry:

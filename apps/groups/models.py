@@ -1,10 +1,7 @@
-from itertools import cycle
-
-from django.contrib.auth.models import Group as Gr
+from django.contrib.auth.models import Group as Gr, Group
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import IntegerField, CharField, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
     TimeField, DecimalField, DateField, BooleanField, CASCADE, ManyToManyField
-from model_bakery import baker
 
 from shared.models import BaseModel
 
@@ -14,6 +11,10 @@ class Company(BaseModel):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'Company'
+        verbose_name_plural = 'Companies'
 
 
 class Branch(BaseModel):
@@ -95,6 +96,9 @@ class CourseGroup(BaseModel):
     @property
     def students_count(self):
         return self.students.count()
+
+    class Meta:
+        unique_together = ('course_id', 'name')
 
 
 class Lesson(BaseModel):
