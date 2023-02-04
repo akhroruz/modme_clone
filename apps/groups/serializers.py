@@ -1,8 +1,14 @@
 from rest_framework.serializers import ModelSerializer
 
-from groups.models import Branch, Room, Course, Holiday, CourseGroup
+from groups.models import Branch, Room, Course, Holiday, CourseGroup, Company
 from users.models import User
 from users.serializers import UserBranchListModelSerializer
+
+
+class CompanyModelSerializer(ModelSerializer):
+    class Meta:
+        model = Company
+        fields = '__all__'
 
 
 class BranchModelSerializer(ModelSerializer):

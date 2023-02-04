@@ -1,6 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
+from django.http import JsonResponse
 from rest_framework import serializers
 from rest_framework.fields import ListField, IntegerField
 from rest_framework.relations import SlugRelatedField
@@ -8,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
 from groups.models import CourseGroup, Branch
-from users.models import User, Comment, LeadIncrement, Lead
+from users.models import User, Comment, LeadIncrement, Lead, Archive
 
 
 class LidModelSerializer(ModelSerializer):
@@ -53,12 +54,30 @@ class UserListModelSerializer(ModelSerializer):
         model = User
         fields = (
             'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'data', 'role',
+            'is_archive'
         )
 
     def to_representation(self, instance: User):
         rep = super().to_representation(instance)
         rep['groups'] = UserGroupListModelSerializer(instance.coursegroup_set.all(), many=True).data
         rep['comments'] = UserListCommentModelSerializer(instance.comment, many=True).data
+        return rep
+
+
+class ArchiveUserListModelSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+
+class ArchiveListModelSerializer(ModelSerializer):
+    class Meta:
+        model = Archive
+        fields = '__all__'
+
+    def to_representation(self, instance: Archive):
+        rep = super().to_representation(instance)
+        rep['users'] = User.objects.filter(is_archive=True)
         return rep
 
 
