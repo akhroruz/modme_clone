@@ -1,31 +1,32 @@
 - model: auth.Group
   fields:
-    name: teacher
+    id: 1
+    name: CEO
 - model: auth.Group
   fields:
-    name: student
+    id: 2
+    name: Administrator
 - model: auth.Group
   fields:
-    name: branch_director
+    id: 3
+    name: Cashier
 - model: auth.Group
   fields:
-    name: admin
+    id: 4
+    name: Marketer
 - model: auth.Group
   fields:
-    name: limited_admin
+    id: 5
+    name: Teacher
 - model: auth.Group
   fields:
-    name: marketer
+    id: 6
+    name: Student
 - model: auth.Group
   fields:
-    name: cashier
+    id: 7
+    name: Branch Director
 - model: auth.Group
   fields:
-    name: ceo
-- model: auth.Group
-  fields:
-    name: hr
-- model: auth.Group
-  fields:
-    name: project_owner
-
+    id: 8
+    name: Limited Administrator
