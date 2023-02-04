@@ -44,8 +44,8 @@ class UserModelViewSet(ModelViewSet):
             balance = request.data.get('balance')
             deleted_at = request.data.get('deleted_at')
             datas = request.data.get('datas')
-            user = User.objects.create(gender=gender, birth_date=birth_date, phone=phone, photo=photo, balance=balance,
-                                       deleted_at=deleted_at, datas=datas, is_archive=True)
+            User.objects.create(gender=gender, birth_date=birth_date, phone=phone, photo=photo, balance=balance,
+                                deleted_at=deleted_at, datas=datas, is_archive=True)
 
 
 class LeadIncrementModelViewSet(ModelViewSet):
