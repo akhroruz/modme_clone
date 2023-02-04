@@ -1,8 +1,9 @@
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, JSONField, \
     TextField, DateTimeField, Model, ManyToManyField, ForeignKey, CASCADE, BooleanField, SET_NULL
 
-from shared.models import BaseModel
+from shared.models import BaseModel, UUIDBaseModel
 from users.managers import MyUserManager
 
 
@@ -74,3 +75,19 @@ class LeadIncrement(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class Blog(UUIDBaseModel, BaseModel):
+    title = CharField(max_length=255)
+    text = RichTextUploadingField()
+    public = BooleanField(default=False)
+    created_by = ForeignKey('users.User', SET_NULL, 'created_by', null=True, blank=True)
+    updated_by = ForeignKey('users.User', SET_NULL, 'updated_by', null=True, blank=True)
+    visible_all = BooleanField(default=False, blank=True, null=True)
+    view_count = IntegerField(default=0, blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ('-created_at',)

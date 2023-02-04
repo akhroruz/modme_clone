@@ -5,6 +5,10 @@ mig:
 unmig:
 	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 
+remig:
+	make unmig
+	make mig
+
 local:
 	python3 manage.py makemessages -l en
 	python3 manage.py makemessages -l ru
@@ -18,7 +22,7 @@ load:
 	python3 manage.py loaddata role
 
 create:
-	python3 manage.py create -b 10
+	python3 manage.py create -c 5 -b 8 -course 5 -r 10 -hd 10 -u 10 -a 10 -li 10 -l 10
 
 setup:
 	pip install -r requirements.txt
