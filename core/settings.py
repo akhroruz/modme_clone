@@ -14,6 +14,7 @@ env = environ.Env(
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(BASE_DIR, 'apps'))
+
 environ.Env.read_env(os.path.join(BASE_DIR, 'core/.env'))
 
 SECRET_KEY = env('SECRET_KEY')
@@ -23,7 +24,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = (
-    'jazzmin',
+    'jazzmin',  # noqa
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -76,7 +77,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -88,7 +88,6 @@ DATABASES = {
     }
 }
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -155,15 +154,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions.AllowAny',
+        # "rest_framework.permissions.IsAuthenticated",
+        "rest_framework.permissions.DjangoModelPermissions",
     ),
-    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S'
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 2
 }
 
 LOGIN_URL = '/admin'
@@ -181,7 +183,7 @@ SWAGGER_SETTINGS = {
             'in': 'header',
             'description': 'Type in the *\'Value\'* input box below: **\'Bearer &lt;JWT&gt;\'**, where JWT is the JSON web token you get back when logging in.'
         }
-    }
+    },
 }
 
 SIMPLE_JWT = {
@@ -191,44 +193,36 @@ SIMPLE_JWT = {
 }
 
 JAZZMIN_SETTINGS = {
-    "site_title": "Library Admin",
-    "site_header": "Library",
-    "site_brand": "Library",
-    "site_logo": "books/img/logo.png",
+    "site_title": "Modme",
+    "site_header": "Modme",
+    "site_brand": "Modme",
+    "site_logo": "users/img.png",
     "login_logo": None,
     "login_logo_dark": None,
     "site_logo_classes": "img-circle",
     "site_icon": None,
-    "welcome_sign": "Welcome to the library",
-    "copyright": "Acme Library Ltd",
-    "search_model": ["auth.User", "auth.Group"],
+    "welcome_sign": "Welcome to the Modme admin",
+    "copyright": "Modme Ltd",
+    "search_model": ["users.User", "auth.Group"],
     "user_avatar": None,
     "topmenu_links": [
         {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
         {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
-        {"model": "auth.User"},
-        {"app": "books"},
+        {"model": "users.User"},
+        {"app": "users"}
     ],
     "usermenu_links": [
         {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
-        {"model": "auth.user"}
+        {"model": "users.user"}
     ],
     "show_sidebar": True,
     "navigation_expanded": True,
     "hide_apps": [],
     "hide_models": [],
-    "order_with_respect_to": ["auth", "books", "books.author", "books.book"],
-    "custom_links": {
-        "books": [{
-            "name": "Make Messages",
-            "url": "make_messages",
-            "icon": "fas fa-comments",
-            "permissions": ["books.view_book"]
-        }]
-    },
+    "order_with_respect_to": ["auth", "users", "books.author", "books.book"],
     "icons": {
         "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
+        "users.user": "fas fa-user",
         "auth.Group": "fas fa-users",
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
@@ -239,6 +233,6 @@ JAZZMIN_SETTINGS = {
     "use_google_fonts_cdn": True,
     "show_ui_builder": False,
     "changeform_format": "horizontal_tabs",
-    "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
+    "changeform_format_overrides": {"users.user": "collapsible", "auth.group": "vertical_tabs"},
     "language_chooser": True,
 }

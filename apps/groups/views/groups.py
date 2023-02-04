@@ -1,19 +1,19 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
-from rest_framework.generics import GenericAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import DjangoObjectPermissions, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from apps.groups.models import Group
-from apps.groups.serializers import GroupModelSerializer
-from groups.serializers import RetrieveGroupModelSerializer
+from groups.models import CourseGroup
+from groups.serializers import GroupListModelSerializer
 
 
 class GroupModelViewSet(ModelViewSet):
-    queryset = Group.objects.order_by('-created_at')
-    serializer_class = GroupModelSerializer
-    lookup_field = 'uuid'
+    queryset = CourseGroup.objects.order_by('-created_at')
+    serializer_class = GroupListModelSerializer
+    permission_classes = DjangoObjectPermissions, IsAuthenticated
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('branch', 'status', 'teachers__first_name', 'course', 'days', 'start_date', 'end_date')
 
     def list(self, request, *args, **kwargs):
         data = {
@@ -23,5 +23,5 @@ class GroupModelViewSet(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = RetrieveGroupModelSerializer(instance=instance)
+        serializer = GroupListModelSerializer(instance=instance)
         return Response(serializer.data)

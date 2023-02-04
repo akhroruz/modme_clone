@@ -1,43 +1,33 @@
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.generics import ListAPIView
 from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions
 from rest_framework.viewsets import ModelViewSet
 
-from apps.groups.models import Role, Branch, Room, Course, Holiday, Group
-from apps.groups.serializers import RoleModelSerializer, BranchModelSerializer, \
-    CourseModelSerializer, \
-    HolidayModelSerializer, GroupModelSerializer
-from apps.groups.serializers import RoomListModelSerializer, RoomCreateModelSerializer
-from apps.groups.models import Role, Branch, Room, Course
-from apps.groups.serializers import RoleModelSerializer, BranchModelSerializer, CourseModelSerializer
-from groups.serializers import RoomListModelSerializer, RoomCreateModelSerializer
-
-
-class RoleModelViewSet(ModelViewSet):
-    serializer_class = RoleModelSerializer
-    queryset = Role.objects.all()
+from groups.models import Branch, Room, Course
+from groups.serializers import BranchModelSerializer, \
+    RoomListModelSerializer, RoomCreateModelSerializer, HomeModelSerializer
+from shared.permissions import IsAdministrator
 
 
 class BranchModelViewSet(ModelViewSet):
     serializer_class = BranchModelSerializer
     queryset = Branch.objects.all()
     parser_classes = (MultiPartParser,)
-
-
-class CourseModelViewSet(ModelViewSet):
-    serializer_class = CourseModelSerializer
-    queryset = Course.objects.all()
-
-
-class WeekendModelViewSet(ModelViewSet):
-    serializer_class = HolidayModelSerializer
-    queryset = Holiday.objects.all()
+    permission_classes = IsAuthenticated, DjangoObjectPermissions, IsAdministrator
 
 
 class RoomModelViewSet(ModelViewSet):
     serializer_class = RoomCreateModelSerializer
     queryset = Room.objects.all()
+    permission_classes = IsAuthenticated, DjangoObjectPermissions, IsAdministrator
 
     def get_serializer_class(self):
         if self.action == 'list':
             return RoomListModelSerializer
         return super().get_serializer_class()
+
+
+class HomeListAPIView(ListAPIView):
+    queryset = Course.objects.all()
+    serializer_class = HomeModelSerializer
+    permission_classes = IsAuthenticated, DjangoObjectPermissions, IsAdministrator

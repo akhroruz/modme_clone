@@ -1,42 +1,45 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.generics import CreateAPIView
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.generics import UpdateAPIView
+from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions
 from rest_framework.viewsets import ModelViewSet
 
-from apps.users.models import User
-from apps.users.serializers import RegisterSerializer
-from apps.users.serializers import UserModelSerializer
-from users.pagination import StudentPagination
-from users.serializers import StudentModelSerializer
+from shared.permissions import IsAdministrator
+from users.models import User, LeadIncrement, Lead
+from users.serializers import UserListModelSerializer, UserCreateModelSerializer, LidIncrementModelSerializer, \
+    LidModelSerializer, ChangePasswordSerializer
 
 
 class UserModelViewSet(ModelViewSet):
-    serializer_class = UserModelSerializer
+    serializer_class = UserListModelSerializer
     queryset = User.objects.all()
+    permission_classes = DjangoObjectPermissions,
     parser_classes = (MultiPartParser,)
-
-
-class RegisterView(CreateAPIView):
-    queryset = User.objects.all()
-    permission_classes = (AllowAny,)
-    serializer_class = RegisterSerializer
-    lookup_url_kwarg = 'uuid'
-
-
-class StudentModelViewSet(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = StudentModelSerializer
-    permission_classes = [AllowAny]
-    lookup_url_kwarg = 'uuid'
-    parser_classes = (MultiPartParser, FormParser,)
-    pagination_class = StudentPagination
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['full_name', 'phone']
+    filterset_fields = ['first_name', 'last_name', 'id', 'phone', 'role__name']
+    ordering = ['first_name', 'last_name']
 
-    def get_permissions(self):
-        if self.action in ['POST', 'PUT', 'PATCH', 'DELETE']:
-            self.permission_classes = [IsAuthenticated]
-        else:
-            self.permission_classes = [AllowAny]
-        return super().get_permissions()
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return UserCreateModelSerializer
+        return super().get_serializer_class()
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+
+class LeadIncrementModelViewSet(ModelViewSet):
+    serializer_class = LidIncrementModelSerializer
+    queryset = LeadIncrement.objects.all()
+
+
+class LeadModelViewSet(ModelViewSet):
+    serializer_class = LidModelSerializer
+    queryset = Lead.objects.all()
+    permission_classes = (DjangoObjectPermissions, IsAdministrator)
+
+
+class ChangePasswordView(UpdateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChangePasswordSerializer

@@ -5,6 +5,7 @@ from apps.groups.models import Branch
 from apps.groups.models import Holiday
 from core.settings import MEDIA_ROOT
 from groups.serializers import HolidayListModelSerializer
+from users.models import User
 
 
 @pytest.mark.django_db
@@ -39,6 +40,15 @@ class TestModelSerializer:
         assert serializer.data['affect_payment'] == holidays.affect_payment
         assert serializer.data['name'] == holidays.name
         assert len(serializer.data) == 5
+    #
+    # @pytest.fixture
+    # def register(self):
+    #     create_user = User.objects.create(
+    #         first_name='Javlon',
+    #         last_name='Baxtiyorov',
+    #         phone=933934050,
+    #
+    #     )
 
 # @pytest.mark.django_db
 # class TestUserModel:
@@ -61,7 +71,7 @@ class TestModelSerializer:
 #         user = User.objects.create(
 #             full_name='User 1',
 #             phone='934923327',
-#             birth='2002-11-27',
+#             birth_date='2002-11-27',
 #             gender='Female',
 #             branch=branches,
 #             password=make_password('1234')
@@ -75,7 +85,7 @@ class TestModelSerializer:
 #         user = User.objects.create(
 #             full_name='User 1',
 #             phone='934923327',
-#             birth='2002-11-27',
+#             birth_date='2002-11-27',
 #             gender=User.GenderChoose.FEMALE,
 #             photo=image,
 #             password=make_password('1234')
@@ -91,6 +101,6 @@ class TestModelSerializer:
 #         assert serializer.data['full_name'] == users.full_name
 #         assert serializer.data['phone'] == int(users.phone)
 #         assert serializer.data['gender'] == users.gender
-#         assert serializer.data['birth'] == users.birth
+#         assert serializer.data['birth_date'] == users.birth_date
 #         assert serializer.data['branch'] == branches.pk
 #         assert len(serializer.data) == 21

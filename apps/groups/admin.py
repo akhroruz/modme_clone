@@ -1,16 +1,11 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
-from django.contrib.auth import models
 
-from apps.groups.models import Role, Branch, Group, Course
-from apps.users.models import User
-from apps.groups.models import Room
-
-admin.site.unregister(models.Group)
+from groups.models import Room, Branch, CourseGroup, Course
 
 
-@admin.register(Group)
-class GroupAdmin(ModelAdmin):
+@admin.register(CourseGroup)
+class CourseGroupAdmin(ModelAdmin):
     pass
 
 
@@ -21,16 +16,6 @@ class RoomAdmin(ModelAdmin):
 
 @admin.register(Course)
 class CourseAdmin(ModelAdmin):
-    pass
-
-
-@admin.register(User)
-class UserAdmin(ModelAdmin):
-    pass
-
-
-@admin.register(Role)
-class RoleAdmin(ModelAdmin):
     pass
 
 

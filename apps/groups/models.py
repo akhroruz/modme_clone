@@ -1,25 +1,17 @@
+from django.contrib.auth.models import Group as Gr
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import IntegerField, CharField, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
     TimeField, DecimalField, DateField, BooleanField, CASCADE, ManyToManyField
 
-from apps.shared.models import BaseModel
-
-
-class Role(BaseModel):
-    name = CharField(max_length=255)
-    user = ManyToManyField('users.User', related_name='user_role')
-
-    def __str__(self):
-        return self.name
+from shared.models import BaseModel
 
 
 class Branch(BaseModel):
     name = CharField(max_length=255)
     address = CharField(max_length=255)
-    phone = IntegerField(unique=True)
-    about = TextField()
-    image = ImageField(max_length=100, upload_to='images/')
-    ceo = ManyToManyField('users.User', related_name='branch_ceo')
+    phone = CharField(max_length=10, unique=True)
+    about = TextField(null=True, blank=True)
+    image = ImageField(max_length=100, upload_to='images/', default='media/img.png')
 
     def __str__(self):
         return self.name
@@ -27,7 +19,7 @@ class Branch(BaseModel):
 
 class Room(BaseModel):
     name = CharField(max_length=255)
-    branch = ForeignKey(to='groups.Branch', on_delete=CASCADE)
+    branch = ForeignKey('groups.Branch', CASCADE)
 
     def __str__(self):
         return self.name
@@ -36,7 +28,11 @@ class Room(BaseModel):
 class Course(BaseModel):
     name = CharField(max_length=255)
     price = DecimalField(max_digits=10, decimal_places=2)
-    branch = ForeignKey('groups.Branch', SET_NULL, null=True)
+    description = TextField(null=True, blank=True)
+    image = ImageField(upload_to='courses/', null=True, blank=True)
+    lesson_duration = IntegerField()
+    course_duration = IntegerField()
+    branch = ManyToManyField('groups.Branch')
 
     def __str__(self):
         return self.name
@@ -52,7 +48,7 @@ class Holiday(BaseModel):  # dam olish kunlari
         return self.name
 
 
-class Group(BaseModel):
+class CourseGroup(BaseModel):
     class DaysChoice(TextChoices):
         ODD_DAYS = 'odd_days', 'Odd days'
         EVEN_DAYS = 'even days', 'Even Days'
@@ -64,14 +60,15 @@ class Group(BaseModel):
         ACTIVE = 'is_active', 'Is Active'  # faol gurux lar
 
     name = CharField(max_length=255)
-    days = CharField(max_length=50, choices=DaysChoice.choices)  # dars bo'lis kunlari
+    days = CharField(max_length=50, choices=DaysChoice.choices)  # dars bo'lish kunlari
     status = CharField(max_length=25, choices=StatusChoice.choices, default=StatusChoice.ACTIVE)
-    room = ForeignKey('groups.Room', SET_NULL, null=True, related_name='group_room')
-    teacher = ForeignKey('users.User', SET_NULL, null=True, related_name='teacher')
+    room = ManyToManyField('groups.Room', 'group_room')
+    students = ManyToManyField('users.User')
+    teachers = ManyToManyField('users.User', 'teachers')
     start_time = TimeField(null=True, blank=True)  # dars boshlanish vaqti
     end_time = TimeField(null=True, blank=True)
     course = ForeignKey('groups.Course', SET_NULL, null=True, related_name='group_course')
-    branch = ForeignKey('groups.Branch', CASCADE, related_name='group_branch')
+    branch = ManyToManyField('groups.Branch')
     start_date = DateField(null=True, blank=True)
     end_date = DateField(null=True, blank=True)
     tags = ArrayField(CharField(max_length=255))
@@ -82,8 +79,14 @@ class Group(BaseModel):
 
     @property
     def get_students(self):
-        return self.user_set.all()
+        return self.students.all()
 
     @property
     def students_count(self):
-        return self.user_set.count()
+        return self.students.count()
+
+
+class Lesson(BaseModel):
+    title = CharField(max_length=255)
+    course = ForeignKey('groups.Course', SET_NULL, null=True)
+    group = ForeignKey('groups.CourseGroup', SET_NULL, null=True)

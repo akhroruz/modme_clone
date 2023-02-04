@@ -224,3 +224,7 @@ core/.env
 **/media/**
 !**/media/
 !**/media/profile.jpg
+
+**/migrations/**
+!**/migrations/
+!**/migrations/__init__.py
