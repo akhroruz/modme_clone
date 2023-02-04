@@ -23,22 +23,14 @@ class Command(BaseCommand):
         branch = Branch.objects.all()
         baker.make(
             'users.User',
-            first_name=faker.first_name(),
-            last_name=faker.last_name(),
-            birth_date=faker.date_of_birth(),
-            phone=faker.random_number(digits=9),
-            gender=faker.random_element(User.GenderChoose),
+            first_name=cycle(faker.first_name() for _ in range(total)),
+            last_name=cycle(faker.last_name() for _ in range(total)),
+            birth_date=cycle(faker.date_of_birth(maximum_age=70, minimum_age=7) for _ in range(total)),
+            phone=cycle(faker.random_number(digits=9) for _ in range(total)),
+            gender=cycle(faker.random_element(User.GenderChoose) for _ in range(total)),
             role=role,
-            branch=cycle(faker.random_choices(branch)),
+            branch=cycle(faker.random_element(branch) for _ in range(total)),
+            comment=cycle(faker.text() for _ in range(total)),
             make_m2m=False,
             _quantity=total
         )
-
-        # User.objects.get_or_create(
-        #     role=faker.random_choices(Role.objects.all()),
-        #     branch=faker,
-        #     balance=faker,
-        #     created_at=faker.date_time_between_dates(),
-        #     # status=User.StatusChoise.ACTIVE,
-        #
-        # )

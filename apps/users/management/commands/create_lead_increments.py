@@ -4,25 +4,23 @@ from django.core.management import BaseCommand
 from faker import Faker
 from model_bakery import baker
 
-from groups.models import Branch
+from users.models import User
 
 faker = Faker()
 
 
 class Command(BaseCommand):
-    help = 'Create some branchs'
+    help = 'Create some lead increments'
 
     def add_arguments(self, parser):
         parser.add_argument('total', type=int, help='total count of creating posts')
 
     def handle(self, *args, **options):
-        total = options.get('total')
-        branch = Branch.objects.all()
+        c = options.get('total')
 
         baker.make(
-            'groups.Branch',
-            name=cycle(faker.building_number() for _ in total),
-            branch=cycle(faker.random_element(branch) for _ in total),
+            'users.LeadIncrement',
+            name=cycle(faker.sentence() for _ in range(c)),
 
-            _quantity=total
+            _quantity=c
         )
