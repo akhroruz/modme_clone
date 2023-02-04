@@ -1,15 +1,17 @@
+from django.db.models import F
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions, AllowAny
 from rest_framework.viewsets import ModelViewSet
 
 from shared.permissions import IsAdministrator
-from users.models import User, LeadIncrement, Lead, Archive
+from users.models import User, LeadIncrement, Lead, Archive, Blog
 from users.serializers import ArchiveListModelSerializer, UserListModelSerializer, UserCreateModelSerializer, \
-    LidIncrementModelSerializer, LidModelSerializer, ChangePasswordSerializer, UpdateProfileSerializer
+    LidIncrementModelSerializer, LidModelSerializer, ChangePasswordSerializer, UpdateProfileSerializer, \
+    BlogModelSerializer
 
 
 class UserModelViewSet(ModelViewSet):
@@ -72,3 +74,14 @@ class UpdateProfileView(UpdateAPIView):
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = UpdateProfileSerializer
+
+
+class BlogModelViewSet(ModelViewSet):
+    queryset = Blog.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = BlogModelSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs.update(view_count=F('view_count') + 1)
+        return qs

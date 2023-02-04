@@ -1,7 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
-from django.http import JsonResponse
 from rest_framework import serializers
 from rest_framework.fields import ListField, IntegerField
 from rest_framework.relations import SlugRelatedField
@@ -9,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
 from groups.models import CourseGroup, Branch
-from users.models import User, Comment, LeadIncrement, Lead, Archive
+from users.models import User, Comment, LeadIncrement, Lead, Archive, Blog
 
 
 class LidModelSerializer(ModelSerializer):
@@ -157,18 +156,6 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         return Response({'successfully updated password'})
 
 
-'''
-name
-phone
-role
-birthday date
-gender
-photo
-password
-
-'''
-
-
 class UpdateProfileSerializer(ModelSerializer):
     phone = IntegerField(required=True)
 
@@ -200,3 +187,14 @@ class UpdateProfileSerializer(ModelSerializer):
         instance.save()
 
         return instance
+
+
+class BlogModelSerializer(ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = ('title', 'text', 'public', 'visible_all', 'view_count')
+        extra_kwargs = {
+            'created_by': {'required': False},
+            'updated_by': {'required': False},
+            'view_count': {'required': False},
+        }

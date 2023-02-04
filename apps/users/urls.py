@@ -1,8 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 from users.views import ArchiveReasonsModelViewSet, UserModelViewSet, LeadIncrementModelViewSet, LeadModelViewSet, \
-    UpdateProfileView
+    UpdateProfileView, BlogModelViewSet
 
 router = DefaultRouter()
 router.register('user', UserModelViewSet, basename='user')
@@ -12,6 +13,8 @@ router.register('archiveReasons', ArchiveReasonsModelViewSet, basename='archive_
 router.register('auth/user', UserModelViewSet, basename='user')
 router.register('lead', LeadModelViewSet, basename='lead')
 router.register('lead-increment', LeadIncrementModelViewSet, basename='lead_increment')
+router.register('news-blog', BlogModelViewSet, basename='news-blog')
+
 
 urlpatterns = [
     path('', include(router.urls)),
