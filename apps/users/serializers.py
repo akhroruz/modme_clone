@@ -8,13 +8,13 @@ from groups.models import CourseGroup, Branch
 from users.models import User, Comment, LeadIncrement, Lead, Archive, Blog
 
 
-class LidModelSerializer(ModelSerializer):
+class LeadModelSerializer(ModelSerializer):
     class Meta:
         model = Lead
         fields = ('phone', 'full_name', 'comment', 'lid_increment')
 
 
-class LidIncrementModelSerializer(ModelSerializer):
+class LeadIncrementModelSerializer(ModelSerializer):
     class Meta:
         model = LeadIncrement
         fields = ('name',)

@@ -7,13 +7,10 @@ from users.views import ArchiveReasonsModelViewSet, UserModelViewSet, LeadIncrem
 
 router = DefaultRouter()
 router.register('user', UserModelViewSet, basename='user')
-router.register('lid', LeadModelViewSet, basename='lid')
-router.register('lid-increment', LeadIncrementModelViewSet, basename='lid_increment')
 router.register('archive-reasons', ArchiveReasonsModelViewSet, basename='archive_reasons')
 router.register('lead', LeadModelViewSet, basename='lead')
 router.register('lead-increment', LeadIncrementModelViewSet, basename='lead_increment')
 router.register('news-blog', BlogModelViewSet, basename='news_blog')
-
 
 urlpatterns = [
     path('', include(router.urls)),
