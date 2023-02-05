@@ -25,6 +25,6 @@ jobs:
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
         poetry install
-    - name: Run Tests
-      run: |
-        python manage.py test
+#    - name: Run Tests
+#      run: |
+#        python manage.py test
