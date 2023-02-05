@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 from shared.permissions import IsAdministrator
 from users.models import User, LeadIncrement, Lead, Archive, Blog
 from users.serializers import ArchiveListModelSerializer, UserListModelSerializer, UserCreateModelSerializer, \
-    LidIncrementModelSerializer, LidModelSerializer, UpdateProfileSerializer, \
+    LeadIncrementModelSerializer, LeadModelSerializer, UpdateProfileSerializer, \
     BlogModelSerializer, ArchiveCreateModelSerializer
 
 
@@ -50,12 +50,12 @@ class UserModelViewSet(ModelViewSet):
 
 
 class LeadIncrementModelViewSet(ModelViewSet):
-    serializer_class = LidIncrementModelSerializer
+    serializer_class = LeadIncrementModelSerializer
     queryset = LeadIncrement.objects.all()
 
 
 class LeadModelViewSet(ModelViewSet):
-    serializer_class = LidModelSerializer
+    serializer_class = LeadModelSerializer
     queryset = Lead.objects.all()
     permission_classes = (DjangoObjectPermissions, IsAdministrator)
 
