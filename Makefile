@@ -5,10 +5,6 @@ mig:
 unmig:
 	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 
-remig:
-	make unmig
-	make mig
-
 local:
 	python3 manage.py makemessages -l en
 	python3 manage.py makemessages -l ru
@@ -29,3 +25,9 @@ poetry:
 
 admin:
 	python3 manage.py createsuperuser --noinput
+
+remig:
+	make unmig
+	make mig
+	make admin
+	make faker
