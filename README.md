@@ -1,4 +1,4 @@
-# Modme-clone
+# Modme Clone API
 
 ## TODO - Required
 
@@ -17,10 +17,10 @@
 6. [ ] docker/docker compose
 7. [ ] elasticsearch
 8. [ ] security
-9. [ ] github actions
+9. [ ] GitHub actions
 10. [ ] server
 
-## Don't Required
+## Don't Require
 
 1. [ ] cache
 2. [ ] celery
@@ -32,8 +32,9 @@
 
 - ```make mig``` make migrations and migrate
 - ```make unmig``` delete migrations files
-- ```make remig``` delete migrations files and make migrations and migrate
+- ```make remig``` delete migrations files, make migrations, migrate, create default superuser and create fake datas in database
 - ```make admin``` create admin superuser
 - ```make load``` collect all datas
 - ```make local``` i18n compile messages
+- ```make faker``` create random fake datas in database
 - ```make poetry``` install poetry
