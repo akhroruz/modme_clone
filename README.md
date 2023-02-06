@@ -37,5 +37,4 @@
 - ```make load``` collect all datas
 - ```make local``` i18n compile messages
 - ```make faker``` create random fake datas in database
-- ```make poetry``` install poetry
 - ```make search_index``` to create and populate the Elasticsearch index and mapping
