@@ -15,7 +15,7 @@
    - cashier - (crud) students, reports
 5. [ ] test (pytest coverage 80% ^)
 6. [ ] docker/docker compose
-7. [ ] elasticsearch
+7. [x] elasticsearch
 8. [ ] security
 9. [ ] GitHub actions
 10. [ ] server
