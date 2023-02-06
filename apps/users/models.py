@@ -46,10 +46,6 @@ class User(AbstractUser, BaseModel):
     def __str__(self):
         return f'{self.phone}'
 
-    # @property
-    # def branches(self):
-    #     return self.teachers.all()
-
     @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'

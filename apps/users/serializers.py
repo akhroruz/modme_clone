@@ -1,23 +1,20 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
-from django.contrib.auth.password_validation import validate_password
-from rest_framework import serializers
 from rest_framework.fields import ListField, IntegerField
 from rest_framework.relations import SlugRelatedField
-from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
 from groups.models import CourseGroup, Branch
 from users.models import User, Comment, LeadIncrement, Lead, Archive, Blog
 
 
-class LidModelSerializer(ModelSerializer):
+class LeadModelSerializer(ModelSerializer):
     class Meta:
         model = Lead
         fields = ('phone', 'full_name', 'comment', 'lid_increment')
 
 
-class LidIncrementModelSerializer(ModelSerializer):
+class LeadIncrementModelSerializer(ModelSerializer):
     class Meta:
         model = LeadIncrement
         fields = ('name',)
@@ -53,20 +50,19 @@ class UserListModelSerializer(ModelSerializer):
         model = User
         fields = (
             'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'data', 'role',
-            'is_archive'
+            'is_archive', 'comment'
         )
 
     def to_representation(self, instance: User):
         rep = super().to_representation(instance)
         rep['groups'] = UserGroupListModelSerializer(instance.coursegroup_set.all(), many=True).data
-        rep['comments'] = UserListCommentModelSerializer(instance.comment, many=True).data
         return rep
 
 
 class ArchiveUserListModelSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ('id', 'full_name')
 
 
 class ArchiveListModelSerializer(ModelSerializer):
@@ -76,8 +72,14 @@ class ArchiveListModelSerializer(ModelSerializer):
 
     def to_representation(self, instance: Archive):
         rep = super().to_representation(instance)
-        rep['users'] = User.objects.filter(is_archive=True)
+        rep['users'] = ArchiveUserListModelSerializer(User.objects.filter(is_archive=True), many=True).data
         return rep
+
+
+class ArchiveCreateModelSerializer(ModelSerializer):
+    class Meta:
+        model = Archive
+        fields = ('id', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'datas')
 
 
 class UserCreateRoleModelSerializer(ModelSerializer):
@@ -127,33 +129,6 @@ class UserCreateModelSerializer(ModelSerializer):
 #         user.set_password(validated_data['password'])
 #         user.save()
 #         return user
-
-
-class ChangePasswordSerializer(serializers.ModelSerializer):
-    old_password = CharField(write_only=True, required=True)
-    new_password = CharField(write_only=True, required=True, validators=[validate_password])
-    new_confirm_password = CharField(write_only=True, required=True)
-
-    class Meta:
-        model = User
-        fields = ('old_password', 'new_password', 'new_confirm_password')
-
-    def validate(self, obj):
-        if obj['new_password'] != obj['new_confirm_password']:
-            raise ValidationError({'new_password': "Password fields didn't match"})
-        return obj
-
-    def validate_old_password(self, value):
-        user = self.context['request'].user
-        if not user.check_password(value):
-            raise ValidationError({'old_password': "Old password is not correct"})
-
-        return value
-
-    def update(self, result, validated_data):
-        result.set_password(validated_data['new_password'])
-        result.save()
-        return Response({'successfully updated password'})
 
 
 class UpdateProfileSerializer(ModelSerializer):
