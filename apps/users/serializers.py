@@ -1,17 +1,19 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
+from django_elasticsearch_dsl_drf.serializers import DocumentSerializer
 from rest_framework.fields import ListField, IntegerField
 from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
 from groups.models import CourseGroup, Branch
+from users.documents import UserDocument
 from users.models import User, Comment, LeadIncrement, Lead, Archive, Blog
 
 
 class LeadModelSerializer(ModelSerializer):
     class Meta:
         model = Lead
-        fields = ('phone', 'full_name', 'comment', 'lid_increment')
+        fields = ('phone', 'full_name', 'comment', 'lead_increment')
 
 
 class LeadIncrementModelSerializer(ModelSerializer):
@@ -102,35 +104,6 @@ class UserCreateModelSerializer(ModelSerializer):
         return super().create(validated_data)
 
 
-# class RegisterSerializer(ModelSerializer):
-#     phone = IntegerField(required=True)
-#     password = CharField(write_only=True, required=True, validators=[validate_password])
-#     confirm_password = CharField(write_only=True, required=True)
-#
-#     class Meta:
-#         model = User
-#         fields = ('first_name', 'last_name', 'phone', 'password', 'confirm_password')
-#         extra_kwargs = {
-#             'first_name': {'required': True},
-#             'last_name': {'required': True}
-#         }
-#
-#     def validate(self, attrs):
-#         if attrs['password'] != attrs['confirm_password']:
-#             raise ValidationError({"password": "Password fields didn't match."})
-#         return attrs
-#
-#     def create(self, validated_data):
-#         user = User.objects.create(
-#             first_name=validated_data['first_name'],
-#             last_name=validated_data['last_name'],
-#             phone=validated_data['phone']
-#         )
-#         user.set_password(validated_data['password'])
-#         user.save()
-#         return user
-
-
 class UpdateProfileSerializer(ModelSerializer):
     phone = IntegerField(required=True)
 
@@ -173,3 +146,9 @@ class BlogModelSerializer(ModelSerializer):
             'updated_by': {'required': False},
             'view_count': {'required': False},
         }
+
+
+class UserListDocumentSerializer(DocumentSerializer):
+    class Meta:
+        document = UserDocument
+        fields = ('first_name', 'last_name', 'phone')

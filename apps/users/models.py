@@ -60,7 +60,7 @@ class Lead(BaseModel):
     full_name = CharField(max_length=255)
     comment = TextField()
     phone = IntegerField()
-    lid_increment = ForeignKey('users.LeadIncrement', CASCADE)
+    lead_increment = ForeignKey('users.LeadIncrement', CASCADE)
 
     def __str__(self):
         return f'{self.full_name} | {self.phone}'

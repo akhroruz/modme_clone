@@ -98,7 +98,7 @@ class CourseGroup(BaseModel):
         return self.students.count()
 
     class Meta:
-        unique_together = ('course_id', 'name')
+        unique_together = ('course', 'name')
 
 
 class Lesson(BaseModel):

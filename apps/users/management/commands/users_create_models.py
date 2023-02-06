@@ -112,7 +112,7 @@ class Command(BaseCommand):
 
             _quantity=5
         )
-        lid_increment = LeadIncrement.objects.all()
+        lead_increment = LeadIncrement.objects.all()
 
         # creating leads
         baker.make(
@@ -120,7 +120,7 @@ class Command(BaseCommand):
             full_name=cycle(str(faker.first_name() + ' ' + faker.last_name()) for _ in range(10)),
             comment=cycle(faker.text() for _ in range(10)),
             phone=cycle(faker.random_number(digits=8) for _ in range(10)),
-            lid_increment=cycle(faker.random_element(lid_increment) for _ in range(10)),
+            lead_increment=cycle(faker.random_element(lead_increment) for _ in range(10)),
 
             make_m2m=False,
             _quantity=10
