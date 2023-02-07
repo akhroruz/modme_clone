@@ -15,7 +15,7 @@
    - cashier - (crud) students, reports
 5. [ ] test (pytest coverage 80% ^)
 6. [ ] docker/docker compose
-7. [ ] elasticsearch
+7. [x] elasticsearch
 8. [ ] security
 9. [ ] GitHub actions
 10. [ ] server
@@ -37,4 +37,4 @@
 - ```make load``` collect all datas
 - ```make local``` i18n compile messages
 - ```make faker``` create random fake datas in database
-- ```make poetry``` install poetry
+- ```make search_index``` to create and populate the Elasticsearch index and mapping

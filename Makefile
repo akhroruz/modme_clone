@@ -17,12 +17,6 @@ load:
 faker:
 	python3 manage.py create -c 2 -b 5 -course 5 -r 10 -hd 10 -u 10 -a 10 -li 10 -l 10 -gr 10
 
-setup:
-	pip install -r requirements.txt
-
-poetry:
-	curl -sSL https://install.python-poetry.org | python3 -
-
 admin:
 	python3 manage.py createsuperuser --noinput
 
@@ -31,3 +25,6 @@ remig:
 	make mig
 	make admin
 	make faker
+
+search_index:
+	python3 manage.py search_index --rebuild

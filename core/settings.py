@@ -43,6 +43,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
     'parler',
     'ckeditor',
 )
@@ -142,6 +144,12 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}
 
 # sentry_sdk.init(
 #     dsn=env('DNS'),

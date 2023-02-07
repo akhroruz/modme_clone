@@ -114,27 +114,26 @@ class Command(BaseCommand):
         print(a, 'archives is being addded')
 
         # user
-        # u = options.get('user', 15)
-        # baker.make(
-        #     'users.User',
-        #     phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(u)),
-        #     is_archive=cycle(random.choice((True, False, False)) for _ in range(u)),
-        #     archive=cycle(Archive.objects.all()),
-        #     birth_date=cycle(fake.date() for _ in range(u)),
-        #     gender=cycle(fake.random_element(User.GenderChoose) for _ in range(100)),
-        #     photo='media/img.png',
-        #     balance=cycle(fake.random_number() for _ in range(u)),
-        #     role=cycle(Group.objects.all()),
-        #     branch=cycle(Branch.objects.all()),
-        #     first_name=cycle(fake.first_name() for _ in range(u)),
-        #     last_name=cycle(fake.last_name() for _ in range(u)),
-        #     comment=cycle(fake.text() for _ in range(u)),
-        #     password=make_password('1'),
-        #     make_m2m=True,
-        #     _quantity=u
-        # )
-        #
-        # print(c, 'users is being addded')
+        u = options.get('user', 15)
+        baker.make(
+            'users.User',
+            first_name=cycle(fake.first_name() for _ in range(u)),
+            last_name=cycle(fake.last_name() for _ in range(u)),
+            birth_date=cycle(fake.date() for _ in range(u)),
+            phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(u)),
+            gender=cycle(fake.random_element(User.GenderChoose) for _ in range(100)),
+            role=cycle(Group.objects.all()),
+            branch=cycle(Branch.objects.all()),
+            archive=cycle(Archive.objects.all()),
+            comment=cycle(fake.text() for _ in range(u)),
+            password=make_password('1'),
+            photo='media/img.png',
+            is_archive=False,
+            make_m2m=True,
+            _quantity=u
+        )
+
+        print(u, 'users is being addded')
 
         # lead increment
         li = options.get('lead_increment', 15)
@@ -144,7 +143,7 @@ class Command(BaseCommand):
             _quantity=li
         )
 
-        print(li, 'lead increments is being addded')
+        print(li, 'leads increments is being addded')
 
         # lead
         l = options.get('lead', 15)
@@ -153,10 +152,10 @@ class Command(BaseCommand):
             full_name=cycle(fake.first_name() for _ in range(l)),
             comment=cycle(fake.text() for _ in range(l)),
             phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(l)),
-            lid_increment=cycle(LeadIncrement.objects.all()),
+            lead_increment=cycle(LeadIncrement.objects.all()),
             _quantity=l
         )
-        print(l, 'lead is being addded')
+        print(l, 'leads is being addded')
 
         # course group
         gr = options.get('coursegroup', 15)
