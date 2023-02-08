@@ -17,7 +17,7 @@
 6. [ ] docker/docker compose
 7. [x] elasticsearch
 8. [ ] security
-9. [ ] GitHub actions
+9. [x] GitHub actions
 10. [ ] server
 
 ## Don't Require
