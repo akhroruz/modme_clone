@@ -6,6 +6,7 @@ from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
 from groups.models import CourseGroup, Branch
+from users.documents import UserDocument
 # from users.documents import UserDocument
 from users.models import User, Comment, LeadIncrement, Lead, Archive, Blog
 
@@ -148,7 +149,7 @@ class BlogModelSerializer(ModelSerializer):
         }
 
 #
-# class UserListDocumentSerializer(DocumentSerializer):
-#     class Meta:
-#         document = UserDocument
-#         fields = ('first_name', 'last_name', 'phone')
+class UserListDocumentSerializer(DocumentSerializer):
+    class Meta:
+        document = UserDocument
+        fields = ('first_name', 'last_name', 'phone')

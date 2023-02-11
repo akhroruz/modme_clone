@@ -19,7 +19,7 @@ from users.filters import UserFilter, CustomDjangoFilterBackend
 from users.models import User, LeadIncrement, Lead, Archive, Blog
 from users.serializers import ArchiveListModelSerializer, UserListModelSerializer, UserCreateModelSerializer, \
     LeadIncrementModelSerializer, LeadModelSerializer, UpdateProfileSerializer, \
-    BlogModelSerializer, ArchiveCreateModelSerializer
+    BlogModelSerializer, ArchiveCreateModelSerializer, UserListDocumentSerializer
 
 
 class UserModelViewSet(ModelViewSet):
