@@ -3,7 +3,7 @@ from rest_framework import filters
 
 class MultipleFilterBackend(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
-        filter_field = request.query_params.getlist('role_name')
+        filter_field = request.query_params.getlist('role')
         if filter_field:
             return queryset.filter(role__name__in=filter_field)
         return queryset
