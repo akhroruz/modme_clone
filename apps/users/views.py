@@ -34,9 +34,6 @@ class UserModelViewSet(ModelViewSet):
             return UserCreateModelSerializer
         return super().get_serializer_class()
 
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-
     @action(methods=['GET', 'POST'], detail=False, url_path='trashed', url_name='trashed')
     def get_trashed(self, request):
         if self.request.method == 'GET':
