@@ -1,12 +1,21 @@
-from django_filters import ModelMultipleChoiceFilter
-from django_filters.rest_framework import FilterSet
-
-from users.models import User
+from rest_framework import filters
 
 
-class UserFilter(FilterSet):
-    groups = ModelMultipleChoiceFilter(field_name='full_name', conjoined=True, queryset=User.objects.all())
+class MultipleFilterBackend(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        filter_field = request.query_params.getlist('role_name')
+        if filter_field:
+            return queryset.filter(role__name__in=filter_field)
+        return queryset
 
-    class Meta:
-        model = User
-        fields = ['groups']
+# class MyFilterSet(django_filters.FilterSet):
+#     name = django_filters.CharFilter(lookup_expr='icontains')
+#     date = django_filters.DateFilter()
+#
+#
+# class MultipleChoiceFilter(BaseFilterBackend):
+#     def filter_queryset(self, request, queryset, view):
+#         multiple_choices = request.query_params.getlist('role_name')
+#         if multiple_choices:
+#             queryset = queryset.filter(role__name__in=multiple_choices)
+#         return queryset
