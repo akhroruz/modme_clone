@@ -43,7 +43,13 @@ class UserModelViewSet(ModelViewSet):
             serializer.save()
             return Response(serializer.data)
 
-    @action(methods=['GET'], detail=False, url_path='export', url_name='export')
+    @action(['GET'], False, '<int:branch_id>', 'branch')
+    def user(self, request, branch_id):
+        qs = self.get_queryset()
+        serializer = UserListModelSerializer(qs.filter(branch__in=branch_id), many=True).data
+        return Response(serializer)
+
+    @action(['GET'], False, 'export', 'export')
     def export_users_xls(self, request):
 
         columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
