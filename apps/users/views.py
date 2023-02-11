@@ -12,7 +12,7 @@ from rest_framework.viewsets import ModelViewSet
 from shared.permissions import IsAdministrator
 from shared.utils.export_excel import export_data_excel
 from users.documents import UserDocument
-from users.filters import UserFilter
+from users.filters import MultipleFilterBackend
 from users.models import User, LeadIncrement, Lead, Archive, Blog
 from users.serializers import ArchiveListModelSerializer, UserListModelSerializer, UserCreateModelSerializer, \
     LeadIncrementModelSerializer, LeadModelSerializer, UpdateProfileSerializer, \
@@ -23,10 +23,9 @@ class UserModelViewSet(ModelViewSet):
     serializer_class = UserListModelSerializer
     queryset = User.objects.all()
     permission_classes = AllowAny,
-    parser_classes = (MultiPartParser,)
-    filter_backends = DjangoFilterBackend,
-    filterset_fields = ['branch', 'first_name', 'last_name', 'phone', 'role__name']
-    filterset_class = UserFilter
+    parser_classes = MultiPartParser,
+    filter_backends = DjangoFilterBackend, MultipleFilterBackend
+    filterset_fields = ['first_name', 'last_name', 'phone', 'role__name']
     ordering = ['first_name', 'last_name']
 
     def get_serializer_class(self):
@@ -34,7 +33,10 @@ class UserModelViewSet(ModelViewSet):
             return UserCreateModelSerializer
         return super().get_serializer_class()
 
-    @action(methods=['GET', 'POST'], detail=False, url_path='trashed', url_name='trashed')
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    @action(['GET', 'POST'], False, 'trashed', 'trashed')
     def get_trashed(self, request):
         if self.request.method == 'GET':
             serializer = ArchiveListModelSerializer(Archive.objects.all(), many=True)
@@ -44,7 +46,13 @@ class UserModelViewSet(ModelViewSet):
             serializer.save()
             return Response(serializer.data)
 
-    @action(methods=['GET'], detail=False, url_path='export', url_name='export')
+    @action(['GET'], False, '<int:branch_id>', 'branch')
+    def user(self, request, branch_id):
+        qs = self.get_queryset()
+        serializer = UserListModelSerializer(qs.filter(branch__in=branch_id), many=True).data
+        return Response(serializer)
+
+    @action(['GET'], False, 'export', 'export')
     def export_users_xls(self, request):
 
         columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
