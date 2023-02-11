@@ -16,8 +16,16 @@ fake = Faker()
 class Command(BaseCommand):
     help = '''
         You can create dummy data. Like this:
-    * Company      -> 2
-    * Branch    -> 5
+    * Company           -> 2
+    * Branch            -> 15
+    * Course            -> 15
+    * Room              -> 15
+    * Holiday           -> 15
+    * Course group      -> 15
+    * User              -> 15
+    * Archive           -> 15
+    * Lead              -> 15
+    * Lead increment    -> 15
     '''
 
     def add_arguments(self, parser):
@@ -33,6 +41,7 @@ class Command(BaseCommand):
         parser.add_argument('-l', '--lead', type=int, help='Define a lead number prefix', )
 
     def handle(self, *args, **options):
+        company_code = ('90', '99', '98', '93', '94')
         # companies
         c = options.get('company', 15)
         baker.make(
@@ -44,7 +53,6 @@ class Command(BaseCommand):
 
         # branches
         b = options.get('branch', 15)
-        company_code = ('90', '99', '98', '93', '94')
         company = Company.objects.all()
         baker.make(
             'groups.Branch',
@@ -107,7 +115,6 @@ class Command(BaseCommand):
 
         # user
         u = options.get('user', 15)
-        company_code = ('90', '99', '98', '93', '94')
         baker.make(
             'users.User',
             first_name=cycle(fake.first_name() for _ in range(u)),
@@ -126,7 +133,7 @@ class Command(BaseCommand):
             _quantity=u
         )
 
-        print(c, 'users is being addded')
+        print(u, 'users is being addded')
 
         # lead increment
         li = options.get('lead_increment', 15)
@@ -136,7 +143,7 @@ class Command(BaseCommand):
             _quantity=li
         )
 
-        print(li, 'lead increments is being addded')
+        print(li, 'leads increments is being addded')
 
         # lead
         l = options.get('lead', 15)
@@ -144,11 +151,11 @@ class Command(BaseCommand):
             'users.Lead',
             full_name=cycle(fake.first_name() for _ in range(l)),
             comment=cycle(fake.text() for _ in range(l)),
-            phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(u)),
-            lid_increment=cycle(LeadIncrement.objects.all()),
+            phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(l)),
+            lead_increment=cycle(LeadIncrement.objects.all()),
             _quantity=l
         )
-        print(l, 'lead is being addded')
+        print(l, 'leads is being addded')
 
         # course group
         gr = options.get('coursegroup', 15)

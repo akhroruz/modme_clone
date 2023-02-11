@@ -1,26 +1,32 @@
 from django.db.models import F
+from django_elasticsearch_dsl_drf.filter_backends import SearchFilterBackend
+from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions, AllowAny
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions
 from rest_framework.viewsets import ModelViewSet
 
 from shared.permissions import IsAdministrator
+from shared.utils.export_excel import export_data_excel
+from users.documents import UserDocument
+from users.filters import UserFilter
 from users.models import User, LeadIncrement, Lead, Archive, Blog
 from users.serializers import ArchiveListModelSerializer, UserListModelSerializer, UserCreateModelSerializer, \
-    LidIncrementModelSerializer, LidModelSerializer, ChangePasswordSerializer, UpdateProfileSerializer, \
-    BlogModelSerializer
+    LeadIncrementModelSerializer, LeadModelSerializer, UpdateProfileSerializer, \
+    BlogModelSerializer, ArchiveCreateModelSerializer, UserListDocumentSerializer
 
 
 class UserModelViewSet(ModelViewSet):
     serializer_class = UserListModelSerializer
     queryset = User.objects.all()
-    permission_classes = DjangoObjectPermissions,
+    permission_classes = AllowAny,
     parser_classes = (MultiPartParser,)
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['first_name', 'last_name', 'id', 'phone', 'role__name']
+    filter_backends = DjangoFilterBackend,
+    filterset_fields = ['branch', 'first_name', 'last_name', 'phone', 'role__name']
+    filterset_class = UserFilter
     ordering = ['first_name', 'last_name']
 
     def get_serializer_class(self):
@@ -37,32 +43,35 @@ class UserModelViewSet(ModelViewSet):
             serializer = ArchiveListModelSerializer(Archive.objects.all(), many=True)
             return Response(serializer.data)
         if self.request.method == 'POST':
-            gender = request.data.get('gender')
-            birth_date = request.data.get('birth_date')
-            phone = request.data.get('phone')
-            photo = request.data.get('photo')
-            balance = request.data.get('balance')
-            deleted_at = request.data.get('deleted_at')
-            datas = request.data.get('datas')
-            User.objects.create(gender=gender, birth_date=birth_date, phone=phone, photo=photo, balance=balance,
-                                deleted_at=deleted_at, datas=datas, is_archive=True)
+            serializer = ArchiveCreateModelSerializer(request.data)
+            serializer.save()
+            return Response(serializer.data)
+
+    @action(methods=['GET'], detail=False, url_path='export', url_name='export')
+    def export_users_xls(self, request):
+
+        columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
+        rows = User.objects.values_list('id', 'first_name', 'phone', 'birth_date', 'comment', 'balance')
+        return export_data_excel(columns, rows)
+
+
+class UserDocumentView(DocumentViewSet):
+    document = UserDocument
+    serializer_class = UserListDocumentSerializer
+    permission_classes = AllowAny,
+    filter_backends = SearchFilterBackend,
+    search_fields = 'first_name', 'last_name', 'phone'
 
 
 class LeadIncrementModelViewSet(ModelViewSet):
-    serializer_class = LidIncrementModelSerializer
+    serializer_class = LeadIncrementModelSerializer
     queryset = LeadIncrement.objects.all()
 
 
 class LeadModelViewSet(ModelViewSet):
-    serializer_class = LidModelSerializer
+    serializer_class = LeadModelSerializer
     queryset = Lead.objects.all()
     permission_classes = (DjangoObjectPermissions, IsAdministrator)
-
-
-class ChangePasswordView(UpdateAPIView):
-    queryset = User.objects.all()
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ChangePasswordSerializer
 
 
 class ArchiveReasonsModelViewSet(ModelViewSet):

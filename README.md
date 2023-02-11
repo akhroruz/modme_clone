@@ -1,4 +1,4 @@
-# Modme-clone
+# Modme Clone API
 
 ## TODO - Required
 
@@ -15,12 +15,12 @@
    - cashier - (crud) students, reports
 5. [ ] test (pytest coverage 80% ^)
 6. [ ] docker/docker compose
-7. [ ] elasticsearch
+7. [x] elasticsearch
 8. [ ] security
-9. [ ] github actions
+9. [x] GitHub actions
 10. [ ] server
 
-## Don't Required
+## Don't Require
 
 1. [ ] cache
 2. [ ] celery
@@ -32,8 +32,9 @@
 
 - ```make mig``` make migrations and migrate
 - ```make unmig``` delete migrations files
-- ```make remig``` delete migrations files and make migrations and migrate
+- ```make remig``` delete migrations files, make migrations, migrate, create default superuser and create fake datas in database
 - ```make admin``` create admin superuser
 - ```make load``` collect all datas
 - ```make local``` i18n compile messages
-- ```make poetry``` install poetry
+- ```make faker``` create random fake datas in database
+- ```make search_index``` to create and populate the Elasticsearch index and mapping

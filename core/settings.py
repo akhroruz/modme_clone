@@ -43,6 +43,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
     'parler',
     'ckeditor',
 )
@@ -143,6 +145,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}
+
 # sentry_sdk.init(
 #     dsn=env('DNS'),
 #     integrations=[
@@ -169,7 +177,7 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 2
+    'PAGE_SIZE': 10
 }
 
 LOGIN_URL = '/admin'

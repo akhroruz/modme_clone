@@ -17,14 +17,14 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         c = options.get('total')
-        lid_increment = LeadIncrement.objects.all()
+        lead_increment = LeadIncrement.objects.all()
 
         baker.make(
             'users.Lead',
             full_name=cycle(str(faker.first_name() + ' ' + faker.last_name()) for _ in range(c)),
             comment=cycle(faker.text() for _ in range(c)),
             phone=cycle(faker.random_number(digits=8) for _ in range(c)),
-            lid_increment=cycle(faker.random_element(lid_increment) for _ in range(c)),
+            lead_increment=cycle(faker.random_element(lead_increment) for _ in range(c)),
 
             make_m2m=False,
             _quantity=c
