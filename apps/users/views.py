@@ -12,12 +12,14 @@ from rest_framework.viewsets import ModelViewSet
 
 from shared.permissions import IsAdministrator
 from shared.utils.export_excel import export_data_excel
+# from users.documents import UserDocument
+from users.filters import UserFilter
 from users.documents import UserDocument
 from users.filters import UserFilter, CustomDjangoFilterBackend
 from users.models import User, LeadIncrement, Lead, Archive, Blog
 from users.serializers import ArchiveListModelSerializer, UserListModelSerializer, UserCreateModelSerializer, \
     LeadIncrementModelSerializer, LeadModelSerializer, UpdateProfileSerializer, \
-    BlogModelSerializer, ArchiveCreateModelSerializer, UserListDocumentSerializer
+    BlogModelSerializer, ArchiveCreateModelSerializer
 
 
 class UserModelViewSet(ModelViewSet):
@@ -73,17 +75,24 @@ class UserDocumentView(DocumentViewSet):
     permission_classes = AllowAny,
     filter_backends = SearchFilterBackend,
     search_fields = 'first_name', 'last_name', 'phone'
+# class UserDocumentView(DocumentViewSet):
+#     document = UserDocument
+#     serializer_class = UserListDocumentSerializer
+#     permission_classes = AllowAny,
+#     filter_backends = SearchFilterBackend,
+#     search_fields = 'first_name', 'last_name', 'phone'
 
 
 class LeadIncrementModelViewSet(ModelViewSet):
     serializer_class = LeadIncrementModelSerializer
     queryset = LeadIncrement.objects.all()
+    permission_classes = (AllowAny,)
 
 
 class LeadModelViewSet(ModelViewSet):
     serializer_class = LeadModelSerializer
     queryset = Lead.objects.all()
-    permission_classes = (DjangoObjectPermissions, IsAdministrator)
+    permission_classes = (AllowAny,)
 
 
 class ArchiveReasonsModelViewSet(ModelViewSet):

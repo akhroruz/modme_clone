@@ -57,9 +57,15 @@ class Comment(BaseModel):
 
 
 class Lead(BaseModel):
+    class LeadStatus(TextChoices):
+        REQUESTS = 'requests', 'Requests'
+        PENDING = 'pending', 'Pending'
+        COLLECT = 'collect', 'Collect'
+
     full_name = CharField(max_length=255)
     comment = TextField()
     phone = IntegerField()
+    status = CharField(max_length=20, choices=LeadStatus.choices, default=LeadStatus.REQUESTS)
     lead_increment = ForeignKey('users.LeadIncrement', CASCADE)
 
     def __str__(self):

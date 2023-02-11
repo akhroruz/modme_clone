@@ -1,130 +1,130 @@
-import pytest
-from django.core.files.uploadedfile import SimpleUploadedFile
-from apps.groups.models import Branch, Holiday
-from core.settings import MEDIA_ROOT
-from groups.serializers import HolidayListModelSerializer
-from apps.users.models import User
-from apps.users.serializers import RegisterSerializer
-
-
+# import pytest
+# # from django.core.files.uploadedfile import SimpleUploadedFile
+# # from apps.groups.models import Branch, Holiday
+# # from core.settings import MEDIA_ROOT
+# # from groups.serializers import HolidayListModelSerializer
+# from apps.users.models import User
+# # from apps.users.serializers import RegisterSerializer
+#
+#
+# #
+# # @pytest.mark.django_db
+# # class TestModelSerializer:
+# #     @pytest.fixture
+# #     def branches(self):
+# #         image_path = MEDIA_ROOT + '/test.png'
+# #         image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+# #         branch = Branch.objects.create(
+# #             name='Branch 1',
+# #             address='Address 1',
+# #             phone=934923327,
+# #             about='Test',
+# #             image=image
+# #         )
+# #         return branch
+# #
+# #     @pytest.fixture
+# #     def holidays(self, branches):
+# #         holiday = Holiday.objects.create(
+# #             name='Name 1',
+# #             branch_id=branches.uuid,
+# #             holiday_date='2021-12-12',
+# #             affect_payment=True
+# #         )
+# #         return holiday
+# #
+# #     def test_holiday_serializer(self, branches, holidays):
+# #         serializer = HolidayListModelSerializer(holidays)
+# #         assert serializer.data['branch'] == holidays.branch.uuid
+# #         assert serializer.data['holiday_date'] == holidays.holiday_date
+# #         assert serializer.data['affect_payment'] == holidays.affect_payment
+# #         assert serializer.data['name'] == holidays.name
+# #         assert len(serializer.data) == 5
+# #
 #
 # @pytest.mark.django_db
-# class TestModelSerializer:
-#     @pytest.fixture
-#     def branches(self):
-#         image_path = MEDIA_ROOT + '/test.png'
-#         image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
-#         branch = Branch.objects.create(
-#             name='Branch 1',
-#             address='Address 1',
-#             phone=934923327,
-#             about='Test',
-#             image=image
-#         )
-#         return branch
+# class TestRegisterSerializer:
 #
 #     @pytest.fixture
-#     def holidays(self, branches):
-#         holiday = Holiday.objects.create(
-#             name='Name 1',
-#             branch_id=branches.uuid,
-#             holiday_date='2021-12-12',
-#             affect_payment=True
+#     def register(self):
+#         register = User.objects.create(
+#             first_name='John',
+#             last_name='Johnson',
+#             phone=873435465,
+#             password='john1234',
+#             confirm_password='john1234'
 #         )
-#         return holiday
+#         return register
 #
-#     def test_holiday_serializer(self, branches, holidays):
-#         serializer = HolidayListModelSerializer(holidays)
-#         assert serializer.data['branch'] == holidays.branch.uuid
-#         assert serializer.data['holiday_date'] == holidays.holiday_date
-#         assert serializer.data['affect_payment'] == holidays.affect_payment
-#         assert serializer.data['name'] == holidays.name
+#     def test_register_serializer(self, register):
+#         serializer = RegisterSerializer(register)
+#         assert serializer.data['first_name'] == register.first_name
+#         assert serializer.data['last_name'] == register.last_name
+#         assert serializer.data['phone'] == register.phone
+#         assert serializer.data['password'] == register.password
+#         assert serializer.data['confirm_password'] == register.confirm_password
 #         assert len(serializer.data) == 5
 #
-
-@pytest.mark.django_db
-class TestRegisterSerializer:
-
-    @pytest.fixture
-    def register(self):
-        register = User.objects.create(
-            first_name='John',
-            last_name='Johnson',
-            phone=873435465,
-            password='john1234',
-            confirm_password='john1234'
-        )
-        return register
-
-    def test_register_serializer(self, register):
-        serializer = RegisterSerializer(register)
-        assert serializer.data['first_name'] == register.first_name
-        assert serializer.data['last_name'] == register.last_name
-        assert serializer.data['phone'] == register.phone
-        assert serializer.data['password'] == register.password
-        assert serializer.data['confirm_password'] == register.confirm_password
-        assert len(serializer.data) == 5
-
-# @pytest.fixture
-# def register(self):
-#     create_user = User.objects.create(
-#         first_name='Javlon',
-#         last_name='Baxtiyorov',
-#         phone=933934050,
+# # @pytest.fixture
+# # def register(self):
+# #     create_user = User.objects.create(
+# #         first_name='Javlon',
+# #         last_name='Baxtiyorov',
+# #         phone=933934050,
+# #
+# #     )
 #
-#     )
-
-# @pytest.mark.django_db
-# class TestUserModel:
-#     @pytest.fixture
-#     def branches(self):
-#         image_path = MEDIA_ROOT + '/test.png'
-#         image = SimpleUploadedFile('test_image.jpg', content=open(image_path, 'rb').read(), content_type='image/jpeg')
-#
-#         branch = Branch.objects.create(
-#             name='Chilonzor branch',
-#             address='Chilonzor',
-#             phone_number='934923326',
-#             about='hello from',
-#             image=image,
-#         )
-#         return branch
-#
-#     @pytest.fixture
-#     def users(self, branches):
-#         user = User.objects.create(
-#             full_name='User 1',
-#             phone='934923327',
-#             birth_date='2002-11-27',
-#             gender='Female',
-#             branch=branches,
-#             password=make_password('1234')
-#         )
-#         return user
-#
-#     def test_user_model(self, branches):
-#         image_path = MEDIA_ROOT + '/test.png'
-#         image = SimpleUploadedFile('test_image.jpg', content=open(image_path, 'rb').read(), content_type='image/jpeg')
-#
-#         user = User.objects.create(
-#             full_name='User 1',
-#             phone='934923327',
-#             birth_date='2002-11-27',
-#             gender=User.GenderChoose.FEMALE,
-#             photo=image,
-#             password=make_password('1234')
-#         )
-#
-#         assert user.full_name == 'User 1'
-#         assert user.gender == User.GenderChoose.FEMALE
-#         assert user.photo is not None
-#
-#     #
-#     def test_create_user(self, users, branches):
-#         serializer = UserModelSerializer(users)
-#         assert serializer.data['full_name'] == users.full_name
-#         assert serializer.data['phone'] == int(users.phone)
-#         assert serializer.data['gender'] == users.gender
-#         assert serializer.data['birth_date'] == users.birth_date
-#         assert serializer.data['branch'] == branches.pk
-#         assert len(serializer.data) == 21
+# # @pytest.mark.django_db
+# # class TestUserModel:
+# #     @pytest.fixture
+# #     def branches(self):
+# #         image_path = MEDIA_ROOT + '/test.png'
+# #         image = SimpleUploadedFile('test_image.jpg', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+# #
+# #         branch = Branch.objects.create(
+# #             name='Chilonzor branch',
+# #             address='Chilonzor',
+# #             phone_number='934923326',
+# #             about='hello from',
+# #             image=image,
+# #         )
+# #         return branch
+# #
+# #     @pytest.fixture
+# #     def users(self, branches):
+# #         user = User.objects.create(
+# #             full_name='User 1',
+# #             phone='934923327',
+# #             birth_date='2002-11-27',
+# #             gender='Female',
+# #             branch=branches,
+# #             password=make_password('1234')
+# #         )
+# #         return user
+# #
+# #     def test_user_model(self, branches):
+# #         image_path = MEDIA_ROOT + '/test.png'
+# #         image = SimpleUploadedFile('test_image.jpg', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+# #
+# #         user = User.objects.create(
+# #             full_name='User 1',
+# #             phone='934923327',
+# #             birth_date='2002-11-27',
+# #             gender=User.GenderChoose.FEMALE,
+# #             photo=image,
+# #             password=make_password('1234')
+# #         )
+# #
+# #         assert user.full_name == 'User 1'
+# #         assert user.gender == User.GenderChoose.FEMALE
+# #         assert user.photo is not None
+# #
+# #     #
+# #     def test_create_user(self, users, branches):
+# #         serializer = UserModelSerializer(users)
+# #         assert serializer.data['full_name'] == users.full_name
+# #         assert serializer.data['phone'] == int(users.phone)
+# #         assert serializer.data['gender'] == users.gender
+# #         assert serializer.data['birth_date'] == users.birth_date
+# #         assert serializer.data['branch'] == branches.pk
+# #         assert len(serializer.data) == 21

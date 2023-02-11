@@ -6,14 +6,14 @@ from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
 from groups.models import CourseGroup, Branch
-from users.documents import UserDocument
+# from users.documents import UserDocument
 from users.models import User, Comment, LeadIncrement, Lead, Archive, Blog
 
 
 class LeadModelSerializer(ModelSerializer):
     class Meta:
         model = Lead
-        fields = ('phone', 'full_name', 'comment', 'lead_increment')
+        fields = ('phone', 'full_name', 'comment', 'lead_increment', 'status')
 
 
 class LeadIncrementModelSerializer(ModelSerializer):
@@ -147,8 +147,8 @@ class BlogModelSerializer(ModelSerializer):
             'view_count': {'required': False},
         }
 
-
-class UserListDocumentSerializer(DocumentSerializer):
-    class Meta:
-        document = UserDocument
-        fields = ('first_name', 'last_name', 'phone')
+#
+# class UserListDocumentSerializer(DocumentSerializer):
+#     class Meta:
+#         document = UserDocument
+#         fields = ('first_name', 'last_name', 'phone')
