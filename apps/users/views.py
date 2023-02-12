@@ -1,9 +1,7 @@
 from django.db.models import F
 from django_elasticsearch_dsl_drf.filter_backends import SearchFilterBackend
 from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
-from rest_framework.filters import SearchFilter
 from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions, AllowAny
@@ -13,7 +11,7 @@ from rest_framework.viewsets import ModelViewSet
 from shared.permissions import IsAdministrator
 from shared.utils.export_excel import export_data_excel
 from users.documents import UserDocument
-from users.filters import UserFilter, CustomDjangoFilterBackend
+from users.filters import UserFilter, CustomUserDjangoFilterBackend
 from users.models import User, LeadIncrement, Lead, Archive, Blog
 from users.serializers import ArchiveListModelSerializer, UserListModelSerializer, UserCreateModelSerializer, \
     LeadIncrementModelSerializer, LeadModelSerializer, UpdateProfileSerializer, \
@@ -25,9 +23,16 @@ class UserModelViewSet(ModelViewSet):
     queryset = User.objects.all()
     permission_classes = AllowAny,
     parser_classes = MultiPartParser,
-    filter_backends = CustomDjangoFilterBackend,
+    filter_backends = CustomUserDjangoFilterBackend,
     filterset_class = UserFilter
     ordering = ['first_name', 'last_name']
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if sort_name := self.request.query_params.get('sort_by_name'):
+            if sort_name == 'desc':
+                qs = qs.order_by('-first_name')
+        return qs
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -44,14 +49,6 @@ class UserModelViewSet(ModelViewSet):
             serializer.save()
             return Response(serializer.data)
 
-    # @action(['GET'], False,url_path='branch', filter_backends=(CustomDjangoFilterBackend,), filterset_class=UserFilter)
-    # def user(self, request):
-    #     filtered_query_set = self.filter_queryset(self.get_queryset())
-    #     branch_id = [1]
-    #     qs = self.get_queryset()
-    #     serializer = UserListModelSerializer(qs.filter(branch__in=branch_id), many=True).data
-    #     return Response(serializer)
-
     @action(['GET'], False, 'export', 'export')
     def export_users_xls(self, request):
 
@@ -63,7 +60,6 @@ class UserModelViewSet(ModelViewSet):
 '''
 https://api.modme.dev/v1/user?user_type=student&per_page=50&page=1&course_id=969,968,966&statuses=with_signed_offer,1&branch_id=189
 https://api.modme.dev/v1/user/branch/<branch:id>
-
 '''
 
 

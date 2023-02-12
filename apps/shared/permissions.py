@@ -56,9 +56,9 @@ class PermissionPolicyMixin:
             handler = None
 
         if (
-            handler
-            and self.permission_classes_per_method
-            and self.permission_classes_per_method.get(handler.__name__)
+                handler
+                and self.permission_classes_per_method
+                and self.permission_classes_per_method.get(handler.__name__)
         ):
             self.permission_classes = self.permission_classes_per_method.get(handler.__name__)
 

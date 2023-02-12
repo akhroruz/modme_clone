@@ -1,10 +1,10 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from groups.filters import CustomGroupDjangoFilterBackend, GroupFilter
 from groups.models import CourseGroup
 from groups.serializers import GroupListModelSerializer
 from shared.utils.export_excel import export_data_excel
@@ -13,10 +13,9 @@ from shared.utils.export_excel import export_data_excel
 class GroupModelViewSet(ModelViewSet):
     queryset = CourseGroup.objects.order_by('-created_at')
     serializer_class = GroupListModelSerializer
-    # permission_classes = DjangoObjectPermissions, IsAuthenticated
-    permission_classes = AllowAny,
-    filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('branch', 'status', 'teachers__first_name', 'course', 'days', 'start_date', 'end_date')
+    permission_classes = AllowAny
+    filter_backends = (CustomGroupDjangoFilterBackend,)
+    filterset_class = GroupFilter
 
     def list(self, request, *args, **kwargs):
         data = {
