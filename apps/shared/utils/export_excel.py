@@ -2,6 +2,9 @@ import xlwt
 from django.http import HttpResponse
 
 
+# import pandas as pd
+
+
 def export_data_excel(columns, rows):
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="users.xls"'
@@ -19,10 +22,21 @@ def export_data_excel(columns, rows):
 
     font_style = xlwt.XFStyle()
 
-    # rows = User.objects.values_list('id', 'first_name', 'phone', 'birth_date', 'comment', 'balance')
     for row in rows:
         row_num += 1
         for col_num in range(len(row)):
             ws.write(row_num, col_num, row[col_num], font_style)
     wb.save(response)
     return response
+
+# def export_users_to_excel(request):
+#     queryset = User.objects.all().values('first_name', 'phone')
+#     books_data = list(queryset)
+#
+#     df = pd.DataFrame(books_data)
+#
+#     # Write the DataFrame to an Excel file
+#     response = HttpResponse(content_type='application/ms-excel')
+#     response['Content-Disposition'] = 'attachment; filename="books.xlsx"'
+#     df.to_excel(response, index=False)
+#     return response

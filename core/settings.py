@@ -5,7 +5,6 @@ from pathlib import Path
 
 import environ
 # import sentry_sdk
-from django.utils.translation import gettext_lazy as _
 from sentry_sdk.integrations.django import DjangoIntegration
 
 env = environ.Env(
@@ -45,7 +44,6 @@ INSTALLED_APPS = (
     'django_filters',
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
-    'parler',
     'ckeditor',
 )
 
@@ -112,31 +110,7 @@ LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Asia/Tashkent'
 
-USE_I18N = True
-
 USE_TZ = True
-
-LANGUAGES = (
-    ('en', _('English')),
-    ('uz', _('Uzbek')),
-    ('ru', _('Russian')),
-)
-
-LOCALE_PATHS = [
-    BASE_DIR + '/locale/',
-]
-
-PARLER_LANGUAGES = {
-    None: (
-        {'code': 'en'},
-        {'code': 'uz'},
-        {'code': 'ru'}
-    ),
-    'default': {
-        'fallbacks': ['en'],
-        'hide_untranslated': False
-    }
-}
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -162,6 +136,7 @@ ELASTICSEARCH_DSL = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -169,6 +144,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
         # "rest_framework.permissions.IsAuthenticated",
         "rest_framework.permissions.DjangoModelPermissions",
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
     ),
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
 

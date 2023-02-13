@@ -7,7 +7,7 @@ from users.views import ArchiveReasonsModelViewSet, UserModelViewSet, LeadIncrem
 
 router = DefaultRouter()
 router.register('user', UserModelViewSet, basename='user')
-router.register('user_search', UserDocumentView, basename='user_search')
+router.register('user-search', UserDocumentView, basename='user_search')
 router.register('archive-reasons', ArchiveReasonsModelViewSet, basename='archive_reasons')
 router.register('lead', LeadModelViewSet, basename='lead')
 router.register('lead-increment', LeadIncrementModelViewSet, basename='lead_increment')
@@ -17,5 +17,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('auth/token', TokenObtainPairView.as_view(), name='get_token'),
     path('auth/refresh-token', TokenRefreshView.as_view(), name='refresh_token'),
-    path('auth/change_profile/<int:pk>', UpdateProfileView.as_view(), name='change_profile'),
+    path('auth/change-profile/<int:pk>', UpdateProfileView.as_view(), name='change_profile'),
 ]

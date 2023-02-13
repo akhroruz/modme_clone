@@ -1,7 +1,6 @@
 from django.db.models import F
 from django_elasticsearch_dsl_drf.filter_backends import SearchFilterBackend
 from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser
@@ -11,8 +10,10 @@ from rest_framework.viewsets import ModelViewSet
 
 from shared.permissions import IsAdministrator
 from shared.utils.export_excel import export_data_excel
+# from users.documents import UserDocument
+from users.filters import UserFilter
 from users.documents import UserDocument
-from users.filters import MultipleFilterBackend
+from users.filters import UserFilter, CustomUserDjangoFilterBackend
 from users.models import User, LeadIncrement, Lead, Archive, Blog
 from users.serializers import ArchiveListModelSerializer, UserListModelSerializer, UserCreateModelSerializer, \
     LeadIncrementModelSerializer, LeadModelSerializer, UpdateProfileSerializer, \
@@ -24,19 +25,23 @@ class UserModelViewSet(ModelViewSet):
     queryset = User.objects.all()
     permission_classes = AllowAny,
     parser_classes = MultiPartParser,
-    filter_backends = DjangoFilterBackend, MultipleFilterBackend
-    filterset_fields = ['first_name', 'last_name', 'phone', 'role__name']
+    filter_backends = CustomUserDjangoFilterBackend,
+    filterset_class = UserFilter
     ordering = ['first_name', 'last_name']
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if sort_name := self.request.query_params.get('sort_by_name'):
+            if sort_name == 'desc':
+                qs = qs.order_by('-first_name')
+        return qs
 
     def get_serializer_class(self):
         if self.action == 'create':
             return UserCreateModelSerializer
         return super().get_serializer_class()
 
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-
-    @action(['GET', 'POST'], False, 'trashed', 'trashed')
+    @action(methods=['GET', 'POST'], detail=False, url_path='trashed', url_name='trashed')
     def get_trashed(self, request):
         if self.request.method == 'GET':
             serializer = ArchiveListModelSerializer(Archive.objects.all(), many=True)
@@ -46,12 +51,6 @@ class UserModelViewSet(ModelViewSet):
             serializer.save()
             return Response(serializer.data)
 
-    @action(['GET'], False, '<int:branch_id>', 'branch')
-    def user(self, request, branch_id):
-        qs = self.get_queryset()
-        serializer = UserListModelSerializer(qs.filter(branch__in=branch_id), many=True).data
-        return Response(serializer)
-
     @action(['GET'], False, 'export', 'export')
     def export_users_xls(self, request):
 
@@ -60,23 +59,36 @@ class UserModelViewSet(ModelViewSet):
         return export_data_excel(columns, rows)
 
 
+'''
+https://api.modme.dev/v1/user?user_type=student&per_page=50&page=1&course_id=969,968,966&statuses=with_signed_offer,1&branch_id=189
+https://api.modme.dev/v1/user/branch/<branch:id>
+'''
+
+
 class UserDocumentView(DocumentViewSet):
     document = UserDocument
     serializer_class = UserListDocumentSerializer
     permission_classes = AllowAny,
     filter_backends = SearchFilterBackend,
     search_fields = 'first_name', 'last_name', 'phone'
+# class UserDocumentView(DocumentViewSet):
+#     document = UserDocument
+#     serializer_class = UserListDocumentSerializer
+#     permission_classes = AllowAny,
+#     filter_backends = SearchFilterBackend,
+#     search_fields = 'first_name', 'last_name', 'phone'
 
 
 class LeadIncrementModelViewSet(ModelViewSet):
     serializer_class = LeadIncrementModelSerializer
     queryset = LeadIncrement.objects.all()
+    permission_classes = (AllowAny,)
 
 
 class LeadModelViewSet(ModelViewSet):
     serializer_class = LeadModelSerializer
     queryset = Lead.objects.all()
-    permission_classes = (DjangoObjectPermissions, IsAdministrator)
+    permission_classes = (AllowAny,)
 
 
 class ArchiveReasonsModelViewSet(ModelViewSet):

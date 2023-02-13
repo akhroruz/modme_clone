@@ -11,10 +11,8 @@ local:
 	python3 manage.py makemessages -l uz
 	python3 manage.py compilemessages
 
-load:
-	python3 manage.py loaddata role
-
 faker:
+	python3 manage.py loaddata role
 	python3 manage.py create -c 2 -b 5 -course 5 -r 10 -hd 10 -u 10 -a 10 -li 10 -l 10 -gr 10
 
 admin:
