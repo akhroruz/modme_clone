@@ -101,7 +101,7 @@ class UserCreateModelSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('phone', 'first_name', 'gender', 'birth_date', 'photo', 'comment', 'data', 'role', 'password')
+        fields = ('phone', 'first_name', 'gender', 'birth_date', 'photo', 'data', 'role', 'password')
 
     def create(self, validated_data):
         validated_data['role'] = Group.objects.filter(name__in=validated_data['role'][0].split(','))
@@ -143,11 +143,12 @@ class UpdateProfileSerializer(ModelSerializer):
 class BlogModelSerializer(ModelSerializer):
     class Meta:
         model = Blog
-        fields = ('title', 'text', 'public', 'visible_all', 'view_count')
+        fields = ('title', 'text', 'public', 'visible_all', 'view_count', 'company')
         extra_kwargs = {
             'created_by': {'required': False},
             'updated_by': {'required': False},
             'view_count': {'required': False},
+            'company': {'required': True},
         }
 
 
