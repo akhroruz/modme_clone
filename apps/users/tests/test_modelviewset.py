@@ -1,10 +1,9 @@
 import pytest
-from django.contrib.auth.models import User
 from django.test import Client
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from users.models import LeadIncrement, Lead, Blog
+from users.models import LeadIncrement, Lead, Blog, User
 
 
 @pytest.mark.django_db
