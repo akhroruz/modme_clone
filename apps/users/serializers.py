@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
 from django_elasticsearch_dsl_drf.serializers import DocumentSerializer
-from rest_framework.fields import ListField, IntegerField, empty
+from rest_framework.fields import ListField, IntegerField
 from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
@@ -109,8 +109,8 @@ class UpdateProfileSerializer(ModelSerializer):
     phone = IntegerField(required=True)
 
     class Meta:
-        fields = ('first_name', 'phone', 'role', 'birth_date', 'gender', 'photo', 'password')
         model = User
+        fields = ('first_name', 'phone', 'role', 'birth_date', 'gender', 'photo', 'password')
 
     def validate_phone(self, phone):
         user = User.objects.context['request'].user
@@ -148,7 +148,7 @@ class BlogModelSerializer(ModelSerializer):
             'view_count': {'required': False},
         }
 
-#
+
 class UserListDocumentSerializer(DocumentSerializer):
     class Meta:
         document = UserDocument
