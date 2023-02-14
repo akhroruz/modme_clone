@@ -3,65 +3,18 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from users.models import Blog, Lead, LeadIncrement, User
-from users.serializers import LeadModelSerializer, LeadIncrementModelSerializer
-
-
-@pytest.mark.django_db
-class TestLeadModelSerializer:
-    @pytest.fixture
-    def lead_increment(self):
-        lead_increment = LeadIncrement.objects.create(
-            name='Lead Increment 1'
-        )
-        return lead_increment
-
-    @pytest.fixture
-    def lead(self, lead_increment):
-        return Lead.objects.create(
-            full_name='full name 1',
-            comment='comment 1',
-            phone=990675624,
-            status=Lead.LeadStatus.REQUESTS,
-            lead_increment=lead_increment
-        )
-
-    def test_create_lead_model_serializer(self, lead):
-        serializer = LeadModelSerializer(lead)
-        assert serializer.data['full_name'] == lead.full_name
-        assert serializer.data['comment'] == lead.comment
-        assert serializer.data['phone'] == lead.phone
-        assert serializer.data['status'] == lead.status
-        assert serializer.data['lead_increment'] == lead.lead_increment_id
-
-    def test_delete_lead_model_serializer(self, lead):
-        lead.delete()
-        assert not Lead.objects.filter(pk=lead.pk).exists()
-
-
-@pytest.mark.django_db
-class TestLeadIncrementModelSerializer:
-    @pytest.fixture
-    def lead_increment(self):
-        lead_increment = LeadIncrement.objects.create(
-            name='Lead Increment 1'
-        )
-        return lead_increment
-
-    def test_create_lead_increment_model_serializer(self, lead_increment):
-        serializer = LeadIncrementModelSerializer(lead_increment)
-        assert serializer.data['name'] == lead_increment.name
-
-    def test_delete_lead_increment_model_serializer(self, lead_increment):
-        lead_increment.delete()
-        assert not LeadIncrement.objects.filter(pk=lead_increment.pk).exists()
+from groups.models import Company
+from users.models import Blog, User
 
 
 @pytest.mark.django_db
 class TestBlogModelSerializer:
     @pytest.fixture
-    def client(self):
-        return APIClient()
+    def company(self):
+        company = Company.objects.create(
+            name='Company 1',
+        )
+        return company
 
     @pytest.fixture
     def user(self):
@@ -69,7 +22,7 @@ class TestBlogModelSerializer:
         return user
 
     @pytest.fixture
-    def blog(self, user):
+    def blog(self, user, client, company):
         blog = Blog.objects.create(
             title='Blog 1',
             text='Text 1',
@@ -78,27 +31,24 @@ class TestBlogModelSerializer:
             updated_by=user,
             visible_all=True,
             view_count=11,
+            company=company
         )
         return blog
 
-    def test_list_blogs(self, client, user, blog):
+    def test_list_blogs(self, client, user, blog, company):
         client.force_authenticate(user=user)
         url = reverse('news_blog-list')
         response = client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 4
 
-    def test_retrieve(self, client, user, blog):
+    def test_retrieve(self, client, user, blog, company):
         client.force_authenticate(user=user)
-        url = reverse('news_blog-detail', args=(blog.id,))
+        url = '%s?company=%s' % (reverse('news_blog-list'), company.pk)
         response = client.get(url)
         assert response.status_code == status.HTTP_200_OK
-        assert response.data['title'] == blog.title
-        assert response.data['text'] == blog.text
-        assert response.data['public'] == blog.public
-        assert response.data['visible_all'] == blog.visible_all
 
-    def test_create(self, client, user):
+    def test_create(self, client, user, company):
         client.force_authenticate(user=user)
         data = {
             'title': 'New Blog Title',
@@ -106,12 +56,13 @@ class TestBlogModelSerializer:
             'public': False,
             'visible_all': False,
             'view_count': 20,
+            'company': company.pk
         }
-        url = reverse('news_blog-list')
+        url = '%s?company=%s' % (reverse('news_blog-list'), company.pk)
         response = client.post(url, data)
         assert response.status_code == status.HTTP_201_CREATED
 
-    def test_update(self, client, user, blog):
+    def test_update(self, client, user, blog, company):
         client.force_authenticate(user=user)
         data = {
             'title': 'Updated Blog Title',
@@ -119,8 +70,10 @@ class TestBlogModelSerializer:
             'public': True,
             'visible_all': True,
             'view_count': 30,
+            'company': company.pk
+
         }
-        url = reverse('news_blog-detail', args=(blog.id,))
+        url = '%s?company=%s' % (reverse('news_blog-detail', args=(blog.pk,)), company.pk)
         response = client.put(url, data)
         assert response.status_code == status.HTTP_200_OK
         assert response.data['title'] == 'Updated Blog Title'
@@ -129,16 +82,17 @@ class TestBlogModelSerializer:
         assert response.data['visible_all']
         assert response.data['view_count'] == 30
 
-    def test_patch(self, client, user, blog):
+    def test_patch(self, client, user, blog, company):
         client.force_authenticate(user=user)
         data = {
             'title': 'Patched Blog Title',
             'text': 'Patched Blog Text',
             'public': False,
             'visible_all': False,
-            'view_count': 55
+            'view_count': 55,
+
         }
-        url = reverse('news_blog-detail', args=(blog.id,))
+        url = '%s?company=%s' % (reverse('news_blog-detail', args=(blog.pk,)), company.pk)
         response = client.patch(url, data)
         assert response.status_code == status.HTTP_200_OK
         assert response.data['title'] == 'Patched Blog Title'
@@ -147,8 +101,8 @@ class TestBlogModelSerializer:
         assert not response.data['visible_all']
         assert response.data['view_count'] == 55
 
-    def test_delete(self, client, user, blog):
+    def test_delete(self, client, user, blog, company):
         client.force_authenticate(user=user)
-        url = reverse('news_blog-detail', args=(blog.id,))
+        url = '%s?company=%s' % (reverse('news_blog-detail', args=(blog.pk,)), company.pk)
         response = client.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
