@@ -20,6 +20,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('api/v1/', include('apps.urls')),
     path('admin/', admin.site.urls),
+    path('i18n/', include('django.conf.urls.i18n')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
