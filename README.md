@@ -32,10 +32,9 @@
 
 - ```make mig``` make migrations and migrate
 - ```make unmig``` delete migrations files
-- ```make remig``` delete migrations files, make migrations, migrate, create default superuser and create fake datas in
-  database
+- ```make remig``` delete migrations files, make migrations, migrate, create default superuser and create fake datas in database
 - ```make admin``` create admin superuser
 - ```make load``` collect all datas
-- ```make local``` i18n compile messages
 - ```make faker``` create random fake datas in database
 - ```make search_index``` to create and populate the Elasticsearch index and mapping
+- ```make ram``` remove all tables from the database

@@ -1,4 +1,3 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import ListAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions
@@ -13,20 +12,7 @@ from shared.permissions import IsAdministrator
 class BranchModelViewSet(ModelViewSet):
     queryset = Branch.objects.all()
     serializer_class = BranchModelSerializer
-    # filter_backends = (DjangoFilterBackend,)
-    # filterset_class = BranchFilter
     parser_classes = (MultiPartParser,)
-    # permission_classes = (IsAuthenticated & CustomDjangoObjectPermissions, )
-    # permission_classes = [IsWriteUser]
-    # permission_classes_per_method = {
-    #     except for list and retrieve where both users with "write" or "read-only"
-    #     permissions can access the endpoints.
-        # "list": [IsWriteUser | IsReadOnlyUser],
-        # "retrieve": [IsWriteUser | IsReadOnlyUser]
-    # }
-    # def get_queryset(self):
-    #     return Branch.objects.all()
-        # return self.request.user.branch.all()
 
 
 class RoomModelViewSet(ModelViewSet):

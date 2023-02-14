@@ -4,8 +4,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from users.models import Blog
-from users.models import Lead, LeadIncrement, User
+from users.models import Blog, Lead, LeadIncrement, User
 from users.serializers import LeadModelSerializer, LeadIncrementModelSerializer
 
 
