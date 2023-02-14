@@ -5,7 +5,7 @@ from rest_framework.fields import ListField, IntegerField
 from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
-from groups.models import Group, Branch
+from groups.models import Branch
 from users.documents import UserDocument
 from users.models import User, Comment, LeadIncrement, Lead, Archive, Blog
 

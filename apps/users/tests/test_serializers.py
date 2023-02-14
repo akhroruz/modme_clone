@@ -1,5 +1,4 @@
 import pytest
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -56,9 +55,6 @@ class TestLeadIncrementModelSerializer:
     def test_delete_lead_increment_model_serializer(self, lead_increment):
         lead_increment.delete()
         assert not LeadIncrement.objects.filter(pk=lead_increment.pk).exists()
-
-
-User = get_user_model()
 
 
 @pytest.mark.django_db
@@ -130,8 +126,8 @@ class TestBlogModelSerializer:
         assert response.status_code == status.HTTP_200_OK
         assert response.data['title'] == 'Updated Blog Title'
         assert response.data['text'] == 'Updated Blog Text'
-        assert response.data['public'] == True
-        assert response.data['visible_all'] == True
+        assert response.data['public']
+        assert response.data['visible_all']
         assert response.data['view_count'] == 30
 
     def test_patch(self, client, user, blog):
@@ -148,8 +144,8 @@ class TestBlogModelSerializer:
         assert response.status_code == status.HTTP_200_OK
         assert response.data['title'] == 'Patched Blog Title'
         assert response.data['text'] == 'Patched Blog Text'
-        assert response.data['public'] == False
-        assert response.data['visible_all'] == False
+        assert not response.data['public']
+        assert not response.data['visible_all']
         assert response.data['view_count'] == 55
 
     def test_delete(self, client, user, blog):

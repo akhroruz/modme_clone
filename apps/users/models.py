@@ -1,11 +1,11 @@
 from ckeditor_uploader.fields import RichTextUploadingField
-from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, JSONField, \
-    TextField, DateTimeField, Model, ManyToManyField, ForeignKey, CASCADE, BooleanField, SET_NULL, BigIntegerField, \
+    TextField, DateTimeField, ManyToManyField, ForeignKey, CASCADE, BooleanField, SET_NULL, BigIntegerField, \
     PositiveIntegerField
 
-from shared.models import BaseModel, UUIDBaseModel
+from shared.models import BaseModel
 from users.managers import MyUserManager
 
 
