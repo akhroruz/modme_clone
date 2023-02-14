@@ -3,7 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django_filters.utils import translate_validation
 from rest_framework.exceptions import ValidationError
 
-from groups.models import CourseGroup, Branch, Course
+from groups.models import Group, Branch, Course
 from users.models import User
 
 
@@ -29,10 +29,10 @@ class GroupFilter(FilterSet):
     teachers = ModelMultipleChoiceFilter(field_name='teachers__first_name', queryset=User.objects.all(),
                                          to_field_name='name')
     branch = ModelMultipleChoiceFilter(queryset=Branch.objects.all())
-    days = ModelMultipleChoiceFilter(field_name='days', queryset=CourseGroup.objects.all())
+    days = ModelMultipleChoiceFilter(field_name='days', queryset=Group.objects.all())
 
     class Meta:
-        model = CourseGroup
+        model = Group
         fields = ('branch', 'status', 'teachers', 'courses', 'days', 'start_date', 'end_date')
 
     # filter_overrides = {

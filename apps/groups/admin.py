@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from groups.models import Room, Branch, CourseGroup, Course, Company
+from groups.models import Room, Branch, Group, Course, Company
 
 
-@admin.register(CourseGroup)
-class CourseGroupAdmin(ModelAdmin):
+@admin.register(Group)
+class GroupAdmin(ModelAdmin):
     pass
 
 

@@ -5,7 +5,7 @@ from rest_framework.fields import ListField, IntegerField
 from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 
-from groups.models import CourseGroup, Branch
+from groups.models import Group, Branch
 from users.documents import UserDocument
 from users.models import User, Comment, LeadIncrement, Lead, Archive, Blog
 
@@ -30,10 +30,10 @@ class UserBranchListModelSerializer(ModelSerializer):
 
 class UserGroupListModelSerializer(ModelSerializer):
     class Meta:
-        model = CourseGroup
+        model = Group
         fields = ('id', 'name')
 
-    def to_representation(self, instance: CourseGroup):
+    def to_representation(self, instance: Group):
         rep = super().to_representation(instance)
         rep['branches'] = UserBranchListModelSerializer(instance.branch, many=True).data
         return rep
@@ -57,7 +57,12 @@ class UserListModelSerializer(ModelSerializer):
 
     def to_representation(self, instance: User):
         rep = super().to_representation(instance)
-        rep['groups'] = UserGroupListModelSerializer(instance.coursegroup_set.all(), many=True).data
+
+        if user_type := self.context['request'].query_params.get('user_type'):
+            if user_type == 'teacher':
+                rep['groups'] = UserGroupListModelSerializer(instance.group_set.all(), many=True).data
+            elif user_type == 'student':
+                rep['groups'] = UserGroupListModelSerializer(instance.groups.all(), many=True).data
         return rep
 
 
