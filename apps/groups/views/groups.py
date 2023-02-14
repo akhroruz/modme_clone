@@ -11,7 +11,7 @@ from shared.utils.export_excel import export_data_excel
 
 
 class GroupModelViewSet(ModelViewSet):
-    queryset = CourseGroup.objects.order_by('-created_at')
+    queryset = CourseGroup.objects.all()
     serializer_class = GroupListModelSerializer
     permission_classes = AllowAny
     filter_backends = (CustomGroupDjangoFilterBackend,)

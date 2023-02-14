@@ -4,14 +4,12 @@ from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 from rest_framework.decorators import action
 from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from shared.permissions import IsAdministrator
 from shared.utils.export_excel import export_data_excel
 # from users.documents import UserDocument
-from users.filters import UserFilter
 from users.documents import UserDocument
 from users.filters import UserFilter, CustomUserDjangoFilterBackend
 from users.models import User, LeadIncrement, Lead, Archive, Blog
@@ -59,18 +57,14 @@ class UserModelViewSet(ModelViewSet):
         return export_data_excel(columns, rows)
 
 
-'''
-https://api.modme.dev/v1/user?user_type=student&per_page=50&page=1&course_id=969,968,966&statuses=with_signed_offer,1&branch_id=189
-https://api.modme.dev/v1/user/branch/<branch:id>
-'''
-
-
 class UserDocumentView(DocumentViewSet):
     document = UserDocument
     serializer_class = UserListDocumentSerializer
     permission_classes = AllowAny,
     filter_backends = SearchFilterBackend,
     search_fields = 'first_name', 'last_name', 'phone'
+
+
 # class UserDocumentView(DocumentViewSet):
 #     document = UserDocument
 #     serializer_class = UserListDocumentSerializer
@@ -104,8 +98,9 @@ class UpdateProfileView(UpdateAPIView):
 
 class BlogModelViewSet(ModelViewSet):
     queryset = Blog.objects.all()
-    permission_classes = (IsAuthenticated,)
     serializer_class = BlogModelSerializer
+    lookup_url_kwarg = 'id'
+    lookup_field = 'id'
 
     def get_queryset(self):
         qs = super().get_queryset()
