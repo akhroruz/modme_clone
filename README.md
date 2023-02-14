@@ -27,6 +27,7 @@
 3. [ ] redis
 4. [ ] rabbitmq
 5. [ ] cron
+6. [x] flake8
 
 ## Makefile
 

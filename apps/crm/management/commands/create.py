@@ -70,7 +70,7 @@ class Command(BaseCommand):
         course = options.get('course', 15)
         baker.make(
             'groups.Course',
-            branch=cycle(Branch.objects.all()),
+            # branch=cycle(Branch.objects.all()),
             name=cycle(fake.first_name() for _ in range(course)),
             price=cycle(fake.pyint() * 100 for _ in range(course)),
             description=cycle(fake.sentences(nb=310050)),
@@ -125,7 +125,7 @@ class Command(BaseCommand):
             role=cycle(Group.objects.all()),
             branch=cycle(Branch.objects.all()),
             archive=cycle(Archive.objects.all()),
-            comment=cycle(fake.text() for _ in range(u)),
+            # comment=cycle(fake.text() for _ in range(u)),
             password=make_password('1'),
             photo='media/img.png',
             is_archive=False,
@@ -166,10 +166,11 @@ class Command(BaseCommand):
             start_date=cycle(fake.date() for _ in range(gr)),
             end_date=cycle(fake.date() for _ in range(gr)),
             branch=cycle(Branch.objects.all()),
-            teachers=cycle(User.objects.all()),
+            teacher=cycle(User.objects.all()),
             students=cycle(User.objects.all()),
             course=cycle(Course.objects.all()),
             room=cycle(Room.objects.all()),
+            # comment=cycle(ContentType.objects.get_for_model(Course).model_class().objects.all()),
             make_m2m=True,
             _quantity=gr
         )

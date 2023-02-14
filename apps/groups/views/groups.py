@@ -13,7 +13,7 @@ from shared.utils.export_excel import export_data_excel
 class GroupModelViewSet(ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupListModelSerializer
-    permission_classes = AllowAny
+    permission_classes = AllowAny,
     filter_backends = (CustomGroupDjangoFilterBackend,)
     filterset_class = GroupFilter
 
@@ -32,5 +32,5 @@ class GroupModelViewSet(ModelViewSet):
     def export_users_xls(self, request):
         columns = ['ID', 'Name', 'Course', 'Teacher', 'Days', 'From', 'To', 'Room']
         rows = Group.objects.values_list('id', 'name', 'course__name', 'teachers__first_name', 'days',
-                                               'start_date', 'end_date', 'room__name')
+                                         'start_date', 'end_date', 'room__name')
         return export_data_excel(columns, rows)

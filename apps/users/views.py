@@ -9,8 +9,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from groups.filters import CustomCompanyDjangoFilterBackend
 from shared.utils.export_excel import export_data_excel
-# from users.documents import UserDocument
 from users.documents import UserDocument
 from users.filters import UserFilter, CustomUserDjangoFilterBackend
 from users.models import User, LeadIncrement, Lead, Archive, Blog
@@ -57,14 +57,6 @@ class UserDocumentView(DocumentViewSet):
     search_fields = 'first_name', 'last_name', 'phone'
 
 
-# class UserDocumentView(DocumentViewSet):
-#     document = UserDocument
-#     serializer_class = UserListDocumentSerializer
-#     permission_classes = AllowAny,
-#     filter_backends = SearchFilterBackend,
-#     search_fields = 'first_name', 'last_name', 'phone'
-
-
 class LeadIncrementModelViewSet(ModelViewSet):
     serializer_class = LeadIncrementModelSerializer
     queryset = LeadIncrement.objects.all()
@@ -91,8 +83,8 @@ class UpdateProfileView(UpdateAPIView):
 class BlogModelViewSet(ModelViewSet):
     queryset = Blog.objects.all()
     serializer_class = BlogModelSerializer
-    lookup_url_kwarg = 'id'
-    lookup_field = 'id'
+    filter_backends = CustomCompanyDjangoFilterBackend,
+    filterset_fields = 'company',
 
     def get_queryset(self):
         qs = super().get_queryset()
