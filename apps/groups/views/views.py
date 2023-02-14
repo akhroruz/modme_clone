@@ -3,15 +3,18 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions
 from rest_framework.viewsets import ModelViewSet
 
+from groups.filters import CustomCompanyDjangoFilterBackend
 from groups.models import Branch, Room, Course, Company
-from groups.serializers import BranchModelSerializer, \
-    RoomListModelSerializer, RoomCreateModelSerializer, HomeModelSerializer, CompanyModelSerializer
+from groups.serializers import BranchModelSerializer, RoomListModelSerializer, RoomCreateModelSerializer, \
+    HomeModelSerializer, CompanyModelSerializer
 from shared.permissions import IsAdministrator
 
 
 class BranchModelViewSet(ModelViewSet):
     queryset = Branch.objects.all()
     serializer_class = BranchModelSerializer
+    filter_backends = CustomCompanyDjangoFilterBackend,
+    filterset_fields = 'company',
     parser_classes = (MultiPartParser,)
 
 

@@ -1,4 +1,3 @@
-from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import IntegerField, CharField, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
     TimeField, DecimalField, DateField, BooleanField, CASCADE, ManyToManyField
@@ -60,7 +59,7 @@ class Holiday(BaseModel):  # dam olish kunlari
         return self.name
 
 
-class Group(BaseModel):   # checked
+class Group(BaseModel):  # checked
     class DaysChoice(TextChoices):
         ODD_DAYS = 'odd_days', 'Odd days'
         EVEN_DAYS = 'even days', 'Even Days'
@@ -84,7 +83,8 @@ class Group(BaseModel):   # checked
     start_date = DateField(null=True, blank=True)
     end_date = DateField(null=True, blank=True)
     tags = ArrayField(CharField(max_length=255))
-    comment = GenericRelation('users.Comment')
+
+    # comment = GenericRelation('users.Comment')
 
     def __str__(self):
         return self.name

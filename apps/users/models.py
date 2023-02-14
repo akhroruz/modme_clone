@@ -1,6 +1,6 @@
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import AbstractUser
-from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, JSONField, \
     TextField, DateTimeField, ManyToManyField, ForeignKey, CASCADE, BooleanField, SET_NULL, BigIntegerField, \
     PositiveIntegerField
@@ -36,7 +36,7 @@ class User(AbstractUser, BaseModel):
     branch = ManyToManyField('groups.Branch')
     data = JSONField(null=True, blank=True)  # social account
     deleted_at = DateTimeField(null=True)
-    comment = GenericRelation('users.Comment')
+    # comment = GenericRelation('users.Comment')
 
     EMAIL_FIELD = None
     USERNAME_FIELD = 'phone'
@@ -93,6 +93,7 @@ class Blog(BaseModel):
     updated_by = ForeignKey('users.User', SET_NULL, 'updated_by', null=True, blank=True)
     visible_all = BooleanField(default=False, blank=True, null=True)
     view_count = BigIntegerField(default=0, blank=True, null=True)
+    company = ForeignKey('groups.Company', CASCADE)
 
     def __str__(self):
         return self.title
