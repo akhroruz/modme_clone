@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from groups.models import Branch, Room, Course, Holiday, CourseGroup, Company
+from groups.models import Branch, Room, Course, Holiday, Group, Company
 from users.models import User
 from users.serializers import UserBranchListModelSerializer
 
@@ -60,10 +60,10 @@ class GroupTeacherListModelSerializer(ModelSerializer):
 
 class GroupListModelSerializer(ModelSerializer):
     class Meta:
-        model = CourseGroup
+        model = Group
         fields = '__all__'
 
-    def to_representation(self, instance: CourseGroup):
+    def to_representation(self, instance: Group):
         data = super().to_representation(instance)
         data['students_count'] = instance.students_count
         data['teachers'] = GroupTeacherListModelSerializer(instance.teachers, many=True).data
@@ -84,7 +84,7 @@ class HolidayCreateModelSerializer(ModelSerializer):
         fields = 'name', 'holiday_date', 'affect_payment'
 
 
-class CourseGroupModelSerializer(ModelSerializer):
+class GroupModelSerializer(ModelSerializer):
     class Meta:
-        model = CourseGroup
+        model = Group
         fields = '__all__'

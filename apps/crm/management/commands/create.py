@@ -34,7 +34,7 @@ class Command(BaseCommand):
         parser.add_argument('-course', '--course', type=int, help='Define a course number prefix', )
         parser.add_argument('-r', '--room', type=int, help='Define a room number prefix', )
         parser.add_argument('-hd', '--holiday', type=int, help='Define a holiday number prefix', )
-        parser.add_argument('-gr', '--coursegroup', type=int, help='Define a group number prefix', )
+        parser.add_argument('-gr', '--Group', type=int, help='Define a group number prefix', )
         parser.add_argument('-u', '--user', type=int, help='Define a user number prefix', )
         parser.add_argument('-a', '--archive', type=int, help='Define a archive number prefix', )
         parser.add_argument('-li', '--lead_increment', type=int, help='Define a lead increment number prefix', )
@@ -158,9 +158,9 @@ class Command(BaseCommand):
         print(l, 'leads is being addded')
 
         # course group
-        gr = options.get('coursegroup', 15)
+        gr = options.get('Group', 15)
         baker.make(
-            'groups.CourseGroup',
+            'groups.Group',
             name=cycle(fake.first_name() for _ in range(gr)),
             status=cycle(fake.random_element(User.GenderChoose) for _ in range(100)),
             start_date=cycle(fake.date() for _ in range(gr)),
