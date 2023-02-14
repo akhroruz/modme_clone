@@ -59,7 +59,6 @@ class TestLeadIncrementModelSerializer:
 
 @pytest.mark.django_db
 class TestBlogModelSerializer:
-
     @pytest.fixture
     def client(self):
         return APIClient()
