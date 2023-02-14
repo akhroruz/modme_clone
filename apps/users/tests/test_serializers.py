@@ -4,8 +4,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from users.models import Blog
-from users.models import Lead, LeadIncrement, User
+from users.models import Blog, Lead, LeadIncrement, User
 from users.serializers import LeadModelSerializer, LeadIncrementModelSerializer
 
 
@@ -62,33 +61,30 @@ class TestLeadIncrementModelSerializer:
 User = get_user_model()
 
 
-@pytest.fixture
-def client():
-    return APIClient()
-
-
-@pytest.fixture
-def user():
-    user = User.objects.create_user(phone='123456789', password='testpass')
-    return user
-
-
-@pytest.fixture
-def blog(user):
-    blog = Blog.objects.create(
-        title='Blog 1',
-        text='Text 1',
-        public=True,
-        created_by=user,
-        updated_by=user,
-        visible_all=True,
-        view_count=11,
-    )
-    return blog
-
-
 @pytest.mark.django_db
 class TestBlogModelSerializer:
+
+    @pytest.fixture
+    def client(self):
+        return APIClient()
+
+    @pytest.fixture
+    def user(self):
+        user = User.objects.create_user(phone='123456789', password='testpass')
+        return user
+
+    @pytest.fixture
+    def blog(self, user):
+        blog = Blog.objects.create(
+            title='Blog 1',
+            text='Text 1',
+            public=True,
+            created_by=user,
+            updated_by=user,
+            visible_all=True,
+            view_count=11,
+        )
+        return blog
 
     def test_list_blogs(self, client, user, blog):
         client.force_authenticate(user=user)

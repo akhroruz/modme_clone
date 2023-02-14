@@ -7,7 +7,6 @@ from rest_framework.serializers import ModelSerializer, CharField, ValidationErr
 
 from groups.models import CourseGroup, Branch
 from users.documents import UserDocument
-# from users.documents import UserDocument
 from users.models import User, Comment, LeadIncrement, Lead, Archive, Blog
 
 
@@ -132,9 +131,7 @@ class UpdateProfileSerializer(ModelSerializer):
         instance.gender = validated_data['gender']
         instance.photo = validated_data['photo']
         instance.password = validated_data['password']
-
         instance.save()
-
         return instance
 
 

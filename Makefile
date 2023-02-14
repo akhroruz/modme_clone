@@ -4,12 +4,10 @@ mig:
 
 unmig:
 	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+	python3 manage.py ram
 
-local:
-	python3 manage.py makemessages -l en
-	python3 manage.py makemessages -l ru
-	python3 manage.py makemessages -l uz
-	python3 manage.py compilemessages
+ram:
+	python3 manage.py ram
 
 faker:
 	python3 manage.py loaddata role
