@@ -229,3 +229,5 @@ core/.env
 !**/migrations/
 !**/migrations/__init__.py
 TODO
+htmlcov
+.idea

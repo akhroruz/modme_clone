@@ -24,3 +24,8 @@ remig:
 
 search_index:
 	python3 manage.py search_index --rebuild
+
+test:
+	coverage run -m pytest -vv
+	coverage report --omit='*/migrations/*,*/__init__.py'
+	coverage html --omit='*/migrations/*,*/__init__.py,core/' && open htmlcov/index.html
