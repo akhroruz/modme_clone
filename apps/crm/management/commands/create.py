@@ -146,16 +146,16 @@ class Command(BaseCommand):
         print(li, 'leads increments is being addded')
 
         # lead
-        l = options.get('lead', 15)
+        lead = options.get('lead', 15)
         baker.make(
             'users.Lead',
-            full_name=cycle(fake.first_name() for _ in range(l)),
-            comment=cycle(fake.text() for _ in range(l)),
-            phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(l)),
+            full_name=cycle(fake.first_name() for _ in range(lead)),
+            comment=cycle(fake.text() for _ in range(lead)),
+            phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(lead)),
             lead_increment=cycle(LeadIncrement.objects.all()),
-            _quantity=l
+            _quantity=lead
         )
-        print(l, 'leads is being addded')
+        print(lead, 'leads is being addded')
 
         # course group
         gr = options.get('Group', 15)
