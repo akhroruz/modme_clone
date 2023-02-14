@@ -148,7 +148,7 @@ class BlogModelSerializer(ModelSerializer):
             'view_count': {'required': False},
         }
 
-#
+
 class UserListDocumentSerializer(DocumentSerializer):
     class Meta:
         document = UserDocument

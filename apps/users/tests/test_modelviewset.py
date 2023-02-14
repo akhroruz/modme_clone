@@ -1,9 +1,11 @@
 import pytest
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
+from django.test import Client
 from rest_framework import status
 from rest_framework.reverse import reverse
-from django.test import Client
-from users.models import Lead
-from users.models import LeadIncrement
+
+from users.models import LeadIncrement, Lead, User, Blog
 
 
 @pytest.mark.django_db
@@ -49,6 +51,7 @@ class TestLeadModelViewSet:
         response = client.post(url, data, 'application/json')
         item = response.json()
         assert response.status_code == status.HTTP_201_CREATED
+
         assert item['full_name'] == data['full_name']
         assert item['comment'] == data['comment']
         assert item['phone'] == data['phone']
@@ -78,7 +81,6 @@ class TestLeadModelViewSet:
         url = reverse('lead-detail', args=[lead.id])
         response = client.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
-
 
 @pytest.mark.django_db
 class TestLeadIncrementModelVIewSet:
@@ -117,3 +119,82 @@ class TestLeadIncrementModelVIewSet:
         url = reverse('lead_increment-detail', args=[lead_increment.id])
         response = client.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+User = get_user_model()
+
+
+@pytest.mark.django_db
+class TestBlogModelViewSet:
+    client = Client()
+
+    @pytest.fixture
+    def base_user(self):
+        user = User.objects.create_user(phone='123456789', password='password1')
+        Blog.objects.create(
+            title='Test Blog 1',
+            text='This is a test blog',
+            public=True,
+            created_by=user,
+            updated_by=user,
+            visible_all=True,
+            view_count=0
+        )
+        self.client.login(phone='123456789', password='password1')
+        return user
+
+    @pytest.fixture
+    def blog(self, base_user):
+        return Blog.objects.create(
+            title='Test Blog 1',
+            text='This is a test blog',
+            public=True,
+            created_by_id=base_user.pk,
+            updated_by_id=base_user.pk,
+            visible_all=True,
+            view_count=0
+        )
+
+    def test_retrieve_blog(self, base_user):
+        url = reverse('news_blog-detail', args=(1,))
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        blog = Blog.objects.get(id=1)
+        assert blog.view_count == 1
+        assert blog.title == 'Test Blog 1'
+        assert blog.text == 'This is a test blog'
+        assert blog.public == True
+        assert blog.visible_all == True
+
+    def test_list_blogs(self, base_user):
+        url = reverse('news_blog-list')
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_create_blog(self, base_user):
+        data = {
+            'title': 'Test Blog 2',
+            'text': 'This is a test blog 2',
+            'public': True,
+            'visible_all': True
+        }
+        url = reverse('news_blog-list')
+        response = self.client.post(url, data=data)
+        blog = response.data
+        assert response.status_code == 201
+        assert blog.get('title') == 'Test Blog 2'
+        assert blog.get('text') == 'This is a test blog 2'
+        assert blog.get('public') == True
+        assert blog.get('visible_all') == True
+        assert blog.get('view_count') == 0
+
+    def test_update_blog(self, client, blog):
+        url = reverse('news_blog-detail', args=(blog.pk,))
+        data = {
+            'title': 'Test Blog 1 - updated',
+            'text': 'This is a test blog - updated',
+            'public': False,
+            'visible_all': False
+        }
+        response = self.client.put(url, data=data, content_type='application/json')
+        assert response.status_code == 200
