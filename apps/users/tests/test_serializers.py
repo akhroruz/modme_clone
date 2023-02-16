@@ -17,18 +17,14 @@ class TestLeadModelSerializer:
         )
         return lead_increment
 
-    @pytest.fixture
-    def client(self):
-        return APIClient()
-
     def test_lead_increment_list(self, client, lead_increment):
-        client.force_authenticate(lead_increment)
+        client.force_login(lead_increment)
         url = reverse('lead_increment-list')
         response = client.get(url)
         assert response.status_code == 200
 
     def test_create_lead_increment(self, client, lead_increment):
-        client.force_authenticate(user=lead_increment)
+        client.force_login(user=lead_increment)
         data = {
             'name': 'New Lead Increment',
 
@@ -39,7 +35,7 @@ class TestLeadModelSerializer:
         assert response.data['name'] == 'New Lead Increment'
 
     def test_update_lead_increment(self, client, lead_increment):
-        client.force_authenticate(user=lead_increment)
+        client.force_login(user=lead_increment)
         data = {
             'name': 'Updated Lead Increment'
         }
@@ -50,7 +46,7 @@ class TestLeadModelSerializer:
         assert response.data['name'] == 'Updated Lead Increment'
 
     def test_patch_lead_increment(self, client, lead_increment):
-        client.force_authenticate(user=lead_increment)
+        client.force_login(user=lead_increment)
         data = {
             'name': 'Patched Lead Increment'
         }
@@ -61,7 +57,7 @@ class TestLeadModelSerializer:
         assert response.data['name'] == 'Patched Lead Increment'
 
     def test_delete(self, client, lead_increment):
-        client.force_authenticate(user=lead_increment)
+        client.force_login(user=lead_increment)
         url = reverse('lead_increment-detail', args=(lead_increment.pk,))
         response = client.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
@@ -79,12 +75,8 @@ class TestBlogModelSerializer:
 
     @pytest.fixture
     def user(self):
-        user = User.objects.create(phone=1234567, password='pass')
+        user = User.objects.create_user(phone=1234567, password='pass')
         return user
-
-    @pytest.fixture
-    def client(self):
-        return APIClient()
 
     @pytest.fixture
     def blog(self, user, client, company):
@@ -101,20 +93,20 @@ class TestBlogModelSerializer:
         return blog
 
     def test_list_blogs(self, client, user, blog, company):
-        client.force_authenticate(user=user)
+        client.force_login(user)
         url = '%s?company=%s' % (reverse('news_blog-list'), company.pk)
         response = client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 4
 
-    def test_retrieve(self, client, user, blog, company):
-        client.force_authenticate(user=user)
+    def test_retrieve(self, client, user, rf, blog, company):
+        client.force_login(user)
         url = '%s?company=%s' % (reverse('news_blog-list'), company.pk)
         response = client.get(url)
         assert response.status_code == status.HTTP_200_OK
 
     def test_create(self, client, user, company):
-        client.force_authenticate(user=user)
+        client.force_login(user)
         data = {
             'title': 'New Blog Title',
             'text': 'New Blog Text',
@@ -128,7 +120,7 @@ class TestBlogModelSerializer:
         assert response.status_code == status.HTTP_201_CREATED
 
     def test_update(self, client, user, blog, company):
-        client.force_authenticate(user=user)
+        client.force_login(user)
         data = {
             'title': 'Updated Blog Title',
             'text': 'Updated Blog Text',
@@ -148,7 +140,7 @@ class TestBlogModelSerializer:
         assert response.data['view_count'] == 30
 
     def test_patch(self, client, user, blog, company):
-        client.force_authenticate(user=user)
+        client.force_login(user)
         data = {
             'title': 'Patched Blog Title',
             'text': 'Patched Blog Text',
@@ -167,7 +159,7 @@ class TestBlogModelSerializer:
         assert response.data['view_count'] == 55
 
     def test_delete(self, client, user, blog, company):
-        client.force_authenticate(user=user)
+        client.force_login(user)
         url = '%s?company=%s' % (reverse('news_blog-detail', args=(blog.pk,)), company.pk)
         response = client.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
@@ -198,13 +190,13 @@ class LeadModelSerializerTest:
         return lead
 
     def test_lead_list(self, client, lead):
-        client.force_authenticate(user=lead)
+        client.force_login(user=lead)
         url = reverse('lead-list')
         response = client.get(url)
         assert response.status_code == 200
 
     def test_create_lead(self, client, lead, lead_increment):
-        client.force_authenticate(user=lead)
+        client.force_login(user=lead)
         data = {
             'full_name': 'New Created Lead',
             'comment': 'New Created Comment',
@@ -280,7 +272,7 @@ class LeadModelSerializerTest:
 #
 #     #
 #     # def test_user_list(self, client, user, branch, company, archive, role):
-#     #     client.force_authenticate(user=user)
+#     #     client.force_login(user)
 #     #     url = reverse('news_blog-list'),
 #     #     response = client.get(url)
 #     #     assert response.status_code == 200
@@ -289,7 +281,7 @@ class LeadModelSerializerTest:
 #     def test_create(self, client, user, archive):
 #         image_path = MEDIA_ROOT + '/test.png'
 #         image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
-#         client.force_authenticate(user=user)
+#         client.force_login(user)
 #         data = {
 #             'phone': '77777777',
 #             'is_archive': True,
