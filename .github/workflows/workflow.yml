@@ -1,0 +1,16 @@
+name: CodeCov
+on: [push, pull_request]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      OS: ubuntu-latest
+      PYTHON: '3.10'
+    steps:
+    - uses: checkout@v2
+      with:
+        fetch-depth: ‘2’
+
+    - name: Django Modme API
+      run: |
+        pytest
