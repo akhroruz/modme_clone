@@ -143,7 +143,7 @@ class Command(BaseCommand):
             'users.Comment',
             text=fake.text(),
             content_type=content_type,
-            object_id=choice(users),
+            object_id=cycle(users.values_list('pk', flat=True)),
             _quantity=15
         )
 
