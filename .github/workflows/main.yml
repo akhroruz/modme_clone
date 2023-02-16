@@ -1,7 +1,20 @@
-name: Django ModMe API
-on: [pull_request, push]
+name: django-pytest
+on: [ pull_request, push ]
 jobs:
-  test_project:
+
+  services:
+    postgres:
+      image: postgres:latest
+      env:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: github_actions
+      ports:
+        - 5432:5432
+      # needed because the postgres container does not provide a healthcheck
+      options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+  projects:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
