@@ -18,7 +18,7 @@ class TestLeadModelSerializer:
         return lead_increment
 
     def test_lead_increment_list(self, client, lead_increment):
-        client.force_login(lead_increment)
+        client.force_login(user=lead_increment)
         url = reverse('lead_increment-list')
         response = client.get(url)
         assert response.status_code == 200
