@@ -1,8 +1,11 @@
 import random
 from itertools import cycle
+from random import choice
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
+from django.contrib.contenttypes.management import get_contenttypes_and_models
+from django.contrib.contenttypes.models import ContentType
 from django.core.management import BaseCommand
 from faker import Faker
 from model_bakery import baker
@@ -125,7 +128,6 @@ class Command(BaseCommand):
             role=cycle(Group.objects.all()),
             branch=cycle(Branch.objects.all()),
             archive=cycle(Archive.objects.all()),
-            # comment=cycle(fake.text() for _ in range(u)),
             password=make_password('1'),
             photo='media/img.png',
             is_archive=False,
@@ -134,6 +136,16 @@ class Command(BaseCommand):
         )
 
         print(u, 'users is being addded')
+        users = User.objects.all()
+        content_type = ContentType.objects.get_for_model(User)
+
+        baker.make(
+            'users.Comment',
+            text=fake.text(),
+            content_type=content_type,
+            object_id=choice(users),
+            _quantity=15
+        )
 
         # lead increment
         li = options.get('lead_increment', 15)
