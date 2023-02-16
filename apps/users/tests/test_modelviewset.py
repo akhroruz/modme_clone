@@ -1,9 +1,11 @@
 # import pytest
+# from django.contrib.auth import get_user_model
+# from django.contrib.auth.models import User
 # from django.test import Client
 # from rest_framework import status
 # from rest_framework.reverse import reverse
 #
-# from users.models import LeadIncrement, Lead, Blog, User
+# from users.models import LeadIncrement, Lead, User, Blog
 #
 #
 # @pytest.mark.django_db
@@ -80,7 +82,6 @@
 #         response = client.delete(url)
 #         assert response.status_code == status.HTTP_204_NO_CONTENT
 #
-#
 # @pytest.mark.django_db
 # class TestLeadIncrementModelVIewSet:
 #
@@ -118,6 +119,9 @@
 #         url = reverse('lead_increment-detail', args=[lead_increment.id])
 #         response = client.delete(url)
 #         assert response.status_code == status.HTTP_204_NO_CONTENT
+#
+#
+# User = get_user_model()
 #
 #
 # @pytest.mark.django_db
@@ -159,8 +163,8 @@
 #         assert blog.view_count == 1
 #         assert blog.title == 'Test Blog 1'
 #         assert blog.text == 'This is a test blog'
-#         assert blog.public
-#         assert blog.visible_all
+#         assert blog.public == True
+#         assert blog.visible_all == True
 #
 #     def test_list_blogs(self, base_user):
 #         url = reverse('news_blog-list')
@@ -180,8 +184,8 @@
 #         assert response.status_code == 201
 #         assert blog.get('title') == 'Test Blog 2'
 #         assert blog.get('text') == 'This is a test blog 2'
-#         assert blog.get('public')
-#         assert blog.get('visible_all')
+#         assert blog.get('public') == True
+#         assert blog.get('visible_all') == True
 #         assert blog.get('view_count') == 0
 #
 #     def test_update_blog(self, client, blog):
