@@ -1,29 +1,26 @@
-name: django-pytest
-on: [ pull_request, push ]
+name: Django ModMe API
+on: [pull_request, push]
 jobs:
-  build:
+  postgres:
+    image: postgres:latest
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: github_actions
+    ports:
+      - 5432:5432
+    # needed because the postgres container does not provide a healthcheck
+    options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+  test_project:
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          poetry install
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: github_actions
-        ports:
-          - 5432:5432
-        # needed because the postgres container does not provide a healthcheck
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
-    test_project:
-      steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-python@v2
-        - run: |
-            curl -sSL https://install.python-poetry.org | python3 -
-            poetry install
-          env:
-            POETRY_VIRTUALENVS_CREATE: false
-        - run: pytest .
-        - run: flake8 .
+          POETRY_VIRTUALENVS_CREATE: false
+      - run: pytest .
+      - run: flake8 .
