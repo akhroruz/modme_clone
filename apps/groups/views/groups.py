@@ -17,6 +17,7 @@ class GroupModelViewSet(ModelViewSet):
     filter_backends = (CustomGroupDjangoFilterBackend,)
     filterset_class = GroupFilter
 
+
     def list(self, request, *args, **kwargs):
         data = {
             'data': self.get_serializer(self.get_queryset(), many=True).data
