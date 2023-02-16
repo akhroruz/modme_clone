@@ -18,6 +18,7 @@ admin:
 
 remig:
 	make unmig
+	make ram
 	make mig
 	make admin
 	make faker

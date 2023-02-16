@@ -33,7 +33,7 @@
 
 - ```make mig``` make migrations and migrate
 - ```make unmig``` delete migrations files
-- ```make remig``` delete migrations files, make migrations, migrate, create default superuser and create fake datas in database
+- ```make remig``` all in one
 - ```make admin``` create admin superuser
 - ```make load``` collect all datas
 - ```make faker``` create random fake datas in database
