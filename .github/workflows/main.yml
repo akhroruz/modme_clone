@@ -1,0 +1,15 @@
+name: Django ModMe API
+on: [pull_request, push]
+jobs:
+  test_project:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          poetry install
+        env:
+          POETRY_VIRTUALENVS_CREATE: false
+      - run: pytest .
+      - run: flake8 .

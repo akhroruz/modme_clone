@@ -11,7 +11,10 @@ env = environ.Env(
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(BASE_DIR, 'apps'))
 
-environ.Env.read_env(os.path.join(BASE_DIR, 'core/.env'))
+if os.getenv("GITHUB_ACTIONS") == "true":
+    environ.Env.read_env(os.path.join(BASE_DIR, 'core/.env.example'))
+else:
+    environ.Env.read_env(os.path.join(BASE_DIR, 'core/.env'))
 
 SECRET_KEY = env('SECRET_KEY')
 
