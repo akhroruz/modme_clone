@@ -1,10 +1,8 @@
 import random
 from itertools import cycle
-from random import choice
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
-from django.contrib.contenttypes.management import get_contenttypes_and_models
 from django.contrib.contenttypes.models import ContentType
 from django.core.management import BaseCommand
 from faker import Faker

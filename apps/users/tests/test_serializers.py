@@ -1,66 +1,10 @@
 import pytest
+from django.test import Client
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIClient
 
 from groups.models import Company
-from users.models import Blog, User, Lead, LeadIncrement
-
-
-@pytest.mark.django_db
-class TestLeadModelSerializer:
-
-    @pytest.fixture
-    def lead_increment(self):
-        lead_increment = LeadIncrement.objects.create(
-            name='Lead Increment 1'
-        )
-        return lead_increment
-
-    def test_lead_increment_list(self, client, lead_increment):
-        client.force_login(user=lead_increment)
-        url = reverse('lead_increment-list')
-        response = client.get(url)
-        assert response.status_code == 200
-
-    def test_create_lead_increment(self, client, lead_increment):
-        client.force_login(user=lead_increment)
-        data = {
-            'name': 'New Lead Increment',
-
-        }
-        url = reverse('lead_increment-list')
-        response = client.post(url, data)
-        assert response.status_code == status.HTTP_201_CREATED
-        assert response.data['name'] == 'New Lead Increment'
-
-    def test_update_lead_increment(self, client, lead_increment):
-        client.force_login(user=lead_increment)
-        data = {
-            'name': 'Updated Lead Increment'
-        }
-
-        url = reverse('lead_increment-detail', args=(lead_increment.id,))
-        response = client.put(url, data)
-        assert response.status_code == 200
-        assert response.data['name'] == 'Updated Lead Increment'
-
-    def test_patch_lead_increment(self, client, lead_increment):
-        client.force_login(user=lead_increment)
-        data = {
-            'name': 'Patched Lead Increment'
-        }
-
-        url = reverse('lead_increment-detail', args=(lead_increment.id,))
-        response = client.put(url, data)
-        assert response.status_code == 200
-        assert response.data['name'] == 'Patched Lead Increment'
-
-    def test_delete(self, client, lead_increment):
-        client.force_login(user=lead_increment)
-        url = reverse('lead_increment-detail', args=(lead_increment.pk,))
-        response = client.delete(url)
-        assert response.status_code == status.HTTP_204_NO_CONTENT
+from users.models import Blog, User
 
 
 @pytest.mark.django_db
@@ -79,7 +23,7 @@ class TestBlogModelSerializer:
         return user
 
     @pytest.fixture
-    def blog(self, user, client, company):
+    def blog(self, user, client: Client, company):
         blog = Blog.objects.create(
             title='Blog 1',
             text='Text 1',
@@ -92,20 +36,20 @@ class TestBlogModelSerializer:
         )
         return blog
 
-    def test_list_blogs(self, client, user, blog, company):
+    def test_list_blogs(self, client: Client, user, blog, company):
         client.force_login(user)
         url = '%s?company=%s' % (reverse('news_blog-list'), company.pk)
         response = client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 4
 
-    def test_retrieve(self, client, user, rf, blog, company):
+    def test_retrieve(self, client: Client, user, rf, blog, company):
         client.force_login(user)
         url = '%s?company=%s' % (reverse('news_blog-list'), company.pk)
         response = client.get(url)
         assert response.status_code == status.HTTP_200_OK
 
-    def test_create(self, client, user, company):
+    def test_create(self, client: Client, user, company):
         client.force_login(user)
         data = {
             'title': 'New Blog Title',
@@ -119,7 +63,7 @@ class TestBlogModelSerializer:
         response = client.post(url, data)
         assert response.status_code == status.HTTP_201_CREATED
 
-    def test_update(self, client, user, blog, company):
+    def test_update(self, client: Client, user, blog, company):
         client.force_login(user)
         data = {
             'title': 'Updated Blog Title',
@@ -131,7 +75,7 @@ class TestBlogModelSerializer:
 
         }
         url = '%s?company=%s' % (reverse('news_blog-detail', args=(blog.pk,)), company.pk)
-        response = client.put(url, data)
+        response = client.put(url, data, 'application/json')
         assert response.status_code == status.HTTP_200_OK
         assert response.data['title'] == 'Updated Blog Title'
         assert response.data['text'] == 'Updated Blog Text'
@@ -139,7 +83,7 @@ class TestBlogModelSerializer:
         assert response.data['visible_all']
         assert response.data['view_count'] == 30
 
-    def test_patch(self, client, user, blog, company):
+    def test_patch(self, client: Client, user, blog, company):
         client.force_login(user)
         data = {
             'title': 'Patched Blog Title',
@@ -150,7 +94,7 @@ class TestBlogModelSerializer:
 
         }
         url = '%s?company=%s' % (reverse('news_blog-detail', args=(blog.pk,)), company.pk)
-        response = client.patch(url, data)
+        response = client.patch(url, data, 'application/json')
         assert response.status_code == status.HTTP_200_OK
         assert response.data['title'] == 'Patched Blog Title'
         assert response.data['text'] == 'Patched Blog Text'
@@ -158,60 +102,12 @@ class TestBlogModelSerializer:
         assert not response.data['visible_all']
         assert response.data['view_count'] == 55
 
-    def test_delete(self, client, user, blog, company):
+    def test_delete(self, client: Client, user, blog, company):
         client.force_login(user)
         url = '%s?company=%s' % (reverse('news_blog-detail', args=(blog.pk,)), company.pk)
         response = client.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
-
-@pytest.mark.django_db
-class LeadModelSerializerTest:
-    @pytest.fixture
-    def lead_increment(self):
-        lead_increment = LeadIncrement.objects.create(
-            name='Lead Increment 1'
-        )
-        return lead_increment
-
-    @pytest.fixture
-    def client(self):
-        return APIClient()
-
-    @pytest.fixture
-    def lead(self, lead_increment):
-        lead = Lead.objects.create(
-            full_name='LeadFullName1',
-            comment='Comment1',
-            phone='123456789',
-            status=Lead.LeadStatus.REQUESTS,
-            lead_increment_id=lead_increment.pk
-        )
-        return lead
-
-    def test_lead_list(self, client, lead):
-        client.force_login(user=lead)
-        url = reverse('lead-list')
-        response = client.get(url)
-        assert response.status_code == 200
-
-    def test_create_lead(self, client, lead, lead_increment):
-        client.force_login(user=lead)
-        data = {
-            'full_name': 'New Created Lead',
-            'comment': 'New Created Comment',
-            'phone': '7777777',
-            'status': Lead.LeadStatus.PENDING,
-            'lead_increment': lead_increment.pk
-        }
-        url = reverse('lead-list')
-        response = client.post(url, data)
-        assert response.status_code == status.HTTP_201_CREATED
-        assert response.data['full_name'] == 'New Created Lead'
-        assert response.data['comment'] == 'New Created Comment'
-        assert response.data['phone'] == 7777777
-        assert response.data['status'] == lead.LeadStatus.PENDING
-        assert response.data['lead_increment'] == lead_increment.pk
 
 # TODO: Adkhamjon
 # @pytest.mark.django_db

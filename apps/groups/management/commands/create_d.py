@@ -58,5 +58,3 @@ class Command(BaseCommand):
             course_duration=9,
             branch=cycle(faker.random_choices(course)),
         )
-        
-
