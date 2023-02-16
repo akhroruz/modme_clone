@@ -2,14 +2,15 @@ from django.db.models import F
 from django_elasticsearch_dsl_drf.filter_backends import SearchFilterBackend
 from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 from rest_framework.decorators import action
+from rest_framework.filters import OrderingFilter
 from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from groups.filters import CustomCompanyDjangoFilterBackend
 from shared.utils.export_excel import export_data_excel
-# from users.documents import UserDocument
 from users.documents import UserDocument
 from users.filters import UserFilter, CustomUserDjangoFilterBackend
 from users.models import User, LeadIncrement, Lead, Archive, Blog
@@ -23,35 +24,26 @@ class UserModelViewSet(ModelViewSet):
     queryset = User.objects.all()
     permission_classes = AllowAny,
     parser_classes = MultiPartParser,
-    filter_backends = CustomUserDjangoFilterBackend,
+    filter_backends = CustomUserDjangoFilterBackend, OrderingFilter
     filterset_class = UserFilter
     ordering = ['first_name', 'last_name']
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        if sort_name := self.request.query_params.get('sort_by_name'):
-            if sort_name == 'desc':
-                qs = qs.order_by('-first_name')
-        return qs
 
     def get_serializer_class(self):
         if self.action == 'create':
             return UserCreateModelSerializer
         return super().get_serializer_class()
 
-    @action(methods=['GET', 'POST'], detail=False, url_path='trashed', url_name='trashed')
+    @action(['GET', 'POST'], False, 'trashed', 'trashed')
     def get_trashed(self, request):
         if self.request.method == 'GET':
             serializer = ArchiveListModelSerializer(Archive.objects.all(), many=True)
-            return Response(serializer.data)
-        if self.request.method == 'POST':
+        else:
             serializer = ArchiveCreateModelSerializer(request.data)
             serializer.save()
-            return Response(serializer.data)
+        return Response(serializer.data)
 
     @action(['GET'], False, 'export', 'export')
     def export_users_xls(self, request):
-
         columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
         rows = User.objects.values_list('id', 'first_name', 'phone', 'birth_date', 'comment', 'balance')
         return export_data_excel(columns, rows)
@@ -63,14 +55,6 @@ class UserDocumentView(DocumentViewSet):
     permission_classes = AllowAny,
     filter_backends = SearchFilterBackend,
     search_fields = 'first_name', 'last_name', 'phone'
-
-
-# class UserDocumentView(DocumentViewSet):
-#     document = UserDocument
-#     serializer_class = UserListDocumentSerializer
-#     permission_classes = AllowAny,
-#     filter_backends = SearchFilterBackend,
-#     search_fields = 'first_name', 'last_name', 'phone'
 
 
 class LeadIncrementModelViewSet(ModelViewSet):
@@ -99,8 +83,8 @@ class UpdateProfileView(UpdateAPIView):
 class BlogModelViewSet(ModelViewSet):
     queryset = Blog.objects.all()
     serializer_class = BlogModelSerializer
-    lookup_url_kwarg = 'id'
-    lookup_field = 'id'
+    filter_backends = CustomCompanyDjangoFilterBackend,
+    filterset_fields = 'company',
 
     def get_queryset(self):
         qs = super().get_queryset()

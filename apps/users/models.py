@@ -1,9 +1,11 @@
 from ckeditor_uploader.fields import RichTextUploadingField
-from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.models import AbstractUser
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, JSONField, \
-    TextField, DateTimeField, Model, ManyToManyField, ForeignKey, CASCADE, BooleanField, SET_NULL, BigIntegerField
+    TextField, DateTimeField, ManyToManyField, ForeignKey, CASCADE, BooleanField, SET_NULL, BigIntegerField, \
+    PositiveIntegerField
 
-from shared.models import BaseModel, UUIDBaseModel
+from shared.models import BaseModel
 from users.managers import MyUserManager
 
 
@@ -21,6 +23,8 @@ class User(AbstractUser, BaseModel):
 
     email = None
     username = None
+    groups = None
+
     phone = CharField(max_length=15, unique=True)
     is_archive = BooleanField(default=False)
     archive = ForeignKey(Archive, SET_NULL, null=True, blank=True)
@@ -28,11 +32,11 @@ class User(AbstractUser, BaseModel):
     gender = CharField(max_length=25, choices=GenderChoose.choices, blank=True, null=True)
     photo = ImageField(max_length=100, upload_to='profiles/', default='media/img.png', blank=True, null=True)
     balance = IntegerField(default=0, blank=True)
-    role = ManyToManyField('auth.Group', 'roles')
-    branch = ManyToManyField('groups.Branch', 'branches')
+    role = ManyToManyField('auth.Group')
+    branch = ManyToManyField('groups.Branch')
     data = JSONField(null=True, blank=True)  # social account
-    comment = TextField(blank=True, null=True)
     deleted_at = DateTimeField(null=True)
+    # comment = GenericRelation('users.Comment')
 
     EMAIL_FIELD = None
     USERNAME_FIELD = 'phone'
@@ -53,7 +57,9 @@ class User(AbstractUser, BaseModel):
 
 class Comment(BaseModel):
     text = TextField()
-    user = ForeignKey('users.User', CASCADE, 'comments')
+    content_type = ForeignKey('contenttypes.ContentType', CASCADE)
+    object_id = PositiveIntegerField()
+    content_object = GenericForeignKey()
 
 
 class Lead(BaseModel):
@@ -87,6 +93,7 @@ class Blog(BaseModel):
     updated_by = ForeignKey('users.User', SET_NULL, 'updated_by', null=True, blank=True)
     visible_all = BooleanField(default=False, blank=True, null=True)
     view_count = BigIntegerField(default=0, blank=True, null=True)
+    company = ForeignKey('groups.Company', CASCADE)
 
     def __str__(self):
         return self.title

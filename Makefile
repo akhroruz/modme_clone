@@ -4,12 +4,10 @@ mig:
 
 unmig:
 	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+	python3 manage.py ram
 
-local:
-	python3 manage.py makemessages -l en
-	python3 manage.py makemessages -l ru
-	python3 manage.py makemessages -l uz
-	python3 manage.py compilemessages
+ram:
+	python3 manage.py ram
 
 faker:
 	python3 manage.py loaddata role
@@ -26,3 +24,8 @@ remig:
 
 search_index:
 	python3 manage.py search_index --rebuild
+
+test:
+	coverage run -m pytest -vv
+	coverage report --omit='*/migrations/*,*/__init__.py'
+	coverage html --omit='*/migrations/*,*/__init__.py,core/' && open htmlcov/index.html

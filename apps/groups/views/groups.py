@@ -5,15 +5,15 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from groups.filters import CustomGroupDjangoFilterBackend, GroupFilter
-from groups.models import CourseGroup
+from groups.models import Group
 from groups.serializers import GroupListModelSerializer
 from shared.utils.export_excel import export_data_excel
 
 
 class GroupModelViewSet(ModelViewSet):
-    queryset = CourseGroup.objects.all()
+    queryset = Group.objects.all()
     serializer_class = GroupListModelSerializer
-    permission_classes = AllowAny
+    permission_classes = AllowAny,
     filter_backends = (CustomGroupDjangoFilterBackend,)
     filterset_class = GroupFilter
 
@@ -31,6 +31,6 @@ class GroupModelViewSet(ModelViewSet):
     @action(methods=['GET'], detail=False, url_path='export', url_name='export')
     def export_users_xls(self, request):
         columns = ['ID', 'Name', 'Course', 'Teacher', 'Days', 'From', 'To', 'Room']
-        rows = CourseGroup.objects.values_list('id', 'name', 'course__name', 'teachers__first_name', 'days',
-                                               'start_date', 'end_date', 'room__name')
+        rows = Group.objects.values_list('id', 'name', 'course__name', 'teachers__first_name', 'days',
+                                         'start_date', 'end_date', 'room__name')
         return export_data_excel(columns, rows)

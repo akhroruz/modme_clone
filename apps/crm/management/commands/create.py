@@ -34,7 +34,7 @@ class Command(BaseCommand):
         parser.add_argument('-course', '--course', type=int, help='Define a course number prefix', )
         parser.add_argument('-r', '--room', type=int, help='Define a room number prefix', )
         parser.add_argument('-hd', '--holiday', type=int, help='Define a holiday number prefix', )
-        parser.add_argument('-gr', '--coursegroup', type=int, help='Define a group number prefix', )
+        parser.add_argument('-gr', '--Group', type=int, help='Define a group number prefix', )
         parser.add_argument('-u', '--user', type=int, help='Define a user number prefix', )
         parser.add_argument('-a', '--archive', type=int, help='Define a archive number prefix', )
         parser.add_argument('-li', '--lead_increment', type=int, help='Define a lead increment number prefix', )
@@ -70,7 +70,7 @@ class Command(BaseCommand):
         course = options.get('course', 15)
         baker.make(
             'groups.Course',
-            branch=cycle(Branch.objects.all()),
+            # branch=cycle(Branch.objects.all()),
             name=cycle(fake.first_name() for _ in range(course)),
             price=cycle(fake.pyint() * 100 for _ in range(course)),
             description=cycle(fake.sentences(nb=310050)),
@@ -125,7 +125,7 @@ class Command(BaseCommand):
             role=cycle(Group.objects.all()),
             branch=cycle(Branch.objects.all()),
             archive=cycle(Archive.objects.all()),
-            comment=cycle(fake.text() for _ in range(u)),
+            # comment=cycle(fake.text() for _ in range(u)),
             password=make_password('1'),
             photo='media/img.png',
             is_archive=False,
@@ -146,30 +146,31 @@ class Command(BaseCommand):
         print(li, 'leads increments is being addded')
 
         # lead
-        l = options.get('lead', 15)
+        lead = options.get('lead', 15)
         baker.make(
             'users.Lead',
-            full_name=cycle(fake.first_name() for _ in range(l)),
-            comment=cycle(fake.text() for _ in range(l)),
-            phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(l)),
+            full_name=cycle(fake.first_name() for _ in range(lead)),
+            comment=cycle(fake.text() for _ in range(lead)),
+            phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(lead)),
             lead_increment=cycle(LeadIncrement.objects.all()),
-            _quantity=l
+            _quantity=lead
         )
-        print(l, 'leads is being addded')
+        print(lead, 'leads is being addded')
 
         # course group
-        gr = options.get('coursegroup', 15)
+        gr = options.get('Group', 15)
         baker.make(
-            'groups.CourseGroup',
+            'groups.Group',
             name=cycle(fake.first_name() for _ in range(gr)),
             status=cycle(fake.random_element(User.GenderChoose) for _ in range(100)),
             start_date=cycle(fake.date() for _ in range(gr)),
             end_date=cycle(fake.date() for _ in range(gr)),
             branch=cycle(Branch.objects.all()),
-            teachers=cycle(User.objects.all()),
+            teacher=cycle(User.objects.all()),
             students=cycle(User.objects.all()),
             course=cycle(Course.objects.all()),
             room=cycle(Room.objects.all()),
+            # comment=cycle(ContentType.objects.get_for_model(Course).model_class().objects.all()),
             make_m2m=True,
             _quantity=gr
         )
