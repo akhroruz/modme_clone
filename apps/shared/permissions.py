@@ -61,4 +61,4 @@ class PermissionPolicyMixin:
         ):
             self.permission_classes = self.permission_classes_per_method.get(handler.__name__)
 
-        super().check_permissions(request)
+        super().check_permissions(request)  # noqa

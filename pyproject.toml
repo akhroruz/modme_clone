@@ -32,6 +32,8 @@ coverage = "^7.1.0"
 pytest = "^7.2.1"
 flake8 = "^6.0.0"
 setuptools = "^67.3.1"
+update = "^0.0.1"
+pytest-cov = "^4.0.0"
 
 
 
