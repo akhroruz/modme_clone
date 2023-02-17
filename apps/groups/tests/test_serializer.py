@@ -26,6 +26,8 @@
 #     @pytest.fixture
 #     def branch_fixture(self):
 #         image_path = MEDIA_ROOT + '/test.png'
+
+
 #         image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
 #         return Branch.objects.create(
 #             name='Branch 1',
