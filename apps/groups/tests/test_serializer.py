@@ -1,10 +1,10 @@
-import pytest
-from django.contrib.auth.models import Group as Role
-from django.core.files.uploadedfile import SimpleUploadedFile
-
-from core.settings import MEDIA_ROOT
-from groups.models import Branch, Company, Room
-from groups.serializers import BranchModelSerializer, GroupModelSerializer, RoomCreateModelSerializer
+# import pytest
+# from django.contrib.auth.models import Group as Role
+# from django.core.files.uploadedfile import SimpleUploadedFile
+#
+# from core.settings import MEDIA_ROOT
+# from groups.models import Branch, Company, Room
+# from groups.serializers import BranchModelSerializer, GroupModelSerializer, RoomCreateModelSerializer
 
 
 # @pytest.mark.django_db
