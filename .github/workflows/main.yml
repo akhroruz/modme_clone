@@ -1,27 +1,27 @@
 name: Django ModMe API
 on: [ pull_request, push ]
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    postgres:
-      image: postgres:latest
-      env:
-        POSTGRES_USER: 'postgres'
-        POSTGRES_PASSWORD: 'postgres'
-        POSTGRES_DB: 'github_actions'
-      ports:
-        - 5432:5432
-      options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+#  build:
+  runs-on: ubuntu-latest
+  postgres:
+    image: postgres:latest
+    env:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'github_actions'
+    ports:
+      - 5432:5432
+    options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
 
-    test_project:
-      steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-python@v2
-        - run:
-            curl -sSL https://install.python-poetry.org | python3 -
-            poetry install
-          env:
-            POETRY_VIRTUALENVS_CREATE: false
-        - run: pytest
-        - run: flake8
+  test_project:
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run:
+          curl -sSL https://install.python-poetry.org | python3 -
+          poetry install
+        env:
+          POETRY_VIRTUALENVS_CREATE: false
+      - run: pytest
+      - run: flake8
