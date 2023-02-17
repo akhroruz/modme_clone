@@ -1,4 +1,5 @@
 import pytest
+from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from django.contrib.auth.models import Group as Role
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
@@ -192,7 +193,7 @@ class TestUserModelSerializer:
         image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
         client.force_login(user)
         data = {
-            'phone': '77777777',
+            'phone': '934923327',
             'archive_id': archive.pk,
             'birth_date': '2000-01-01',
             'balance': 45,
@@ -206,30 +207,31 @@ class TestUserModelSerializer:
         url = '%s?branch=%s' % (reverse('user-list'), branch.pk)
         response = client.post(url, data)
         assert response.status_code == 201
-        assert response.data['phone'] == '934923327'
+        assert response.data['phone'] == data['phone']
         assert response.data['gender'] == user.GenderChoose.MALE
-        assert response.data['birth_date'] == '2000-01-01'
+        assert response.data['birth_date'] == data['birth_date']
 
     def test_update(self, client: Client, user, branch, role):
         client.force_login(user)
         image_path = MEDIA_ROOT + '/test.png'
-        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/png')
+        image = SimpleUploadedFile('test.png', open(image_path, 'rb').read(), 'image/png')
 
         data = {
-            'phone': 123456789,
-            'birth_date': '1999-01-01',
-            'gender': user.GenderChoose.FEMALE,
+            'birth_date': '1999-01-11',
             'password': '1234567890',
             'role': role.pk,
-            'photo': image
+            'photo': image,
+            'gender': user.GenderChoose.FEMALE
         }
+
         url = reverse('user-detail', args=(user.pk,)) + f'?branch={branch.pk}&user_type={role.name}'
-        response = client.put(url, data)
+        response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
+
         assert response.status_code == status.HTTP_200_OK, f"Expected status code 200 but got {response.status_code}"
-        assert 'phone' in response.data, "Response data should contain 'phone' field"
-        assert response.data['phone'] == '123456789', "Response data 'phone' field should match sent data"
+
         assert 'gender' in response.data, "Response data should contain 'gender' field"
         assert response.data['gender'] == user.GenderChoose.FEMALE, "Response data 'gender' " \
                                                                     "field should match sent data"
         assert 'birth_date' in response.data, "Response data should contain 'birth_date' field"
-        assert response.data['birth_date'] == '2000-01-01', "Response data 'birth_date' field should match sent data"
+        assert response.data['birth_date'] == data[
+            'birth_date'], "Response data 'birth_date' field should match sent data"

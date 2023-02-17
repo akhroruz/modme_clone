@@ -53,6 +53,7 @@ class UserListModelSerializer(ModelSerializer):
             'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'data', 'role',
             'is_archive'
         )
+        read_only_fields = ('phone', 'full_name', 'id')
 
     def to_representation(self, instance: User):
         rep = super().to_representation(instance)

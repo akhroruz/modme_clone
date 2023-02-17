@@ -4,7 +4,7 @@ from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import UpdateAPIView
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -23,10 +23,13 @@ class UserModelViewSet(ModelViewSet):
     serializer_class = UserListModelSerializer
     queryset = User.objects.all()
     permission_classes = AllowAny,
-    parser_classes = MultiPartParser,
+    parser_classes = MultiPartParser, FormParser
     filter_backends = CustomUserDjangoFilterBackend, OrderingFilter
     filterset_class = UserFilter
     ordering = ['first_name', 'last_name']
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
 
     def get_serializer_class(self):
         if self.action == 'create':
