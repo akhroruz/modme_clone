@@ -1,5 +1,5 @@
+from django.contrib.auth.models import Group as Role
 from rest_framework.serializers import ModelSerializer
-
 from groups.models import Branch, Room, Course, Holiday, Group, Company
 from users.models import User
 
@@ -80,5 +80,5 @@ class HolidayCreateModelSerializer(ModelSerializer):
 
 class GroupModelSerializer(ModelSerializer):
     class Meta:
-        model = Group
+        model = Role
         fields = '__all__'
