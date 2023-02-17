@@ -4,7 +4,7 @@ from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import UpdateAPIView
-from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -87,7 +87,7 @@ class BlogModelViewSet(ModelViewSet):
     queryset = Blog.objects.all()
     serializer_class = BlogModelSerializer
     filter_backends = CustomCompanyDjangoFilterBackend,
-    filterset_fields = 'company',
+    filterset_fields = 'company',  # noqa
 
     def get_queryset(self):
         qs = super().get_queryset()

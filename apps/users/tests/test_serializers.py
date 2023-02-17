@@ -1,11 +1,10 @@
 import pytest
-from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
+from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart  # noqa
 from django.contrib.auth.models import Group as Role
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
 from rest_framework import status
 from rest_framework.reverse import reverse
-
 from core.settings import MEDIA_ROOT
 from groups.models import Company, Group, Branch, Room
 from users.models import User, Archive, Blog
@@ -228,10 +227,39 @@ class TestUserModelSerializer:
         response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
 
         assert response.status_code == status.HTTP_200_OK, f"Expected status code 200 but got {response.status_code}"
-
         assert 'gender' in response.data, "Response data should contain 'gender' field"
         assert response.data['gender'] == user.GenderChoose.FEMALE, "Response data 'gender' " \
                                                                     "field should match sent data"
         assert 'birth_date' in response.data, "Response data should contain 'birth_date' field"
         assert response.data['birth_date'] == data[
             'birth_date'], "Response data 'birth_date' field should match sent data"
+
+    def test_patch(self, client: Client, user, branch, role):
+        client.force_login(user)
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', open(image_path, 'rb').read(), 'image/png')
+
+        data = {
+            'birth_date': '1000-10-10',
+            'password': 'password1',
+            'role': role.pk,
+            'photo': image,
+            'gender': user.GenderChoose.MALE
+        }
+
+        url = reverse('user-detail', args=(user.pk,)) + f'?branch={branch.pk}&user_type={role.name}'
+        response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
+
+        assert response.status_code == status.HTTP_200_OK, f"Expected status code 200 but got {response.status_code}"
+        assert 'gender' in response.data, "Response data should contain 'gender' field"
+        assert response.data['gender'] == user.GenderChoose.MALE, "Response data 'gender' " \
+                                                                  "field should match sent data"
+        assert 'birth_date' in response.data, "Response data should contain 'birth_date' field"
+        assert response.data['birth_date'] == data['birth_date'], \
+            "Response data 'birth_date' field should match sent data"
+
+    def test_delete(self, client: Client, user, branch, role, company):
+        client.force_login(user)
+        url = reverse('user-detail', args=(user.pk,)) + f'?branch={branch.pk}&user_type={role.name}'
+        response = client.delete(url)
+        assert response.status_code == status.HTTP_204_NO_CONTENT

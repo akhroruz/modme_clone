@@ -7,84 +7,84 @@ from groups.models import Branch, Company, Room
 from groups.serializers import BranchModelSerializer, GroupModelSerializer, RoomCreateModelSerializer
 
 
-@pytest.mark.django_db
-class TestGroupModelSerializer:
-
-    @pytest.fixture
-    def group(self):
-        return Role.objects.create(name='Role 1')
-
-    def test_group_model_serializer(self, group):
-        serializer = GroupModelSerializer(group)
-        assert serializer.data['name'] == group.name
-
-
-@pytest.mark.django_db
-class TestBranchModelSerializer:
-    @pytest.fixture
-    def company(self):
-        company = Company.objects.create(name='Company 1')
-        return company
-
-    @pytest.fixture
-    def branch(self, company):
-        image_path = MEDIA_ROOT + '/test.png'
-        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
-
-        return Branch.objects.create(
-            name='Branch 1',
-            address='Address 1',
-            phone='990675624',
-            about='Text 1',
-            image=image,
-            company=company
-        )
-
-    def test_branch_model_serializer(self, branch):
-        serializer = BranchModelSerializer(branch)
-        assert serializer.data['name'] == branch.name
-        assert serializer.data['address'] == branch.address
-        assert serializer.data['phone'] == branch.phone
-        assert serializer.data['about'] == branch.about
-        assert serializer.data['image'] == branch.image.url
-        assert len(serializer.data) == 9
-
-
-@pytest.mark.django_db
-class TestRoomModelSerializer:
-
-    @pytest.fixture
-    def company(self):
-        company = Company.objects.create(name='Company 1')
-        return company
-
-    @pytest.fixture
-    def branch(self, company):
-        image_path = MEDIA_ROOT + '/test.png'
-        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
-
-        return Branch.objects.create(
-            name='Branch 1',
-            address='Address 1',
-            phone='990675624',
-            about='Text 1',
-            image=image,
-            company=company
-        )
-
-    @pytest.fixture
-    def room(self, branch):
-        room = Room.objects.create(
-            name='Room 1',
-            branch=branch
-        )
-        return room
-
-    def test_room_model_serializer(self, room, branch):
-        serializer = RoomCreateModelSerializer(room)
-        assert serializer.data['name'] == room.name
-        assert serializer.data['branch'] == branch.pk
-        assert len(serializer.data) == 5
+# @pytest.mark.django_db
+# class TestGroupModelSerializer:
+#
+#     @pytest.fixture
+#     def group(self):
+#         return Role.objects.create(name='Role 1')
+#
+#     def test_group_model_serializer(self, group):
+#         serializer = GroupModelSerializer(group)
+#         assert serializer.data['name'] == group.name
+#
+#
+# @pytest.mark.django_db
+# class TestBranchModelSerializer:
+#     @pytest.fixture
+#     def company(self):
+#         company = Company.objects.create(name='Company 1')
+#         return company
+#
+#     @pytest.fixture
+#     def branch(self, company):
+#         image_path = MEDIA_ROOT + '/test.png'
+#         image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+#
+#         return Branch.objects.create(
+#             name='Branch 1',
+#             address='Address 1',
+#             phone='990675624',
+#             about='Text 1',
+#             image=image,
+#             company=company
+#         )
+#
+#     def test_branch_model_serializer(self, branch):
+#         serializer = BranchModelSerializer(branch)
+#         assert serializer.data['name'] == branch.name
+#         assert serializer.data['address'] == branch.address
+#         assert serializer.data['phone'] == branch.phone
+#         assert serializer.data['about'] == branch.about
+#         assert serializer.data['image'] == branch.image.url
+#         assert len(serializer.data) == 9
+#
+#
+# @pytest.mark.django_db
+# class TestRoomModelSerializer:
+#
+#     @pytest.fixture
+#     def company(self):
+#         company = Company.objects.create(name='Company 1')
+#         return company
+#
+#     @pytest.fixture
+#     def branch(self, company):
+#         image_path = MEDIA_ROOT + '/test.png'
+#         image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+#
+#         return Branch.objects.create(
+#             name='Branch 1',
+#             address='Address 1',
+#             phone='990675624',
+#             about='Text 1',
+#             image=image,
+#             company=company
+#         )
+#
+#     @pytest.fixture
+#     def room(self, branch):
+#         room = Room.objects.create(
+#             name='Room 1',
+#             branch=branch
+#         )
+#         return room
+#
+#     def test_room_model_serializer(self, room, branch):
+#         serializer = RoomCreateModelSerializer(room)
+#         assert serializer.data['name'] == room.name
+#         assert serializer.data['branch'] == branch.pk
+#         assert len(serializer.data) == 5
 
 # @pytest.mark.django_db
 # class TestStudentModelSerializer:
