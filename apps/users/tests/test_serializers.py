@@ -8,7 +8,7 @@ from rest_framework.reverse import reverse
 
 from core.settings import MEDIA_ROOT
 from groups.models import Company, Group, Branch, Room
-from users.models import User, Archive, Blog, LeadIncrement, Lead
+from users.models import User, Archive, Blog
 
 
 @pytest.mark.django_db

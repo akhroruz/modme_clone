@@ -1,6 +1,7 @@
 from datetime import date
 
 import pytest
+
 from groups.models import Company, Branch, Room, Course, Holiday
 
 
@@ -142,8 +143,6 @@ class TestHolidayModel:
     def test_holiday_model(self, holiday, branch):
         assert holiday.name == 'test_name'
         assert holiday.holiday_date == date(2023, 12, 25)
-        assert holiday.affect_payment == False
+        assert not holiday.affect_payment
         assert branch == branch
         assert str(holiday) == holiday.name
-
-
