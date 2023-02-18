@@ -42,6 +42,8 @@ class TestBlogModelSerializer:
 
     def test_list_blogs(self, client: Client, user, blog, company):
         client.force_login(user)
+        assert str(blog) == str(blog.title)
+
         url = '%s?company=%s' % (reverse('news_blog-list'), company.pk)
         response = client.get(url)
         assert response.status_code == status.HTTP_200_OK
@@ -185,6 +187,7 @@ class TestUserModelSerializer:
         client.force_login(user)
         url = '%s?branch=%s&user_type=%s' % (reverse('user-list'), branch.pk, role.name)
         response = client.get(url)
+        assert str(user) == str(user.phone)
         assert response.status_code == 200
         assert len(response.data) == 4
 
@@ -280,10 +283,11 @@ class TestLeadIncrementSerialize:
         )
         return lead_increment
 
-    def test_lead_increment_list(self, client: Client, user):
+    def test_lead_increment_list(self, client: Client, user, lead_increment):
         client.force_login(user)
         url = reverse('lead_increment-list')
         response = client.get(url)
+        assert str(lead_increment) == str(lead_increment.name)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 4
 
@@ -355,10 +359,11 @@ class TestLeadSerializer:
         )
         return lead
 
-    def test_lead_list(self, client: Client, user):  # noqa
+    def test_lead_list(self, client: Client, user, lead):  # noqa
         client.force_login(user)
         url = reverse('lead-list')
         response = client.get(url)
+        assert str(lead) == f"{lead.full_name} | {lead.phone}"
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 4
 
@@ -434,10 +439,11 @@ class TestArchiveSerializer:
         )
         return archive
 
-    def test_archive_list(self, client: Client, user):  # noqa
+    def test_archive_list(self, client: Client, user, archive):  # noqa
         client.force_login(user)
         url = reverse('archive_reasons-list')
         response = client.get(url)
+        assert str(archive) == str(archive.name)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 4
 
