@@ -12,7 +12,6 @@ class Company(BaseModel):  # checked
         return self.name
 
     class Meta:
-        verbose_name = 'Company'
         verbose_name_plural = 'Companies'
 
 
@@ -23,6 +22,9 @@ class Branch(BaseModel):  # checked
     phone = CharField(max_length=10, unique=True)
     about = TextField(null=True, blank=True)
     image = ImageField(max_length=100, upload_to='images/', default='media/img.png')
+
+    class Meta:
+        verbose_name_plural = 'Branches'
 
     def __str__(self):
         return self.name

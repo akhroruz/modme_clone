@@ -92,12 +92,12 @@ DATABASES = {
 if os.environ.get('GITHUB_WORKFLOW'):
     DATABASES = {
         'default': {
-           'ENGINE': 'django.db.backends.postgresql',
-           'NAME': 'github_actions',
-           'USER': 'postgres',
-           'PASSWORD': 'postgres',
-           'HOST': '127.0.0.1',
-           'PORT': '5432',
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'github_actions',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
         }
     }
 
@@ -222,11 +222,14 @@ JAZZMIN_SETTINGS = {
     "icons": {
         "auth": "fas fa-users-cog",
         "users.user": "fas fa-user",
-        "auth.Group": "fas fa-users",
+        "auth.Group": "fas fa-sharp fa-regular fa-user-shield",
         "users.Blog": "fas fa-newspaper",
-        "users.Lid": "fas fa-download",
+        "users.Lead": "fas fa-light fa-user-nurse",
+        "users.LeadIncrement": "fas fa-light fa-user-check",
         "groups.Branch": "fa regular fa-code-branch",
+        "groups.Company": "fa regular fa-building",
         "groups.Course": "fa solid fa-layer-group",
+        "groups.Group": "fa solid fa-layer-group",
         "groups.Room": "fa solid fa-door-open",
     },
     "default_icon_parents": "fas fa-chevron-circle-right",

@@ -31,6 +31,7 @@
 
 ## Makefile
 
+- ```make test``` run pytest with coverage html
 - ```make mig``` make migrations and migrate
 - ```make unmig``` delete migrations files
 - ```make remig``` all in one
