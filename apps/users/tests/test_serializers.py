@@ -308,12 +308,12 @@ class TestLeadIncrementSerialize:
     def test_update_lead_increment(self, client: Client, user, lead_increment):
         client.force_login(user)
         data = {
-            'name': 'updated_new_increment',
+            'name': 'created_new_increment',
         }
         url = reverse('lead_increment-detail', args=(lead_increment.pk,))
         response = client.put(url, data, 'application/json')
         assert response.status_code == status.HTTP_200_OK
-        assert response.data['name'] == 'updated_new_increment'
+        assert response.data['name'] == 'created_new_increment'
 
     def test_patch_lead_increment(self, client: Client, user, lead_increment):
         client.force_login(user)
@@ -332,7 +332,7 @@ class TestLeadIncrementSerialize:
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db  # noqa
 class TestLeadSerializer:
 
     @pytest.fixture
