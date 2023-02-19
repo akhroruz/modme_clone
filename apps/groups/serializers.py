@@ -19,7 +19,7 @@ class BranchModelSerializer(ModelSerializer):
 class RoomListModelSerializer(ModelSerializer):
     class Meta:
         model = Room
-        fields = ('id', 'name')
+        fields = '__all__'
 
 
 class RoomCreateModelSerializer(ModelSerializer):
