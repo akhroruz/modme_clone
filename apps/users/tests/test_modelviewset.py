@@ -23,11 +23,11 @@
 #         return Lead.objects.create(
 #             full_name='full name 1',
 #             comment='comment 1',
-#             phone=990675624,
+#             phone='990675624',
 #             status=Lead.LeadStatus.REQUESTS,
 #             lead_increment=lead_increment
 #         )
-#
+
 #     def test_list_lead(self, client: Client, lead):
 #         url = reverse('lead-list')
 #         response = client.get(url)

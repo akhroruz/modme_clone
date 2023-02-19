@@ -2,13 +2,13 @@ import random
 from itertools import cycle
 
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group as Role
 from django.contrib.contenttypes.models import ContentType
 from django.core.management import BaseCommand
 from faker import Faker
 from model_bakery import baker
 
-from groups.models import Company, Branch, Course, Room
+from groups.models import Company, Branch, Course, Room, Group
 from users.models import User, LeadIncrement, Archive
 
 fake = Faker()
@@ -24,22 +24,24 @@ class Command(BaseCommand):
     * Holiday           -> 15
     * Course group      -> 15
     * User              -> 15
+    * User comment      -> 15
     * Archive           -> 15
     * Lead              -> 15
     * Lead increment    -> 15
     '''
 
     def add_arguments(self, parser):
-        parser.add_argument('-c', '--company', type=int, help='Define a company number prefix', )
-        parser.add_argument('-b', '--branch', type=int, help='Define a branch number prefix', )
-        parser.add_argument('-course', '--course', type=int, help='Define a course number prefix', )
+        parser.add_argument('-c', '--company', type=int, help='Define a company number prefix')
+        parser.add_argument('-b', '--branch', type=int, help='Define a branch number prefix')
+        parser.add_argument('-course', '--course', type=int, help='Define a course number prefix')
         parser.add_argument('-r', '--room', type=int, help='Define a room number prefix', )
-        parser.add_argument('-hd', '--holiday', type=int, help='Define a holiday number prefix', )
-        parser.add_argument('-gr', '--Group', type=int, help='Define a group number prefix', )
-        parser.add_argument('-u', '--user', type=int, help='Define a user number prefix', )
-        parser.add_argument('-a', '--archive', type=int, help='Define a archive number prefix', )
-        parser.add_argument('-li', '--lead_increment', type=int, help='Define a lead increment number prefix', )
-        parser.add_argument('-l', '--lead', type=int, help='Define a lead number prefix', )
+        parser.add_argument('-hd', '--holiday', type=int, help='Define a holiday number prefix')
+        parser.add_argument('-gr', '--Group', type=int, help='Define a group number prefix')
+        parser.add_argument('-u', '--user', type=int, help='Define a user number prefix')
+        parser.add_argument('-uc', '--usercomment', type=int, help='Define a user comment number prefix')
+        parser.add_argument('-a', '--archive', type=int, help='Define a archive number prefix')
+        parser.add_argument('-li', '--lead_increment', type=int, help='Define a lead increment number prefix')
+        parser.add_argument('-l', '--lead', type=int, help='Define a lead number prefix')
 
     def handle(self, *args, **options):
         company_code = ('90', '99', '98', '93', '94')
@@ -132,8 +134,10 @@ class Command(BaseCommand):
             make_m2m=True,
             _quantity=u
         )
-
         print(u, 'users is being addded')
+
+        # user comment
+        uc = options.get('usercomment', 15)
         users = User.objects.all()
         content_type = ContentType.objects.get_for_model(User)
 
@@ -142,8 +146,9 @@ class Command(BaseCommand):
             text=fake.text(),
             content_type=content_type,
             object_id=cycle(users.values_list('pk', flat=True)),
-            _quantity=15
+            _quantity=uc
         )
+        print(uc, 'user comments is being addded')
 
         # lead increment
         li = options.get('lead_increment', 15)
@@ -180,8 +185,21 @@ class Command(BaseCommand):
             students=cycle(User.objects.all()),
             course=cycle(Course.objects.all()),
             room=cycle(Room.objects.all()),
-            # comment=cycle(ContentType.objects.get_for_model(Course).model_class().objects.all()),
             make_m2m=True,
             _quantity=gr
         )
         print(gr, 'groups is being addded')
+
+        # group comment
+        gc = options.get('groupcomment', 15)
+        groups = Group.objects.all()
+        content_type = ContentType.objects.get_for_model(Group)
+
+        baker.make(
+            'users.Comment',
+            text=fake.text(),
+            content_type=content_type,
+            object_id=cycle(groups.values_list('pk', flat=True)),
+            _quantity=gc
+        )
+        print(uc, 'group comments is being addded')

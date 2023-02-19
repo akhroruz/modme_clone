@@ -71,6 +71,14 @@ class LeadModelViewSet(ModelViewSet):
     queryset = Lead.objects.all()
     permission_classes = (AllowAny,)
 
+    def list(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        data = {
+            'count': qs.count(),
+            'data': self.get_serializer(qs, many=True).data
+        }
+        return Response(data)
+
 
 class ArchiveReasonsModelViewSet(ModelViewSet):
     queryset = Archive.objects.all()
