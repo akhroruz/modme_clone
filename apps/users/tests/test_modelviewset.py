@@ -248,16 +248,6 @@ class TestExportExcel:
         assert len(df) == 1
         assert list(df.columns) == ['first_name', 'phone']
         assert list(df.values[0]) == ['Backend', 66666666]
-        # explanation [prosta yozb qoydm yaxshi narsa ekan]  # noqa
-        '''
-            >>> df = pd.DataFrame({'age':    [ 3,  29],
-                                   'height': [94, 170],
-                                   'weight': [31, 115]})
-            >>> df
-               age  height  weight
-            0    3      94      31
-            1   29     170     115
-        '''
 
     def test_export_data_excel(self, columns, rows):
         response = export_data_excel(columns, rows)
