@@ -1,11 +1,7 @@
-from datetime import date
-
-from django.contrib.auth.hashers import make_password
-
 import pytest
 
-from groups.models import Company, Branch
-from users.models import Archive, LeadIncrement, Lead, Blog, User, Comment
+from groups.models import Company
+from users.models import Archive, LeadIncrement, Lead, Blog, User
 
 
 @pytest.mark.django_db
@@ -101,5 +97,3 @@ class TestBlogModel:
         assert blog.view_count == 100
         assert blog.company == company
         assert str(blog) == blog.title
-
-
