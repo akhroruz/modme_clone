@@ -13,7 +13,6 @@ from users.models import User
 @pytest.mark.django_db
 class TestBranchModelViewSet:
 
-
     @pytest.fixture
     def company(self):
         company = Company.objects.create(name='Company 1')
@@ -21,8 +20,8 @@ class TestBranchModelViewSet:
 
     @pytest.fixture
     def branch(self, company):
-        image_path = MEDIA_ROOT + '/img.png'
-        image = SimpleUploadedFile('img.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
         branch = Branch.objects.create(
             name='Branch 1',
             address='Uzbekistan, Toshkent',
@@ -47,10 +46,9 @@ class TestBranchModelViewSet:
         assert item['company'] == branch.company.pk
 
     def test_create_branch(self, client: Client, branch):
-        # url = reverse('branch-list')
         url = '%s?company=%s' % (reverse('branch-list'), branch.company.id)
-        image_path = MEDIA_ROOT + '/img.png'
-        image = SimpleUploadedFile('img.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
         data = {
             'name': branch.name,
             'address': branch.address,
@@ -121,8 +119,8 @@ class TestRoomModelViewSet:
 
     @pytest.fixture
     def branch(self, company):
-        image_path = MEDIA_ROOT + '/img.png'
-        image = SimpleUploadedFile('img.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
         branch = Branch.objects.create(
             name='Room 1',
             address='Uzbekistan, Toshkent',

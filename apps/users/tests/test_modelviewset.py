@@ -1,200 +1,264 @@
-# import pytest
-# from django.contrib.auth import get_user_model
-# from django.contrib.auth.models import User
-# from django.test import Client
-# from rest_framework import status
-# from rest_framework.reverse import reverse
-#
-# from users.models import LeadIncrement, Lead, User, Blog
-#
-#
-# @pytest.mark.django_db
-# class TestLeadModelViewSet:
-#
-#     @pytest.fixture
-#     def lead_increment(self):
-#         lead_increment = LeadIncrement.objects.create(
-#             name='Lead 1'
-#         )
-#         return lead_increment
-#
-#     @pytest.fixture
-#     def lead(self, lead_increment):
-#         return Lead.objects.create(
-#             full_name='full name 1',
-#             comment='comment 1',
-#             phone='990675624',
-#             status=Lead.LeadStatus.REQUESTS,
-#             lead_increment=lead_increment
-#         )
+import pytest
+from django.test import Client
+from django.urls import reverse
+from rest_framework import status
+from shared.utils.export_excel import export_data_excel, export_users_to_excel
+from users.models import User, LeadIncrement, Archive, Lead
+import pandas as pd
 
-#     def test_list_lead(self, client: Client, lead):
-#         url = reverse('lead-list')
-#         response = client.get(url)
-#         item = response.data['results'][0]
-#         assert response.status_code == status.HTTP_200_OK
-#         assert item['full_name'] == lead.full_name
-#         assert item['comment'] == lead.comment
-#         assert item['phone'] == lead.phone
-#         assert item['status'] == lead.status
-#         assert item['lead_increment'] == lead.lead_increment_id
-#
-#     def test_create_lead(self, client: Client, lead):
-#         url = reverse('lead-list')
-#         data = {
-#             'full_name': lead.full_name,
-#             'comment': lead.comment,
-#             'phone': lead.phone,
-#             'status': lead.status,
-#             'lead_increment': lead.lead_increment_id
-#         }
-#         response = client.post(url, data, 'application/json')
-#         item = response.json()
-#         assert response.status_code == status.HTTP_201_CREATED
-#
-#         assert item['full_name'] == data['full_name']
-#         assert item['comment'] == data['comment']
-#         assert item['phone'] == data['phone']
-#         assert item['status'] == data['status']
-#         assert item['lead_increment'] == data['lead_increment']
-#
-#     def test_update_lead(self, client: Client, lead):
-#         url = reverse('lead-detail', args=[lead.id])
-#         data = {
-#             'full_name': lead.full_name,
-#             'comment': lead.comment,
-#             'phone': lead.phone,
-#             'status': lead.status,
-#             'lead_increment': lead.lead_increment_id
-#         }
-#         response = client.put(url, data, 'application/json')
-#         item = response.data
-#
-#         assert response.status_code == status.HTTP_200_OK
-#         assert item['full_name'] == data['full_name']
-#         assert item['comment'] == data['comment']
-#         assert item['phone'] == data['phone']
-#         assert item['status'] == data['status']
-#         assert item['lead_increment'] == data['lead_increment']
-#
-#     def test_delete_lead(self, client: Client, lead):
-#         url = reverse('lead-detail', args=[lead.id])
-#         response = client.delete(url)
-#         assert response.status_code == status.HTTP_204_NO_CONTENT
-#
-# @pytest.mark.django_db
-# class TestLeadIncrementModelVIewSet:
-#
-#     @pytest.fixture
-#     def lead_increment(self):
-#         return LeadIncrement.objects.create(
-#             name='Lead Increment 1'
-#         )
-#
-#     def test_list_lead_increment(self, client: Client, lead_increment):
-#         url = reverse('lead_increment-list')
-#         response = client.get(url)
-#         assert response.status_code == status.HTTP_200_OK
-#         assert response.data['results'][0]['name'] == lead_increment.name
-#
-#     def test_create_lead_increment(self, client: Client, lead_increment):
-#         url = reverse('lead_increment-list')
-#         data = {
-#             'name': 'Lead Increment 1'
-#         }
-#         response = client.post(url, data, 'application/json')
-#         assert response.status_code == status.HTTP_201_CREATED
-#         assert response.data['name'] == lead_increment.name
-#
-#     def test_update_lead_increment(self, client: Client, lead_increment):
-#         url = reverse('lead_increment-detail', args=[lead_increment.id])
-#         data = {
-#             'name': 'Lead Increment 1'
-#         }
-#         response = client.put(url, data, 'application/json')
-#         assert response.status_code == status.HTTP_200_OK
-#         assert response.data['name'] == lead_increment.name
-#
-#     def test_delete_lead_increment(self, client: Client, lead_increment):
-#         url = reverse('lead_increment-detail', args=[lead_increment.id])
-#         response = client.delete(url)
-#         assert response.status_code == status.HTTP_204_NO_CONTENT
-#
-#
-# User = get_user_model()
-#
-#
-# @pytest.mark.django_db
-# class TestBlogModelViewSet:
-#     client = Client()
-#
-#     @pytest.fixture
-#     def base_user(self):
-#         user = User.objects.create_user(phone='123456789', password='password1')
-#         Blog.objects.create(
-#             title='Test Blog 1',
-#             text='This is a test blog',
-#             public=True,
-#             created_by=user,
-#             updated_by=user,
-#             visible_all=True,
-#             view_count=0
-#         )
-#         self.client.login(phone='123456789', password='password1')
-#         return user
-#
-#     @pytest.fixture
-#     def blog(self, base_user):
-#         return Blog.objects.create(
-#             title='Test Blog 1',
-#             text='This is a test blog',
-#             public=True,
-#             created_by_id=base_user.pk,
-#             updated_by_id=base_user.pk,
-#             visible_all=True,
-#             view_count=0
-#         )
-#
-#     def test_retrieve_blog(self, base_user):
-#         url = reverse('news_blog-detail', args=(1,))
-#         response = self.client.get(url)
-#         assert response.status_code == status.HTTP_200_OK
-#         blog = Blog.objects.get(id=1)
-#         assert blog.view_count == 1
-#         assert blog.title == 'Test Blog 1'
-#         assert blog.text == 'This is a test blog'
-#         assert blog.public == True
-#         assert blog.visible_all == True
-#
-#     def test_list_blogs(self, base_user):
-#         url = reverse('news_blog-list')
-#         response = self.client.get(url)
-#         assert response.status_code == status.HTTP_200_OK
-#
-#     def test_create_blog(self, base_user):
-#         data = {
-#             'title': 'Test Blog 2',
-#             'text': 'This is a test blog 2',
-#             'public': True,
-#             'visible_all': True
-#         }
-#         url = reverse('news_blog-list')
-#         response = self.client.post(url, data=data)
-#         blog = response.data
-#         assert response.status_code == 201
-#         assert blog.get('title') == 'Test Blog 2'
-#         assert blog.get('text') == 'This is a test blog 2'
-#         assert blog.get('public') == True
-#         assert blog.get('visible_all') == True
-#         assert blog.get('view_count') == 0
-#
-#     def test_update_blog(self, client, blog):
-#         url = reverse('news_blog-detail', args=(blog.pk,))
-#         data = {
-#             'title': 'Test Blog 1 - updated',
-#             'text': 'This is a test blog - updated',
-#             'public': False,
-#             'visible_all': False
-#         }
-#         response = self.client.put(url, data=data, content_type='application/json')
-#         assert response.status_code == 200
+
+@pytest.mark.django_db
+class TestLeadIncrementModelViewSet:
+    @pytest.fixture
+    def user(self):
+        user = User.objects.create_user(
+            phone=7777,
+            password='01A777DA'
+        )
+        return user
+
+    @pytest.fixture
+    def lead_increment(self):
+        lead_increment = LeadIncrement.objects.create(
+            name='lead_increment1',
+        )
+        return lead_increment
+
+    def test_lead_increment_list(self, client: Client, user, lead_increment):
+        client.force_login(user)
+        url = reverse('lead_increment-list')
+        response = client.get(url)
+        assert response.status_code == 200
+        assert str(lead_increment) == lead_increment.name
+
+    def test_lead_increment_create(self, client: Client, user, lead_increment):
+        client.force_login(user)
+        data = {
+            'name': 'New_Lead_increment'
+        }
+        url = reverse('lead_increment-list')
+        response = client.post(url, data)
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.data['name'] == 'New_Lead_increment'
+
+    def test_delete_lead_increment(self, client: Client, user, lead_increment):
+        client.force_login(user)
+        url = reverse('lead_increment-detail', args=(lead_increment.pk,))
+        response = client.delete(url)
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+@pytest.mark.django_db  # noqa
+class TestLeadSerializer:
+
+    @pytest.fixture
+    def user(self):
+        user = User.objects.create_user(phone=1234567, password='pass')
+        return user
+
+    @pytest.fixture
+    def lead_increment(self):
+        lead_increment = LeadIncrement.objects.create(
+            name="lead_increment1"
+        )
+        return lead_increment
+
+    @pytest.fixture
+    def lead(self, lead_increment):
+        lead = Lead.objects.create(
+            phone=12345678,
+            full_name='LeadFullname',
+            comment='Lead comment',
+            lead_increment_id=lead_increment.pk,
+            status=Lead.LeadStatus.REQUESTS
+        )
+        return lead
+
+    def test_lead_list(self, client: Client, user, lead):  # noqa
+        client.force_login(user)
+        url = reverse('lead-list')
+        response = client.get(url)
+        assert str(lead) == f"{lead.full_name} | {lead.phone}"
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 4
+
+    def test_lead_retrieve(self, client: Client, user):  # noqa
+        client.force_login(user)
+        url = reverse('lead-list')
+        response = client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_create_lead(self, client: Client, user, lead, lead_increment):  # noqa
+        client.force_login(user)
+        data = {
+            'phone': 7777777,
+            'full_name': 'Botirali',  # noqa
+            'comment': 'botirali commentti',  # noqa
+            'lead_increment': lead_increment.pk,
+            'status': Lead.LeadStatus.PENDING
+        }
+        url = reverse('lead-list')
+        response = client.post(url, data)
+        assert response.status_code == status.HTTP_201_CREATED
+
+    def test_update_lead(self, client: Client, user, lead, lead_increment):
+        client.force_login(user)
+        data = {
+            'phone': 9999999,
+            'full_name': 'Updated_full_name',
+            'comment': 'Updated_comment',
+            'lead_increment': lead_increment.pk,
+            'status': Lead.LeadStatus.COLLECT
+        }
+        url = reverse('lead-detail', args=(lead.pk,))
+        response = client.put(url, data, 'application/json')
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['full_name'] == 'Updated_full_name'
+        assert response.data['comment'] == 'Updated_comment'
+        assert response.data['status'] == Lead.LeadStatus.COLLECT
+
+    def test_patch_lead(self, client: Client, user, lead, lead_increment):
+        client.force_login(user)
+        data = {
+            'phone': 7777777,
+            'full_name': 'PATCHED_full_name',  # noqa
+            'comment': 'PATCHED_comment',  # noqa
+            'lead_increment': lead_increment.pk,
+            'status': Lead.LeadStatus.PENDING
+        }
+        url = reverse('lead-detail', args=(lead.pk,))
+        response = client.patch(url, data, 'application/json')
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['full_name'] == 'PATCHED_full_name'
+        assert response.data['comment'] == 'PATCHED_comment'
+        assert response.data['status'] == Lead.LeadStatus.PENDING
+
+    def test_delete_lead(self, client: Client, user, lead):
+        client.force_login(user)
+        url = reverse('lead-detail', args=(lead.pk,))
+        response = client.delete(url)
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+@pytest.mark.django_db
+class TestArchiveSerializer:
+    @pytest.fixture  # noqa
+    def user(self):
+        user = User.objects.create_user(phone=1234567, password='pass')
+        return user
+
+    @pytest.fixture
+    def archive(self):
+        archive = Archive.objects.create(
+            name="ARCHIVE1"
+        )
+        return archive
+
+    def test_archive_list(self, client: Client, user, archive):  # noqa
+        client.force_login(user)
+        url = reverse('archive_reasons-list')
+        response = client.get(url)
+        assert str(archive) == str(archive.name)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 4
+
+    def test_retrieve_archive(self, client: Client, user):  # noqa
+        client.force_login(user)
+        url = reverse('archive_reasons-list')
+        response = client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_create_lead_increment(self, client: Client, user, archive):  # noqa
+        client.force_login(user)
+        data = {
+            'name': 'New_arxiv_qora_royxat ',  # noqa
+        }
+        url = reverse('archive_reasons-list')
+        response = client.post(url, data)
+        assert response.status_code == status.HTTP_201_CREATED
+
+    def test_update_archive(self, client: Client, user, archive):  # noqa
+        client.force_login(user)
+        data = {
+            'name': 'Updated New archive OQ ROYXAT'  # noqa
+        }
+        url = reverse('archive_reasons-detail', args=(archive.pk,))
+        response = client.put(url, data, 'application/json')
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['name'] == 'Updated New archive OQ ROYXAT'  # noqa
+
+    def test_patch_archive(self, client: Client, user, archive):  # noqa
+        client.force_login(user)
+        data = {
+            'name': 'PATCHED New archive OQ ROYXAT'  # noqa
+        }
+        url = reverse('archive_reasons-detail', args=(archive.pk,))
+        response = client.put(url, data, 'application/json')
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['name'] == 'PATCHED New archive OQ ROYXAT'  # noqa
+
+    def test_delete_archive(self, client: Client, user, archive):  # noqa
+        client.force_login(user)
+        url = reverse('archive_reasons-detail', args=(archive.pk,))
+        response = client.delete(url)
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+@pytest.mark.django_db
+class TestExportExcel:
+
+    @pytest.fixture
+    def user(self):
+        user = User.objects.create_user(
+            phone='5555555',
+            password='password5',
+        )
+        return user
+
+    @pytest.fixture
+    def columns(self):
+        return ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
+
+    @pytest.fixture
+    def rows(self):
+        return [
+            [1, 'Gucci', '777-77-77', '2000-32-33', 'only top', 1000],
+        ]
+
+    @pytest.fixture
+    def exported_file(self, client: Client, columns, rows, user):
+        client.force_login(user)
+        url = reverse('export-detail')
+        response = client.get(url)
+        assert response.status_code == 200
+        return pd.read_excel(response.content)
+
+    def test_export_users_to_excel(self):
+        User.objects.create(first_name='Backend', phone='66666666')
+        response = export_users_to_excel()
+
+        assert response.status_code == 200
+        assert response['Content-Type'] == 'application/ms-excel'
+        assert response['Content-Disposition'] == 'attachment; filename="books.xlsx"'
+
+        # Read exel from response
+        content = response.content
+        df = pd.read_excel(content)
+
+        assert len(df) == 1
+        assert list(df.columns) == ['first_name', 'phone']
+        assert list(df.values[0]) == ['Backend', 66666666]
+        # explanation [prosta yozb qoydm yaxshi narsa ekan]  # noqa
+        '''
+            >>> df = pd.DataFrame({'age':    [ 3,  29],
+                                   'height': [94, 170],
+                                   'weight': [31, 115]})
+            >>> df
+               age  height  weight
+            0    3      94      31
+            1   29     170     115
+        '''
+
+    def test_export_data_excel(self, columns, rows):
+        response = export_data_excel(columns, rows)
+        assert response.status_code == status.HTTP_200_OK
