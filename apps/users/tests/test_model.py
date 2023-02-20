@@ -1,4 +1,5 @@
 import pytest
+
 from groups.models import Company
 from users.models import Archive, LeadIncrement, Lead, Blog, User
 
