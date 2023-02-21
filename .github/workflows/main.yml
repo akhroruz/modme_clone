@@ -37,8 +37,6 @@ jobs:
       - name: Install dependencies
         run: poetry install
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-      - run:
-          poetry run python manage.py migrate
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/testdb
           DJANGO_SETTINGS_MODULE: root.settings
