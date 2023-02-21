@@ -28,7 +28,7 @@ class TestLeadIncrementModelViewSet:
         client.force_login(user)
         url = reverse('lead_increment-list')
         response = client.get(url)
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_200_OK
         assert str(lead_increment) == lead_increment.name
 
     def test_lead_increment_create(self, client: Client, user, lead_increment):
@@ -75,7 +75,7 @@ class TestLeadSerializer:
         return lead
 
     def test_lead_list(self, client: Client, user, lead):  # noqa
-        client.force_login(user)
+        client.force_login(user)  # noqa
         url = reverse('lead-list')
         response = client.get(url)
         assert str(lead) == f"{lead.full_name} | {lead.phone}"
@@ -89,7 +89,7 @@ class TestLeadSerializer:
         assert response.status_code == status.HTTP_200_OK
 
     def test_create_lead(self, client: Client, user, lead, lead_increment):  # noqa
-        client.force_login(user)
+        client.force_login(user)  # noqa
         data = {
             'phone': 7777777,
             'full_name': 'Botirali',  # noqa
@@ -102,7 +102,7 @@ class TestLeadSerializer:
         assert response.status_code == status.HTTP_201_CREATED
 
     def test_update_lead(self, client: Client, user, lead, lead_increment):
-        client.force_login(user)
+        client.force_login(user)  # noqa
         data = {
             'phone': 9999999,
             'full_name': 'Updated_full_name',
@@ -118,7 +118,7 @@ class TestLeadSerializer:
         assert response.data['status'] == Lead.LeadStatus.COLLECT
 
     def test_patch_lead(self, client: Client, user, lead, lead_increment):
-        client.force_login(user)
+        client.force_login(user)  # noqa
         data = {
             'phone': 7777777,
             'full_name': 'PATCHED_full_name',  # noqa
@@ -144,7 +144,7 @@ class TestLeadSerializer:
 class TestArchiveSerializer:
     @pytest.fixture  # noqa
     def user(self):
-        user = User.objects.create_user(phone=1234567, password='pass')
+        user = User.objects.create_user(phone=1234567, password='password1')
         return user
 
     @pytest.fixture
@@ -248,16 +248,6 @@ class TestExportExcel:
         assert len(df) == 1
         assert list(df.columns) == ['first_name', 'phone']
         assert list(df.values[0]) == ['Backend', 66666666]
-        # explanation [prosta yozb qoydm yaxshi narsa ekan]  # noqa
-        '''
-            >>> df = pd.DataFrame({'age':    [ 3,  29],
-                                   'height': [94, 170],
-                                   'weight': [31, 115]})
-            >>> df
-               age  height  weight
-            0    3      94      31
-            1   29     170     115
-        '''
 
     def test_export_data_excel(self, columns, rows):
         response = export_data_excel(columns, rows)

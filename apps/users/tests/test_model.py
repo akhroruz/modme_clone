@@ -1,7 +1,11 @@
-import pytest
+from datetime import date
 
-from groups.models import Company
-from users.models import Archive, LeadIncrement, Lead, Blog, User
+import pytest
+from django.contrib.auth.hashers import make_password
+from django.contrib.contenttypes.models import ContentType
+
+from groups.models import Company, Branch
+from users.models import Archive, LeadIncrement, Lead, Blog, User, Comment
 
 
 @pytest.mark.django_db
@@ -90,10 +94,27 @@ class TestBlogModel:
     def test_blog(self, blog, company, user):
         assert blog.title == 'test_title'
         assert blog.text == 'test_text'
-        assert blog.public == True
+        assert blog.public
         assert blog.created_by == user
         assert blog.updated_by == user
-        assert blog.visible_all == True
+        assert blog.visible_all
         assert blog.view_count == 100
         assert blog.company == company
         assert str(blog) == blog.title
+
+
+@pytest.mark.django_db
+class TestCommentModel:
+    @pytest.fixture
+    def comment(self):
+        content_type = ContentType.objects.get_for_model(User)
+        comment = Comment.objects.create(
+            text='test_text',
+            content_type=content_type,
+            object_id=1,
+        )
+        return comment
+
+    def test_comment(self, comment):
+        assert comment.text == 'test_text'
+        assert comment.object_id == 1

@@ -1,5 +1,9 @@
+from datetime import date, time
+
 import pytest
-from groups.models import Company, Branch, Room, Course, Holiday
+
+from groups.models import Company, Branch, Room, Course, Holiday, Group
+from users.models import User
 
 
 @pytest.mark.django_db
@@ -131,7 +135,7 @@ class TestHolidayModel:
     def holiday(self, branch):
         holiday = Holiday.objects.create(
             name='test_name',
-            holiday_date='2000-12-20',
+            holiday_date=date(2023, 12, 25),
             affect_payment=False,
             branch=branch
         )
@@ -139,7 +143,98 @@ class TestHolidayModel:
 
     def test_holiday_model(self, holiday, branch):
         assert holiday.name == 'test_name'
-        assert holiday.holiday_date == '2000-12-20'
+        assert holiday.holiday_date == date(2023, 12, 25)
         assert not holiday.affect_payment
         assert branch == branch
         assert str(holiday) == holiday.name
+
+
+@pytest.mark.django_db
+class TestGroupModel:
+    @pytest.fixture
+    def company(self):
+        company = Company.objects.create(name='test_name')
+        return company
+
+    @pytest.fixture
+    def branch(self, company):
+        branch = Branch.objects.create(
+            name='test_name',
+            address='test_address',
+            company=company,
+            phone='932333445',
+            about='test_about',
+            image='test_image.png'
+        )
+        return branch
+
+    @pytest.fixture
+    def room(self, branch):
+        room = Room.objects.create(
+            name='test_room',
+            branch=branch
+        )
+        return room
+
+    @pytest.fixture
+    def course(self, company):
+        course = Course.objects.create(
+            name='test_name',
+            price=1500,
+            description='test_description',
+            image='test_image.png',
+            lesson_duration=2,
+            course_duration=6,
+            company=company
+        )
+        return course
+
+    @pytest.fixture
+    def user1(self):
+        user1 = User.objects.create_user(
+            phone='1233434',
+            password='test_password'
+        )
+        return user1
+
+    @pytest.fixture
+    def user2(self):
+        user2 = User.objects.create_user(
+            phone='12334345',
+            password='test_password'
+        )
+        return user2
+
+    @pytest.fixture
+    def group(self, branch, user1, user2, course, room):
+        group = Group.objects.create(
+            name='test_name',
+            days='Odd days',
+            status='active',
+            room=room,
+            teacher=user2,
+            start_time=time(hour=9, minute=00),
+            end_time=time(hour=12, minute=30),
+            course=course,
+            branch=branch,
+            start_date=date(2023, 2, 23),
+            end_date=date(2023, 5, 23),
+            tags=['test_tag1', 'tests_tag2', 'tests_tag3'],
+
+        )
+        group.students.add(user1)
+        return group
+
+    def test_group_model(self, group, user1,user2, branch, course, room):
+        assert group.name == 'test_name'
+        assert group.days == 'Odd days'
+        assert group.status == 'active'
+        assert group.room == room
+        assert group.start_time == time(hour=9, minute=00)
+        assert group.end_time == time(hour=12, minute=30)
+        assert group.course == course
+        assert group.branch == branch
+        assert group.start_date == date(2023, 2, 23)
+        assert group.end_date == date(2023, 5, 23)
+        assert group.tags == ['test_tag1', 'tests_tag2', 'tests_tag3']
+
