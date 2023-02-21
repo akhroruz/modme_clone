@@ -82,11 +82,10 @@ class TestBlogModelSerializer:
         url = '%s?company=%s' % (reverse('news_blog-detail', args=(blog.pk,)), company.pk)
         response = client.put(url, data, 'application/json')
         assert response.status_code == status.HTTP_200_OK
-        assert response.data['title'] == 'Updated Blog Title'
-        assert response.data['text'] == 'Updated Blog Text'
-        assert response.data['public']
-        assert response.data['visible_all']
-        assert response.data['view_count'] == 30
+        keys = {'title', 'text', 'public', 'visible_all', 'view_count'}
+
+        assert len(keys.difference(set(response.json()))) == 0
+        assert data == response.json()
 
     def test_patch(self, client: Client, user, blog, company):
         client.force_login(user)
@@ -170,7 +169,7 @@ class TestUserModelSerializer:
         user = User.objects.create_user(
             phone=12345678,
             is_archive=False,
-            archive_id=archive.pk,
+            archive=archive,
             birth_date='2004-10-10',
             photo=image,
             balance=2,

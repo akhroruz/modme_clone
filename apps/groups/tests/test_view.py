@@ -59,11 +59,9 @@ class TestBranchModelViewSet:
         response = client.post(url, data)
         assert response.status_code == status.HTTP_201_CREATED
         item = response.json()
-        assert item['name'] == data['name']
-        assert item['address'] == data['address']
-        assert item['phone'] == data['phone']
-        assert item['about'] == data['about']
-        assert item['company'] == data['company']
+        keys = ('name', 'address', 'phone', 'about', 'company')
+        for key in keys:
+            assert item[key] == data[key]
 
     def test_retrieve_branch(self, client: Client, branch):
         url = '%s?company=%s' % (reverse('branch-detail', args=[branch.id]), branch.company.id)
