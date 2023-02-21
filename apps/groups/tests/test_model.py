@@ -225,7 +225,7 @@ class TestGroupModel:
         group.students.add(user1)
         return group
 
-    def test_group_model(self, group, user1,user2, branch, course, room):
+    def test_group_model(self, group, user1, user2, branch, course, room):
         assert group.name == 'test_name'
         assert group.days == 'Odd days'
         assert group.status == 'active'
@@ -237,4 +237,3 @@ class TestGroupModel:
         assert group.start_date == date(2023, 2, 23)
         assert group.end_date == date(2023, 5, 23)
         assert group.tags == ['test_tag1', 'tests_tag2', 'tests_tag3']
-

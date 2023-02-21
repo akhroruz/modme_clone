@@ -75,11 +75,11 @@ class Command(BaseCommand):
             # branch=cycle(Branch.objects.all()),
             name=cycle(fake.first_name() for _ in range(course)),
             price=cycle(fake.pyint() * 100 for _ in range(course)),
+            company=cycle(Company.objects.all()),
             description=cycle(fake.sentences(nb=310050)),
             lesson_duration=cycle(fake.pyint() for _ in range(course)),
             course_duration=cycle(fake.pyint() for _ in range(course)),
             image='media/img.png',
-            make_m2m=True,
             _quantity=b
         )
         print(course, 'courses is being addded')
