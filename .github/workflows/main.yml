@@ -35,12 +35,12 @@ jobs:
         with:
           path: .venv
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
-      - run: |
-          source .venv/bin/activate
       - name: Install dependencies
         run: poetry install
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      - run: source .venv/bin/activate
       - run:
+          python3 manage.py makemigrations
           python3 manage.py migrate
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/testdb
