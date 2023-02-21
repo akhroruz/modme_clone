@@ -105,8 +105,12 @@ class TestRoomModelViewSet:
 
     @pytest.fixture
     def user(self):
-        user = User.objects.create_user(phone='123654987', password='Asdvbn12ghnf115dfsa2f', is_superuser=True,
-                                        is_staff=True)
+        user = User.objects.create_user(
+            phone='123654987',
+            password='Asdvbn12ghnf115dfsa2f',
+            is_superuser=True,
+            is_staff=True
+        )
         return user
 
     @pytest.fixture

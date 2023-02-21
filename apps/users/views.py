@@ -84,8 +84,8 @@ class LeadModelViewSet(ModelViewSet):
 class ArchiveReasonsModelViewSet(ModelViewSet):
     queryset = Archive.objects.all()
     serializer_class = ArchiveListModelSerializer
-    permission_classes = [IsAdministrator, CustomDjangoObjectPermissions]
-    http_method_names = ['get', 'post', 'put', 'patch']
+    # permission_classes = [IsAdministrator, CustomDjangoObjectPermissions]
+    # http_method_names = ['get', 'post', 'put', 'patch']
 
 
 class UpdateProfileView(UpdateAPIView):

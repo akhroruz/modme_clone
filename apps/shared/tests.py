@@ -12,11 +12,11 @@ class TestBase:
     @pytest.fixture
     def teacher_role(self):
         teacher = Role.objects.create(name='teacher')
-        view_group = Permission.objects.get(
+        view_group = Permission.objects.filter(
             content_type=ContentType.objects.get_for_model(Group),
             codename='view_group'
         )
-        teacher.permissions.add(view_group)
+        teacher.permissions.add(*view_group)
         return teacher
 
     @pytest.fixture

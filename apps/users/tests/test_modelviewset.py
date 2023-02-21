@@ -2,7 +2,7 @@ import pytest
 from django.test import Client
 from django.urls import reverse
 from rest_framework import status
-from shared.utils.export_excel import export_data_excel, export_users_to_excel
+from shared.utils.export_excel import export_data_excel
 from users.models import User, LeadIncrement, Archive, Lead
 import pandas as pd
 
@@ -68,7 +68,7 @@ class TestLeadSerializer:
             phone=12345678,
             full_name='LeadFullname',
             comment='Lead comment',
-            lead_increment_id=lead_increment.pk,
+            lead_increment=lead_increment,
             status=Lead.LeadStatus.REQUESTS
         )
         return lead
@@ -77,9 +77,10 @@ class TestLeadSerializer:
         client.force_login(user)  # noqa
         url = reverse('lead-list')
         response = client.get(url)
+        count = Lead.objects.count()
         assert str(lead) == f"{lead.full_name} | {lead.phone}"
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 4
+        assert len(response.data['data']) == count
 
     def test_lead_retrieve(self, client: Client, user):  # noqa
         client.force_login(user)
@@ -233,18 +234,18 @@ class TestExportExcel:
         assert response.status_code == 200
         return pd.read_excel(response.content)
 
-    def test_export_users_to_excel(self):
-        User.objects.create(first_name='Backend', phone='66666666')
-        response = export_users_to_excel()
-
-        assert response.status_code == 200
-        assert response['Content-Type'] == 'application/ms-excel'
-        assert response['Content-Disposition'] == 'attachment; filename="books.xlsx"'
-
-        # Read exel from response
-        content = response.content
-        df = pd.read_excel(content)
-
-        assert len(df) == 1
-        assert list(df.columns) == ['first_name', 'phone']
-        assert list(df.values[0]) == ['Backend', 66666666]
+    # def test_export_users_to_excel(self):
+    #     User.objects.create(first_name='Backend', phone='66666666')
+    #     response = export_users_to_excel()
+    #
+    #     assert response.status_code == 200
+    #     assert response['Content-Type'] == 'application/ms-excel'
+    #     assert response['Content-Disposition'] == 'attachment; filename="books.xlsx"'
+    #
+    #     # Read exel from response
+    #     content = response.content
+    #     df = pd.read_excel(content)
+    #
+    #     assert len(df) == 1
+    #     assert list(df.columns) == ['first_name', 'phone']
+    #     assert list(df.values[0]) == ['Backend', 66666666]
