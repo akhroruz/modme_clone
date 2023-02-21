@@ -20,13 +20,13 @@ class TestBranchModelViewSet:
 
     @pytest.fixture
     def branch(self, company):
-        image_path = MEDIA_ROOT + '/img.png'
-        image = SimpleUploadedFile('img.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
         branch = Branch.objects.create(
             name='Branch 1',
-            address='Uzbekistan, Toshkent',
+            address='Uzbekistan, Tashkent',
             phone='12345678',
-            about='Smth about this branch',
+            about='Something about this branch',
             company=company,
             image=image
 
@@ -37,7 +37,6 @@ class TestBranchModelViewSet:
         url = '%s?company=%s' % (reverse('branch-list'), branch.company.pk)
         response = client.get(url)
         item = response.data['results'][0]
-        # json.loads(response.content) == response.data     # ishlatib korish kere shunaqa stildi
         assert response.status_code == status.HTTP_200_OK
         assert item['name'] == branch.name
         assert item['address'] == branch.address
@@ -46,10 +45,9 @@ class TestBranchModelViewSet:
         assert item['company'] == branch.company.pk
 
     def test_create_branch(self, client: Client, branch):
-        # url = reverse('branch-list')
         url = '%s?company=%s' % (reverse('branch-list'), branch.company.id)
-        image_path = MEDIA_ROOT + '/img.png'
-        image = SimpleUploadedFile('img.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
         data = {
             'name': branch.name,
             'address': branch.address,
@@ -83,7 +81,7 @@ class TestBranchModelViewSet:
         url = '%s?company=%s' % (reverse('branch-detail', args=[branch.id]), branch.company.id)
         data = {
             'name': 'New updated Branch 1',
-            'address': 'dsadas',
+            'address': 'test_address',
             'phone': '11111111',
             'about': branch.about,
             'company': branch.company.pk,
@@ -120,13 +118,13 @@ class TestRoomModelViewSet:
 
     @pytest.fixture
     def branch(self, company):
-        image_path = MEDIA_ROOT + '/img.png'
-        image = SimpleUploadedFile('img.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
         branch = Branch.objects.create(
             name='Room 1',
-            address='Uzbekistan, Toshkent',
+            address='Uzbekistan, Tashkent',
             phone='12345678',
-            about='Smth about this branch',
+            about='Something about this branch',
             company=company,
             image=image
         )
