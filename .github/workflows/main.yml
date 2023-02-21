@@ -35,8 +35,9 @@ jobs:
           path: .venv
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
-      - run: poetry install
-      - run: source $VENV
+        run: poetry install
+      - run: |
+          source $VENV
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       - run:
           python manage.py migrate
