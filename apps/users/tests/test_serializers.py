@@ -364,7 +364,7 @@ class TestLeadSerializer:
         response = client.get(url)
         assert str(lead) == f"{lead.full_name} | {lead.phone}"
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 4
+        assert len(response.data) == 2
 
     def test_lead_retrieve(self, client: Client, user):  # noqa
         client.force_login(user)

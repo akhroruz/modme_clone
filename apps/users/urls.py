@@ -6,12 +6,12 @@ from users.views import ArchiveReasonsModelViewSet, UserModelViewSet, LeadIncrem
     UpdateProfileView, BlogModelViewSet, UserDocumentView
 
 router = DefaultRouter()
-router.register('user', UserModelViewSet, basename='user')
-router.register('user-search', UserDocumentView, basename='user_search')
-router.register('archive-reasons', ArchiveReasonsModelViewSet, basename='archive_reasons')
-router.register('lead', LeadModelViewSet, basename='lead')
-router.register('lead-increment', LeadIncrementModelViewSet, basename='lead_increment')
-router.register('news-blog', BlogModelViewSet, basename='news_blog')
+router.register('user', UserModelViewSet, 'user')
+router.register('user-search', UserDocumentView, 'user_search')
+router.register('archive-reasons', ArchiveReasonsModelViewSet, 'archive_reasons')
+router.register('lead', LeadModelViewSet, 'lead')
+router.register('lead-increment', LeadIncrementModelViewSet, 'lead_increment')
+router.register('news-blog', BlogModelViewSet, 'news_blog')
 
 urlpatterns = [
     path('', include(router.urls)),

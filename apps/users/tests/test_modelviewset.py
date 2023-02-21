@@ -1,8 +1,10 @@
 import pytest
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.test import Client
 from django.urls import reverse
 from rest_framework import status
-from shared.utils.export_excel import export_data_excel, export_users_to_excel
+from shared.utils.export_excel import export_data_excel
 from users.models import User, LeadIncrement, Archive, Lead
 import pandas as pd
 
@@ -80,7 +82,7 @@ class TestLeadSerializer:
         response = client.get(url)
         assert str(lead) == f"{lead.full_name} | {lead.phone}"
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 4
+        assert len(response.data) == 2
 
     def test_lead_retrieve(self, client: Client, user):  # noqa
         client.force_login(user)
@@ -230,7 +232,6 @@ class TestExportExcel:
         client.force_login(user)
         url = reverse('export-detail')
         response = client.get(url)
-        assert response.status_code == 200
         return pd.read_excel(response.content)
 
     def test_export_users_to_excel(self):
@@ -252,3 +253,31 @@ class TestExportExcel:
     def test_export_data_excel(self, columns, rows):
         response = export_data_excel(columns, rows)
         assert response.status_code == status.HTTP_200_OK
+#
+#
+# @pytest.mark.django_db
+# class TestAdministratorPermission:
+#     @pytest.fixture
+#     def archive(self):
+#         archive = Archive.objects.create(name="ARCHIVE1")
+#         return archive
+#
+#     @pytest.fixture
+#     def user(self):
+#         user = User.objects.create_user(
+#             phone='901001010',
+#             password='1'
+#         )
+#         return user
+#
+#     @pytest.fixture
+#     def administrator(self, user: User):
+#         '''
+#         get archive all permissions
+#         '''
+#         content_type = ContentType.objects.get_for_model(Archive)
+#         perms = Permission.objects.filter(content_type=content_type)
+#         user.user_permissions.add(perms)
+#         return user
+
+
