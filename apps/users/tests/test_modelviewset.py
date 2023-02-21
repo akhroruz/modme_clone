@@ -226,7 +226,7 @@ class TestExportExcel:
         ]
 
     @pytest.fixture
-    def exported_file(self, client: Client, columns, rows, user):
+    def exported_file(self, client: Client, user):
         client.force_login(user)
         url = reverse('export-detail')
         response = client.get(url)
@@ -248,7 +248,3 @@ class TestExportExcel:
         assert len(df) == 1
         assert list(df.columns) == ['first_name', 'phone']
         assert list(df.values[0]) == ['Backend', 66666666]
-
-    def test_export_data_excel(self, columns, rows):
-        response = export_data_excel(columns, rows)
-        assert response.status_code == status.HTTP_200_OK
