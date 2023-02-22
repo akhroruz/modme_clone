@@ -4,7 +4,6 @@ from django.test import Client
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart  # noqa
 from rest_framework import status
 from rest_framework.reverse import reverse
-
 from core.settings import MEDIA_ROOT
 from groups.models import Branch, Company, Room, Course
 from users.models import User
