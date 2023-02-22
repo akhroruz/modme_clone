@@ -13,7 +13,7 @@ class TestCompanyModel:
         }
         company_count = Company.objects.count()
         company = Company.objects.create(**company_data)
-        assert company.name == 'PDP'
+        assert company.name == company_data['name']
         assert str(company) == company.name
         assert company_count + 1 == Company.objects.count()
 
@@ -143,7 +143,9 @@ class TestHolidayModel:
 @pytest.mark.django_db
 class TestGroupModel:
     def test_group(self):
-        company_data = {'name': 'test_company'}
+        company_data = {
+            'name': 'test_company'
+        }
         company = Company.objects.create(**company_data)
         branch_data = {
             'name': 'test_name',
