@@ -12,7 +12,7 @@
 #
 # # TODO korib berishila kk # noqa
 # @pytest.mark.django_db
-# class TestUserModelSerializer:
+# class TestUserModelViewSet:
 #
 #     @pytest.fixture
 #     def company(self):
