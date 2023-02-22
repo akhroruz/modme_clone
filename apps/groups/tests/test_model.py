@@ -35,11 +35,11 @@ class TestBranchModel:
         }
         branch_count = Branch.objects.count()
         branch = Branch.objects.create(**branch_data)
-        assert branch.name == 'Test Branch'
-        assert branch.address == 'Test Address'
-        assert branch.phone == '949343943'
-        assert branch.about == 'Test About'
-        assert branch.image == 'test_image.png'
+        assert branch.name == branch_data['name']
+        assert branch.address == branch_data['address']
+        assert branch.phone == branch_data['phone']
+        assert branch.about == branch_data['about']
+        assert branch.image == branch_data['image']
         assert str(branch) == branch.name
         assert str(company) == company.name
         assert branch.company.name == 'Test Company'
@@ -64,12 +64,13 @@ class TestRoomModel:
         }
         branch = Branch.objects.create(**branch_data)
         room_count = Room.objects.count()
-        room = Room.objects.create(
-            name='test_name',
-            branch=branch
-        )
+        room_data = {
+            'name': 'test_room',
+            'branch': branch
+        }
+        room = Room.objects.create(**room_data)
 
-        assert room.name == 'test_name'
+        assert room.name == room_data['name']
         assert room.branch == branch
         assert str(room) == room.name
         assert room_count == Room.objects.count() - 1
@@ -94,12 +95,12 @@ class TestCourseModel:
         }
         course_count = Course.objects.count()
         course = Course.objects.create(**course_data)
-        assert course.name == 'test_name'
-        assert course.price == 500
-        assert course.description == 'test_description'
-        assert course.image == 'test_image.png'
-        assert course.lesson_duration == 3
-        assert course.course_duration == 6
+        assert course.name == course_data['name']
+        assert course.price == course_data['price']
+        assert course.description == course_data['description']
+        assert course.image == course_data['image']
+        assert course.lesson_duration == course_data['lesson_duration']
+        assert course.course_duration == course_data['course_duration']
         assert course.company == company
         assert str(course) == course.name
         assert course_count == Company.objects.count() - 1
@@ -132,8 +133,8 @@ class TestHolidayModel:
         holiday_count = Holiday.objects.count()
         holiday = Holiday.objects.create(**holiday_data)
 
-        assert holiday.name == 'test_name'
-        assert holiday.holiday_date == date(2023, 12, 25)
+        assert holiday.name == holiday_data['name']
+        assert holiday.holiday_date == holiday_data['holiday_date']
         assert not holiday.affect_payment
         assert branch == branch
         assert str(holiday) == holiday.name
@@ -198,15 +199,15 @@ class TestGroupModel:
         group = Group.objects.create(**group_data)
         group.students.add(user)
 
-        assert group.name == 'test_name'
-        assert group.days == 'Odd days'
-        assert group.status == 'active'
+        assert group.name == group_data['name']
+        assert group.days == group_data['days']
+        assert group.status == group_data['status']
         assert group.room == room
-        assert group.start_time == time(hour=9, minute=00)
-        assert group.end_time == time(hour=12, minute=30)
+        assert group.start_time == group_data['start_time']
+        assert group.end_time == group_data['end_time']
         assert group.course == course
         assert group.branch == branch
-        assert group.start_date == date(2023, 2, 23)
-        assert group.end_date == date(2023, 5, 23)
-        assert group.tags == ['test_tag1']
+        assert group.start_date == group_data['start_date']
+        assert group.end_date == group_data['end_date']
+        assert group.tags == group_data['tags']
         assert group_count + 1 == Group.objects.count()
