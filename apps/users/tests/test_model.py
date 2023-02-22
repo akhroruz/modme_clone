@@ -8,22 +8,22 @@ from users.models import Archive, LeadIncrement, Lead, User, Blog, Comment
 
 @pytest.mark.django_db
 class TestArchiveModel:
-    @pytest.fixture
-    def test_archive(self):
-        archive = Archive.objects.create(name='PDP')
 
-        assert archive.name == 'PDP'
+    def test_archive(self):
+        data = {'name': 'PDP'}
+        count = Archive.objects.count()
+        archive = Archive.objects.create(**data)
+        assert archive.name == data['name']
         assert str(archive) == archive.name
+        assert count + 1 == Archive.objects.count()
 
 
 @pytest.mark.django_db
 class TestLeadIncrementModel:
-    @pytest.fixture
     def test_lead_increment(self):
-        lead_increment = LeadIncrement.objects.create(
-            name='test_name'
-        )
-        assert lead_increment.name == 'test_name'
+        data = {'name': 'test_name'}
+        lead_increment = LeadIncrement.objects.create(**data)
+        assert lead_increment.name == data['name']
         assert str(lead_increment) == lead_increment.name
 
 
@@ -33,39 +33,32 @@ class TestLeadModel:
         lead_increment = LeadIncrement.objects.create(
             name='test_name'
         )
-
-        lead = Lead.objects.create(
-            full_name='test_fullname',
-            comment='test_comment',
-            phone=934492123,
-            status='Requests',
-            lead_increment=lead_increment
-        )
-
-        assert lead.full_name == 'test_fullname'
-        assert lead.comment == 'test_comment'
-        assert lead.phone == 934492123
-        assert lead.status == 'Requests'
-        assert lead.lead_increment == lead_increment
+        data = {
+            'full_name': 'test_fullname',
+            'comment': 'test_comment',
+            'phone': 934492123,
+            'status': 'Requests',
+            'lead_increment': lead_increment
+        }
+        count = Lead.objects.count()
+        lead = Lead.objects.create(**data)
+        assert lead.full_name == data['full_name']
+        assert lead.comment == data['comment']
+        assert lead.phone == data['phone']
+        assert lead.status == data['status']
+        assert lead.lead_increment == data['lead_increment']
         assert str(lead) == f'{lead.full_name} | {lead.phone}'
+        assert count + 1 == Lead.objects.count()
 
 
 @pytest.mark.django_db
 class TestBlogModel:
-    @pytest.fixture
-    def company(self):
+
+    def test_create_blog(self):
         company = Company.objects.create(
             name='test_company'
         )
-        return company
-
-    @pytest.fixture
-    def user(self):
         user = User.objects.create_user(phone=1234567, password='pass')
-        return user
-
-    @pytest.fixture
-    def blog(self, company, user):
         blog = Blog.objects.create(
             title='test_title',
             text='test_text',
@@ -89,6 +82,7 @@ class TestBlogModel:
 
 @pytest.mark.django_db
 class TestCommentModel:
+    # TODO Javlon
     @pytest.fixture
     def comment(self):
         content_type = ContentType.objects.get_for_model(User)
