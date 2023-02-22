@@ -2,6 +2,7 @@ import random
 from itertools import cycle
 
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import Group as Role
 from django.contrib.contenttypes.models import ContentType
 from django.core.management import BaseCommand
 from faker import Faker
@@ -124,7 +125,7 @@ class Command(BaseCommand):
             birth_date=cycle(fake.date() for _ in range(u)),
             phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(u)),
             gender=cycle(fake.random_element(User.GenderChoose) for _ in range(100)),
-            role=cycle(Group.objects.all()),
+            role=cycle(Role.objects.all()),
             branch=cycle(Branch.objects.all()),
             archive=cycle(Archive.objects.all()),
             password=make_password('1'),
