@@ -1,10 +1,10 @@
+import pandas as pd
 import pytest
 from django.test import Client
 from django.urls import reverse
 from rest_framework import status
-from shared.utils.export_excel import export_data_excel
+
 from users.models import User, LeadIncrement, Archive, Lead
-import pandas as pd
 
 
 @pytest.mark.django_db
