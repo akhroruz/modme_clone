@@ -7,8 +7,10 @@
 3. [x] github
 4. [ ] permissions
     - ceo - all permissions
-    - administrator - (crud) student, (crud) course, (crud) teacher, (crud) room, (crud) lead, (crud) holiday, (crud) archive, branch itself
-    - branch director - (crud) student, (crud) course, (crud) teacher, (crud) room, (crud) lead, (crud) holiday, (crud) archive, branch itself
+    - administrator - (crud) student, (crud) course, (crud) teacher, (crud) room, (crud) lead, (crud) holiday, (crud)
+      archive, branch itself
+    - branch director - (crud) student, (crud) course, (crud) teacher, (crud) room, (crud) lead, (crud) holiday, (crud)
+      archive, branch itself
     - teacher - class days, self-groups
     - limited administrator - (crud) teacher, (crud) course, (crud) group, branch itself
     - marketer - (crud) leads

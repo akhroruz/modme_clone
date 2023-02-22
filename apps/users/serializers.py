@@ -115,7 +115,7 @@ class UpdateProfileSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'phone', 'role', 'birth_date', 'gender', 'photo', 'password')
+        fields = 'first_name', 'phone', 'role', 'birth_date', 'gender', 'photo', 'password'
 
     def validate_phone(self, phone):  # noqa
         user = User.objects.context['request'].user
