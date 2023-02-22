@@ -98,7 +98,7 @@ class UserCreateRoleModelSerializer(ModelSerializer):
 
 class UserCreateModelSerializer(ModelSerializer):
     role = ListField(write_only=True)
-    password = CharField(write_only=True)
+    password = CharField(write_only=True, required=False)
 
     class Meta:
         model = User

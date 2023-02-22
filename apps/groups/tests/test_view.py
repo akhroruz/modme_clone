@@ -202,8 +202,8 @@ class TestHomeListAPIViewSet:
 
     @pytest.fixture
     def course(self, company):
-        image_path = MEDIA_ROOT + '/img.png'
-        image = SimpleUploadedFile('img.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
         course = Course.objects.create(
             name='Python Back End course',
             price=1400000,
@@ -223,7 +223,6 @@ class TestHomeListAPIViewSet:
         assert item['name'] == course.name
         assert float(item['price']) == course.price  # problem , demical 2 ta nol qoshilib qolib qolyapti
         assert item['description'] == course.description
-        # assert item['image'] == course.image  # xoto chiqyapti image di item da server url bilan kelyapti
         assert item['lesson_duration'] == course.lesson_duration
         assert item['course_duration'] == course.course_duration
         assert item['company'] == course.company.pk
