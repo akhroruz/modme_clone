@@ -127,16 +127,6 @@ class TestUserModel:
         return archive
 
     @pytest.fixture
-    def comment(self):
-        content_type = ContentType.objects.get_for_model(User)
-        comment = Comment.objects.create(
-            text='test_text',
-            content_type=content_type,
-            object_id=1
-        )
-        return comment
-
-    @pytest.fixture
     def user(self):
         user = User.objects.create_user(
             phone='1233434',
@@ -150,7 +140,7 @@ class TestUserModel:
         return role
 
     @pytest.fixture
-    def user(self, archive, role, branch, comment):
+    def user(self, archive, role, branch):
         user = User.objects.create(
             phone='3232923',
             is_archive=True,
@@ -161,7 +151,6 @@ class TestUserModel:
             balance=550,
             data={'social_account': 'twitter', 'password': '1'},
             deleted_at=date(2022, 12, 25),
-            comment=comment
         )
         user.branch.add(branch)
         user.role.add(role)
@@ -174,4 +163,3 @@ class TestUserModel:
         assert user.balance == 550
         assert user.data == {'social_account': 'twitter', 'password': '1'}
         assert user.deleted_at == date(2022, 12, 25)
-        assert user.comment == comment
