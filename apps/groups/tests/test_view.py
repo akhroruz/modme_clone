@@ -223,7 +223,6 @@ class TestHomeListAPIViewSet:
         assert item['name'] == course.name
         assert float(item['price']) == course.price  # problem , demical 2 ta nol qoshilib qolib qolyapti
         assert item['description'] == course.description
-        # assert item['image'] == course.image  # xoto chiqyapti image di item da server url bilan kelyapti
         assert item['lesson_duration'] == course.lesson_duration
         assert item['course_duration'] == course.course_duration
         assert item['company'] == course.company.pk

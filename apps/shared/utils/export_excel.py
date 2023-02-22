@@ -4,7 +4,7 @@ from django.http import HttpResponse
 
 def export_data_excel(columns, rows):
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="users.xls"'
+    response['Content-Disposition'] = 'attachment; filename="users.xlsx"'
 
     wb = xlwt.Workbook(encoding='utf-8')
     ws = wb.add_sheet('Users')
