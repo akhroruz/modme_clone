@@ -11,9 +11,7 @@ class TestCompanyModel:
     @pytest.fixture
     def company(self):
         company = Company.objects.create(name='PDP')
-        return company
 
-    def test_company(self, company):
         assert company.name == 'PDP'
         assert str(company) == company.name
 
@@ -35,9 +33,7 @@ class TestBranchModel:
             about='Test About',
             image='test.png'
         )
-        return branch
 
-    def test_branch_model(self, branch, company):  # noqa
         assert branch.name == 'Test Branch'
         assert branch.address == 'Test Address'
         assert branch.phone == '1234567890'
@@ -73,9 +69,7 @@ class TestRoomModel:
             name='test_name',
             branch=branch
         )
-        return room
 
-    def test_room_model(self, room, branch):
         assert room.name == 'test_name'
         assert room.branch == branch
         assert str(room) == room.name
@@ -99,9 +93,7 @@ class TestCourseModel:
             course_duration=6,
             company=company
         )
-        return course
 
-    def test_course_model(self, company, course):
         assert course.name == 'test_name'
         assert course.price == 500
         assert course.description == 'test_description'
@@ -139,9 +131,7 @@ class TestHolidayModel:
             affect_payment=False,
             branch=branch
         )
-        return holiday
 
-    def test_holiday_model(self, holiday, branch):
         assert holiday.name == 'test_name'
         assert holiday.holiday_date == date(2023, 12, 25)
         assert not holiday.affect_payment
@@ -223,9 +213,7 @@ class TestGroupModel:
 
         )
         group.students.add(user1)
-        return group
 
-    def test_group_model(self, group, user1, user2, branch, course, room):
         assert group.name == 'test_name'
         assert group.days == 'Odd days'
         assert group.status == 'active'

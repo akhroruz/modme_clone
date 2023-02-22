@@ -202,8 +202,8 @@ class TestHomeListAPIViewSet:
 
     @pytest.fixture
     def course(self, company):
-        image_path = MEDIA_ROOT + '/img.png'
-        image = SimpleUploadedFile('img.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
         course = Course.objects.create(
             name='Python Back End course',
             price=1400000,
