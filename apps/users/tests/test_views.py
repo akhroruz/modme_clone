@@ -12,14 +12,12 @@ class TestBlogModelViewSet:
 
     @pytest.fixture
     def user(self):
-        user = User.objects.create_user(phone=1234567, password='password')
+        user = User.objects.create_user(phone='1234567', password='password')
         return user
 
     @pytest.fixture
     def company(self):
-        company = Company.objects.create(
-            name='Company 1',
-        )
+        company = Company.objects.create(name='Company 1')
         return company
 
     @pytest.fixture
@@ -36,14 +34,14 @@ class TestBlogModelViewSet:
         )
         return blog
 
-    def test_list_blogs(self, client: Client, user, company):
+    def test_list_blogs(self, client: Client, user, company, blog):
         client.force_login(user)
         url = '%s?company=%s' % (reverse('news_blog-list'), company.pk)
         response = client.get(url)
         assert Blog.objects.count() == response.data['count']
         assert response.status_code == status.HTTP_200_OK
 
-    def test_create_blog(self, client: Client, user, company):
+    def test_create_blog(self, client: Client, user, company, blog):
         client.force_login(user)
         data = {
             'title': 'Title1',

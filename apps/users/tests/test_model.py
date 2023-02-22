@@ -60,6 +60,7 @@ class TestBlogModel:
         user_data = {'phone': 1234567, 'password': 'pass'}
         user = User.objects.create_user(**user_data)
 
+        blog_count = Blog.objects.count()
         blog_data = {
             'title': 'test_title',
             'text': 'test_text',
@@ -70,19 +71,18 @@ class TestBlogModel:
             'view_count': 100,
             'company': company
         }
-        blog_count = Blog.objects.count()
         blog = Blog.objects.create(**blog_data)
-        assert len(blog.__dict__) - len(blog_data) == 4
         assert blog.title == blog_data['title']
         assert blog.text == blog_data['text']
         assert blog.public
         assert blog.created_by == user
         assert blog.updated_by == user
         assert blog.visible_all
-        assert blog.view_count == blog['view_count']
+        assert blog.view_count == blog_data['view_count']
         assert blog.company == company
         assert str(blog) == blog.title
         assert blog_count + 1 == Blog.objects.count()
+        assert len(blog.__dict__) - len(blog_data) == 4
 
 
 @pytest.mark.django_db
