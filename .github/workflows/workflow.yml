@@ -6,14 +6,3 @@ jobs:
     env:
       OS: ubuntu-latest
       PYTHON: '3.10'
-    steps:
-#      - uses: checkout@v2
-#        with:
-#          fetch-depth: ‘2’
-#      - name: Django Modme API
-#        run:
-#          pytest
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}

@@ -48,3 +48,8 @@ jobs:
           python3 manage.py makemigrations
           python3 manage.py migrate
           pytest
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
