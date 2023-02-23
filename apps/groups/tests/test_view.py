@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from core.settings import MEDIA_ROOT
-from groups.models import Course
+from groups.models import Course, Branch, Room, Company
 from shared.tests import TestBaseFixture
 
 
@@ -16,8 +16,11 @@ class TestBranchModelViewSet(TestBaseFixture):
     def test_list_branch(self, client: Client, branch):
         url = '%s?company=%s' % (reverse('branch-list'), branch.company.pk)
         response = client.get(url)
-        item = response.data['results'][0]
+
+        assert response.data['count'] == Branch.objects.count()
         assert response.status_code == status.HTTP_200_OK
+
+        item = response.data['results'][0]
         assert item['name'] == branch.name
         assert item['address'] == branch.address
         assert item['phone'] == branch.phone
@@ -36,8 +39,12 @@ class TestBranchModelViewSet(TestBaseFixture):
             'company': branch.company.pk,
             'image': image
         }
+        previous_count = Branch.objects.count()
         response = client.post(url, data)
+
         assert response.status_code == status.HTTP_201_CREATED
+        assert previous_count + 1 == Branch.objects.count()
+
         item = response.json()
         keys = ('name', 'address', 'phone', 'about', 'company')
         for key in keys:
@@ -76,8 +83,11 @@ class TestBranchModelViewSet(TestBaseFixture):
 
     def test_delete_branch(self, client: Client, branch):
         url = '%s?company=%s' % (reverse('branch-detail', args=[branch.id]), branch.company.id)
+        previous_count = Branch.objects.count()
         response = client.delete(url)
+
         assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert previous_count - 1 == Branch.objects.count()
 
 
 @pytest.mark.django_db
@@ -87,6 +97,7 @@ class TestRoomModelViewSet(TestBaseFixture):
         client.force_login(user)
         url = reverse('room-list')
         response = client.get(url)
+        assert response.data['count'] == Room.objects.count()
         assert response.status_code == status.HTTP_200_OK
         item = response.data['results'][0]
         assert item['id'] == room.id
@@ -100,9 +111,11 @@ class TestRoomModelViewSet(TestBaseFixture):
             'name': 'Room 2',
             'branch': room.branch.pk,
         }
-
+        previous_count = Branch.objects.count()
         response = client.post(url, data, 'application/json')
+
         assert response.status_code == status.HTTP_201_CREATED
+        assert previous_count + 1 == Room.objects.count()
 
         item = response.json()
         assert item['name'] == data['name']
@@ -135,8 +148,11 @@ class TestRoomModelViewSet(TestBaseFixture):
     def test_delete_room(self, client: Client, room, user):
         client.force_login(user)
         url = reverse('room-detail', args=[room.id])
+        previous_count = Room.objects.count()
         response = client.delete(url)
+
         assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert previous_count - 1 == Room.objects.count()
 
 
 @pytest.mark.django_db
@@ -177,7 +193,9 @@ class TestCompanyModelViewSet(TestBaseFixture):
         client.force_login(user)
         url = reverse('company-list')
         response = client.get(url)
+
         assert response.status_code == status.HTTP_200_OK
+        assert response.data['count'] == Company.objects.count()
 
         item = response.data['results'][0]
         assert item['name'] == company.name
@@ -188,8 +206,12 @@ class TestCompanyModelViewSet(TestBaseFixture):
         data = {
             'name': 'Company test 1'
         }
+        previous_count = Company.objects.count()
         response = client.post(url, data)
+
         assert response.status_code == status.HTTP_201_CREATED
+        assert previous_count + 1 == Company.objects.count()
+
         item = response.json()
         assert item['name'] == data['name']
 
@@ -215,5 +237,7 @@ class TestCompanyModelViewSet(TestBaseFixture):
     def test_delete_company(self, client: Client, company, user):
         client.force_login(user)
         url = reverse('company-detail', args=(company.id,))
+        previous_count = Company.objects.count()
         response = client.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert previous_count - 1 == Company.objects.count()
