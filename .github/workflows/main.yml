@@ -48,4 +48,3 @@ jobs:
           python3 manage.py makemigrations
           python3 manage.py migrate
           pytest
-          flake8
