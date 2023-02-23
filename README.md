@@ -1,7 +1,6 @@
 # Modme Clone API
 
-[![Test coverage](https://img.shields.io/codecov/c/github/akhroruz/modme_clone)](https://codecov.io/gh/akhroruz/modme_clone)
-
+[![codecov](https://codecov.io/github/akhroruz/modme_clone/branch/master/graph/badge.svg?token=2E37XZAA63)](https://codecov.io/github/akhroruz/modme_clone)
 ## TODO - Required
 
 1. [x] custom admin
