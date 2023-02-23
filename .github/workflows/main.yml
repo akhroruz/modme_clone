@@ -9,7 +9,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: testdb
+          POSTGRES_DB: postgres
         ports:
           - 5432:5432
         options: >-
@@ -45,5 +45,6 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
+          python3 manage.py migrate
           pytest
           flake8
