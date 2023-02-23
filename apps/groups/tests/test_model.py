@@ -8,7 +8,7 @@ from users.models import User
 
 @pytest.mark.django_db
 class TestCompanyModel:
-    def test_create_company(self):
+    def test_create_company(self): # noqa
         data = {'name': 'PDP'}
         company_count = Company.objects.count()
         company = Company.objects.create(**data)
