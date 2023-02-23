@@ -35,7 +35,7 @@ jobs:
           path: .venv
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
-        run: poetry install && poetry shell
+        run: poetry install
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/testdb
