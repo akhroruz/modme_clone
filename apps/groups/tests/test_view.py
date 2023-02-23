@@ -12,6 +12,7 @@ from shared.tests import TestBaseFixture
 
 @pytest.mark.django_db
 class TestBranchModelViewSet(TestBaseFixture):
+    keys = {'name', 'address', 'phone', 'about', 'company', 'image'}
 
     def test_list_branch(self, client: Client, branch):
         url = '%s?company=%s' % (reverse('branch-list'), branch.company.pk)
@@ -21,6 +22,7 @@ class TestBranchModelViewSet(TestBaseFixture):
         assert response.status_code == status.HTTP_200_OK
 
         item = response.data['results'][0]
+        assert len(self.keys.difference(set(item))) == 0
         assert item['name'] == branch.name
         assert item['address'] == branch.address
         assert item['phone'] == branch.phone
@@ -42,6 +44,7 @@ class TestBranchModelViewSet(TestBaseFixture):
         previous_count = Branch.objects.count()
         response = client.post(url, data)
 
+        assert len(self.keys.difference(set(response.json()))) == 0
         assert response.status_code == status.HTTP_201_CREATED
         assert previous_count + 1 == Branch.objects.count()
 
@@ -53,6 +56,8 @@ class TestBranchModelViewSet(TestBaseFixture):
     def test_retrieve_branch(self, client: Client, branch):
         url = '%s?company=%s' % (reverse('branch-detail', args=[branch.id]), branch.company.id)
         response = client.get(url)
+
+        assert len(self.keys.difference(set(response.json()))) == 0
         assert response.status_code == status.HTTP_200_OK
 
         item = response.data
@@ -73,7 +78,10 @@ class TestBranchModelViewSet(TestBaseFixture):
             'image': branch.image,
         }
         response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
+
+        assert len(self.keys.difference(set(response.json()))) == 0
         assert response.status_code == status.HTTP_200_OK
+
         item = response.data
         assert item['name'] == data['name']
         assert item['address'] == data['address']
@@ -92,15 +100,18 @@ class TestBranchModelViewSet(TestBaseFixture):
 
 @pytest.mark.django_db
 class TestRoomModelViewSet(TestBaseFixture):
+    keys = {'name', 'branch'}
 
     def test_list_room(self, client: Client, room, user):
         client.force_login(user)
         url = reverse('room-list')
         response = client.get(url)
-        assert response.data['count'] == Room.objects.count()
+
         assert response.status_code == status.HTTP_200_OK
+        assert response.data['count'] == Room.objects.count()
+
         item = response.data['results'][0]
-        assert item['id'] == room.id
+        assert len(self.keys.difference(set(item))) == 0
         assert item['name'] == room.name
         assert item['branch'] == room.branch.pk
 
@@ -118,16 +129,19 @@ class TestRoomModelViewSet(TestBaseFixture):
         assert previous_count + 1 == Room.objects.count()
 
         item = response.json()
+        assert len(self.keys.difference(set(item))) == 0
         assert item['name'] == data['name']
         assert item['branch'] == data['branch']
 
     def test_retrieve_room(self, client: Client, room, user):
         client.force_login(user)
         url = reverse('room-detail', args=[room.id])
+
         response = client.get(url)
         assert response.status_code == status.HTTP_200_OK
 
         item = response.data
+        assert len(self.keys.difference(set(item))) == 0
         assert item['name'] == room.name
         assert item['branch'] == room.branch.pk
 
@@ -138,10 +152,12 @@ class TestRoomModelViewSet(TestBaseFixture):
             'name': 'New updated Room 1',
             'branch': room.branch.pk,
         }
+
         response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
         assert response.status_code == status.HTTP_200_OK
 
         item = response.data
+        assert len(self.keys.difference(set(item))) == 0
         assert item['name'] == data['name']
         assert item['branch'] == data['branch']
 
@@ -176,10 +192,16 @@ class TestHomeListAPIViewSet(TestBaseFixture):
     def test_list_home(self, client: Client, course):
         url = reverse('home')
         response = client.get(url)
+
+        assert response.data['count'] == Course.objects.count()
         assert response.status_code == status.HTTP_200_OK
+
+        keys = {'name', 'price', 'description', 'lesson_duration', 'course_duration', 'company'}
         item = response.data['results'][0]
+
+        assert len(keys.difference(set(item))) == 0
         assert item['name'] == course.name
-        assert float(item['price']) == course.price  # problem , demical 2 ta nol qoshilib qolib qolyapti
+        assert float(item['price']) == course.price  # problem , decimal 2 ta nol qoshilib qolib qolyapti
         assert item['description'] == course.description
         assert item['lesson_duration'] == course.lesson_duration
         assert item['course_duration'] == course.course_duration
@@ -219,7 +241,9 @@ class TestCompanyModelViewSet(TestBaseFixture):
         client.force_login(user)
         url = reverse('company-detail', args=(company.id,))
         response = client.get(url)
+
         assert response.status_code == status.HTTP_200_OK
+
         item = response.json()
         assert item['name'] == company.name
 
@@ -231,6 +255,7 @@ class TestCompanyModelViewSet(TestBaseFixture):
         }
         response = client.put(url, data, "application/json")
         assert response.status_code == status.HTTP_200_OK
+
         item = response.json()
         assert item['name'] == data['name']
 
@@ -239,5 +264,6 @@ class TestCompanyModelViewSet(TestBaseFixture):
         url = reverse('company-detail', args=(company.id,))
         previous_count = Company.objects.count()
         response = client.delete(url)
+
         assert response.status_code == status.HTTP_204_NO_CONTENT
         assert previous_count - 1 == Company.objects.count()
