@@ -4,33 +4,14 @@ from django.test import Client
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart  # noqa
 from rest_framework import status
 from rest_framework.reverse import reverse
+
 from core.settings import MEDIA_ROOT
-from groups.models import Branch, Company, Room, Course
-from users.models import User
+from groups.models import Course
+from shared.tests import TestBaseFixture
 
 
 @pytest.mark.django_db
-class TestBranchModelViewSet:
-
-    @pytest.fixture
-    def company(self):
-        company = Company.objects.create(name='Company 1')
-        return company
-
-    @pytest.fixture
-    def branch(self, company):
-        image_path = MEDIA_ROOT + '/test.png'
-        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
-        branch = Branch.objects.create(
-            name='Branch 1',
-            address='Uzbekistan, Tashkent',
-            phone='12345678',
-            about='Something about this branch',
-            company=company,
-            image=image
-
-        )
-        return branch
+class TestBranchModelViewSet(TestBaseFixture):
 
     def test_list_branch(self, client: Client, branch):
         url = '%s?company=%s' % (reverse('branch-list'), branch.company.pk)
@@ -100,41 +81,7 @@ class TestBranchModelViewSet:
 
 
 @pytest.mark.django_db
-class TestRoomModelViewSet:
-
-    @pytest.fixture
-    def user(self):
-        user = User.objects.create_user(
-            phone='123654987',
-            password='Asdvbn12ghnf115dfsa2f',
-            is_superuser=True,
-            is_staff=True
-        )
-        return user
-
-    @pytest.fixture
-    def company(self):
-        company = Company.objects.create(name='Company 1')
-        return company
-
-    @pytest.fixture
-    def branch(self, company):
-        image_path = MEDIA_ROOT + '/test.png'
-        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
-        branch = Branch.objects.create(
-            name='Room 1',
-            address='Uzbekistan, Tashkent',
-            phone='12345678',
-            about='Something about this branch',
-            company=company,
-            image=image
-        )
-        return branch
-
-    @pytest.fixture
-    def room(self, branch):
-        room = Room.objects.create(name='Room 1', branch=branch)
-        return room
+class TestRoomModelViewSet(TestBaseFixture):
 
     def test_list_room(self, client: Client, room, user):
         client.force_login(user)
@@ -193,11 +140,7 @@ class TestRoomModelViewSet:
 
 
 @pytest.mark.django_db
-class TestHomeListAPIViewSet:
-    @pytest.fixture
-    def company(self):
-        company = Company.objects.create(name='Company 1')
-        return company
+class TestHomeListAPIViewSet(TestBaseFixture):
 
     @pytest.fixture
     def course(self, company):
@@ -228,18 +171,9 @@ class TestHomeListAPIViewSet:
 
 
 @pytest.mark.django_db
-class TestCompanyModelViewSet:
-    @pytest.fixture
-    def user(self):
-        user = User.objects.create(phone='12345678', password='ASdgashjgjh3123', is_superuser=True, is_staff=True)
-        return user
+class TestCompanyModelViewSet(TestBaseFixture):
 
-    @pytest.fixture
-    def company(self):
-        company = Company.objects.create(name='Company 1')
-        return company
-
-    def test_list_company(self, client: Client, company, user):
+    def test_list_company(self, client: Client, user, company, ):
         client.force_login(user)
         url = reverse('company-list')
         response = client.get(url)

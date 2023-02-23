@@ -2,14 +2,87 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission, Group as Role
 from django.contrib.contenttypes.models import ContentType
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models import Q
+from django.test import Client
 
-from groups.models import Group, Course, Room, Holiday, Branch
-from users.models import Lead, LeadIncrement, User, Archive
+from core.settings import MEDIA_ROOT
+from groups.models import Group, Course, Room, Holiday, Branch, Company
+from users.models import Lead, LeadIncrement, User, Archive, Blog
+
+
+class TestBaseFixture:
+
+    @pytest.fixture
+    def user(self):
+        user = get_user_model().objects.create_user(phone='901001010', password='1', is_superuser=True, is_staff=True)
+        return user
+
+    @pytest.fixture
+    def company(self):
+        company = Company.objects.create(name='Company 1')
+        return company
+
+    @pytest.fixture
+    def blog(self, client: Client, user, company):
+        blog = Blog.objects.create(
+            title='Blog 1',
+            text='Text 1',
+            public=True,
+            created_by=user,
+            updated_by=user,
+            visible_all=True,
+            view_count=11,
+            company=company
+        )
+        return blog
+
+    @pytest.fixture
+    def lead_increment(self):
+        lead_increment = LeadIncrement.objects.create(name="lead_increment1")
+        return lead_increment
+
+    @pytest.fixture
+    def lead(self, lead_increment):
+        lead = Lead.objects.create(
+            phone=12345678,
+            full_name='LeadFullname',
+            comment='Lead comment',
+            lead_increment=lead_increment,
+            status=Lead.LeadStatus.REQUESTS
+        )
+        return lead
+
+    @pytest.fixture
+    def archive(self):
+        archive = Archive.objects.create(
+            name="archive1"
+        )
+        return archive
+
+    @pytest.fixture
+    def branch(self, company):
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        branch = Branch.objects.create(
+            name='Branch 1',
+            address='Uzbekistan, Tashkent',
+            phone='12345678',
+            about='Something about this branch',
+            company=company,
+            image=image
+
+        )
+        return branch
+
+    @pytest.fixture
+    def room(self, branch):
+        room = Room.objects.create(name='Room 1', branch=branch)
+        return room
 
 
 @pytest.mark.django_db
-class TestBase:
+class TestBase(TestBaseFixture):
 
     # def set_permissions(self, role_name: str, perms: list = None, model=None):
     #     role = Role.objects.create(name=role_name)
@@ -38,14 +111,6 @@ class TestBase:
     #         permission = Permission.objects.all()
     #         role.permissions.add(*permission)
     #     return role
-
-    @pytest.fixture
-    def user(self):
-        user = get_user_model().objects.create_user(
-            phone='901001010',
-            password='1'
-        )
-        return user
 
     @pytest.fixture
     def ceo(self, user):

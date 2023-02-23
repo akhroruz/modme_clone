@@ -1,4 +1,5 @@
 from datetime import date, time
+
 import pytest
 
 from groups.models import Company, Branch, Room, Course, Holiday, Group
@@ -7,7 +8,7 @@ from users.models import User
 
 @pytest.mark.django_db
 class TestCompanyModel:
-    def test_company(self):
+    def test_create_company(self):
         data = {'name': 'PDP'}
         company_count = Company.objects.count()
         company = Company.objects.create(**data)
@@ -51,7 +52,7 @@ class TestRoomModel:
             address='test branch address',
             phone='934341245',
             about='test branch about',
-            image='branch_image.png',
+            image='branch_image/.png',
             company=company
         )
         room_count = Room.objects.count()

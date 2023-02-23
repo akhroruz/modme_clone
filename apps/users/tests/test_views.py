@@ -3,36 +3,13 @@ from django.test import Client
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart  # noqa
 from rest_framework import status
 from rest_framework.reverse import reverse
-from groups.models import Company
-from users.models import User, Archive, Blog, LeadIncrement, Lead
+
+from shared.tests import TestBaseFixture
+from users.models import Archive, Blog, LeadIncrement, Lead
 
 
 @pytest.mark.django_db
-class TestBlogModelViewSet:
-
-    @pytest.fixture
-    def user(self):
-        user = User.objects.create_user(phone='1234567', password='password')
-        return user
-
-    @pytest.fixture
-    def company(self):
-        company = Company.objects.create(name='Company 1')
-        return company
-
-    @pytest.fixture
-    def blog(self, client: Client, user, company):
-        blog = Blog.objects.create(
-            title='Blog 1',
-            text='Text 1',
-            public=True,
-            created_by=user,
-            updated_by=user,
-            visible_all=True,
-            view_count=11,
-            company=company
-        )
-        return blog
+class TestBlogModelViewSet(TestBaseFixture):
 
     def test_list_blogs(self, client: Client, user, company, blog):
         client.force_login(user)
@@ -106,20 +83,9 @@ class TestBlogModelViewSet:
 
 
 @pytest.mark.django_db
-class TestLeadIncrementModelViewSet:
-    @pytest.fixture
-    def user(self):
-        user = User.objects.create_user(phone=1234567, password='pass')
-        return user
+class TestLeadIncrementModelViewSet(TestBaseFixture):
 
-    @pytest.fixture
-    def lead_increment(self):
-        lead_increment = LeadIncrement.objects.create(
-            name="lead_increment1"
-        )
-        return lead_increment
-
-    def test_lead_increment_list(self, client: Client, user):
+    def test_lead_increment_list(self, client: Client, user, lead_increment):
         client.force_login(user)
         url = reverse('lead_increment-list')
         response = client.get(url)
@@ -162,30 +128,7 @@ class TestLeadIncrementModelViewSet:
 
 
 @pytest.mark.django_db
-class TestLeadModelViewSet:
-
-    @pytest.fixture
-    def user(self):
-        user = User.objects.create_user(phone=1234567, password='pass')
-        return user
-
-    @pytest.fixture
-    def lead_increment(self):
-        lead_increment = LeadIncrement.objects.create(
-            name="lead_increment1"
-        )
-        return lead_increment
-
-    @pytest.fixture
-    def lead(self, lead_increment):
-        lead = Lead.objects.create(
-            phone=12345678,
-            full_name='LeadFullname',
-            comment='Lead comment',
-            lead_increment=lead_increment,
-            status=Lead.LeadStatus.REQUESTS
-        )
-        return lead
+class TestLeadModelViewSet(TestBaseFixture):
 
     def test_lead_list(self, client: Client, user, lead):
         client.force_login(user)
@@ -254,18 +197,7 @@ class TestLeadModelViewSet:
 
 
 @pytest.mark.django_db
-class TestArchiveModelViewSet:
-    @pytest.fixture
-    def user(self):
-        user = User.objects.create_user(phone=1234567, password='pass')
-        return user
-
-    @pytest.fixture
-    def archive(self):
-        archive = Archive.objects.create(
-            name="archive1"
-        )
-        return archive
+class TestArchiveModelViewSet(TestBaseFixture):
 
     def test_archive_list(self, client: Client, user):
         client.force_login(user)
