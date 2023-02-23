@@ -48,7 +48,9 @@ jobs:
           python3 manage.py makemigrations
           python3 manage.py migrate
           pytest --cov=./ --cov-report=xml
-
+      - uses: TrueBrain/actions-flake8@v2
+        with:
+          path: src
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:

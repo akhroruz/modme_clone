@@ -1,12 +1,9 @@
 import pytest
-from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.models import ContentType
 from django.test import Client
 from django.urls import reverse
 from rest_framework import status
 
 from shared.tests import TestBaseFixture
-from users.models import Comment
 
 
 # TODO: ahror_oka
@@ -18,11 +15,11 @@ class TestExportExcel(TestBaseFixture):
         url = reverse('user-export')
         response = client.get(url)
         assert response.status_code == status.HTTP_200_OK
-        comment = Comment.objects.create(
-            text='My comment',
-            content_type=ContentType.objects.get_for_model(get_user_model()),
-            object_id=user.pk,
-        )
+        # comment = Comment.objects.create(
+        #     text='My comment',
+        #     content_type=ContentType.objects.get_for_model(get_user_model()),
+        #     object_id=user.pk,
+        # )
         # columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
         # rows = User.objects.values_list('id', 'first_name', 'phone', 'birth_date', 'comment', 'balance')
         # response = export_data_excel(columns, rows)
