@@ -3,11 +3,11 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from users.views import ArchiveReasonsModelViewSet, UserModelViewSet, LeadIncrementModelViewSet, LeadModelViewSet, \
-    UpdateProfileView, BlogModelViewSet, UserDocumentView
+    UpdateProfileView, BlogModelViewSet
 
 router = DefaultRouter()
 router.register('user', UserModelViewSet, 'user')
-router.register('user-search', UserDocumentView, 'user_search')
+# router.register('user-search', UserDocumentView, 'user_search')
 router.register('archive-reasons', ArchiveReasonsModelViewSet, 'archive_reasons')
 router.register('lead', LeadModelViewSet, 'lead')
 router.register('lead-increment', LeadIncrementModelViewSet, 'lead_increment')

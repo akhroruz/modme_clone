@@ -59,15 +59,15 @@ class Command(BaseCommand):
         company = Company.objects.all()
         baker.make(
             'groups.Branch',
-            name=cycle(fake.first_name() for _ in range(c)),
-            address=cycle(fake.sentences(nb=100)),
+            name=cycle(fake.company() for _ in range(c)),
+            address=cycle(fake.address()),
             phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(b)),
             about=cycle(fake.sentences(nb=310050)),
             company=cycle(company),
             image='media/img.png',
             _quantity=b
         )
-        print(c, 'branches is being addded')
+        print(b, 'branches is being addded')
 
         # course
         course = options.get('course', 15)
@@ -89,7 +89,7 @@ class Command(BaseCommand):
         r = options.get('room', 15)
         baker.make(
             'groups.Room',
-            name=cycle(fake.first_name() for _ in range(r)),
+            name=cycle(fake.bothify(text='Room Number: ?-##', letters='ABCDE') for _ in range(r)),
             branch=cycle(Branch.objects.all()),
             _quantity=r
         )

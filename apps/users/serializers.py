@@ -1,13 +1,11 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
-from django_elasticsearch_dsl_drf.serializers import DocumentSerializer
 from rest_framework.fields import ListField, IntegerField, SerializerMethodField
 from rest_framework.serializers import ModelSerializer, CharField, ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.settings import api_settings
 
 from groups.models import Branch
-from users.documents import UserDocument
 from users.models import User, Comment, LeadIncrement, Lead, Archive, Blog
 
 
@@ -153,10 +151,10 @@ class BlogModelSerializer(ModelSerializer):
         }
 
 
-class UserListDocumentSerializer(DocumentSerializer):
-    class Meta:
-        document = UserDocument
-        fields = ('first_name', 'last_name', 'phone')
+# class UserListDocumentSerializer(DocumentSerializer):
+#     class Meta:
+#         document = UserDocument
+#         fields = ('first_name', 'last_name', 'phone')
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):  # noqa
