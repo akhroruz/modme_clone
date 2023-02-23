@@ -11,7 +11,7 @@ from users.models import Archive, LeadIncrement, Lead, User, Blog, Comment
 @pytest.mark.django_db
 class TestArchiveModel:
 
-    def test_create_archive(self):
+    def test_create_archive(self):  # noqa
         data = {'name': 'PDP'}
         count = Archive.objects.count()
         archive = Archive.objects.create(**data)
