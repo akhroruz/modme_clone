@@ -1,4 +1,4 @@
-name: Django ModMe API
+name: Testing
 on: [ pull_request, push ]
 jobs:
   test:
@@ -35,10 +35,10 @@ jobs:
           path: .venv
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
-        run: poetry install
+        run: poetry install && poetry shell
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/testdb
           DJANGO_SETTINGS_MODULE: core.settings
-      - run: poetry run pytest
-      - run: poetry run flake8
+      - run: pytest
+      - run: flake8
