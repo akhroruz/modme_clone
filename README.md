@@ -45,4 +45,4 @@
 - ```make search_index``` to create and populate the Elasticsearch index and mapping
 - ```make ram``` remove all tables from the database
 
-![](https://codecov.io/github/akhroruz/modme_clone/branch/master/graphs/sunburst.svg?token=2E37XZAA63)
+![Covrage chart:](https://codecov.io/github/akhroruz/modme_clone/branch/master/graphs/sunburst.svg?token=2E37XZAA63)
