@@ -89,7 +89,7 @@ class Command(BaseCommand):
         r = options.get('room', 15)
         baker.make(
             'groups.Room',
-            name=cycle(fake.first_name() for _ in range(r)),
+            name=cycle(fake.bothify(text='Product Number: ?-##', letters='ABCDE') for _ in range(r)),
             branch=cycle(Branch.objects.all()),
             _quantity=r
         )
