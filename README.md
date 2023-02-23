@@ -1,6 +1,8 @@
 # Modme Clone API
 
 [![codecov](https://codecov.io/github/akhroruz/modme_clone/branch/master/graph/badge.svg?token=2E37XZAA63)](https://codecov.io/github/akhroruz/modme_clone)
+![](https://codecov.io/github/akhroruz/modme_clone/branch/master/graphs/sunburst.svg?token=2E37XZAA63)
+
 ## TODO - Required
 
 1. [x] custom admin
