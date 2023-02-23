@@ -1,8 +1,6 @@
 # Modme Clone API
 
 [![codecov](https://codecov.io/github/akhroruz/modme_clone/branch/master/graph/badge.svg?token=2E37XZAA63)](https://codecov.io/github/akhroruz/modme_clone)
-[![Flake8 Linter](https://img.shields.io/github/workflow/status/akhroruz/modme_clone/Flake8%20Linter?label=flake8&logo=github&style=flat-square)](https://github.com/akhroruz/modme_clone/actions/workflows/workflow.yml)
-
 
 ## TODO - Required
 
