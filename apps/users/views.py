@@ -1,6 +1,4 @@
 from django.db.models import F
-from django_elasticsearch_dsl_drf.filter_backends import SearchFilterBackend
-from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import UpdateAPIView
@@ -11,12 +9,11 @@ from rest_framework.viewsets import ModelViewSet
 
 from groups.filters import CustomCompanyDjangoFilterBackend
 from shared.utils.export_excel import export_data_excel
-from users.documents import UserDocument
 from users.filters import UserFilter, CustomUserDjangoFilterBackend
 from users.models import User, LeadIncrement, Lead, Archive, Blog
 from users.serializers import ArchiveListModelSerializer, UserListModelSerializer, UserCreateModelSerializer, \
     LeadIncrementModelSerializer, LeadModelSerializer, UpdateProfileSerializer, BlogModelSerializer, \
-    ArchiveCreateModelSerializer, UserListDocumentSerializer
+    ArchiveCreateModelSerializer
 
 
 class UserModelViewSet(ModelViewSet):
@@ -52,12 +49,12 @@ class UserModelViewSet(ModelViewSet):
         return export_data_excel(columns, rows)
 
 
-class UserDocumentView(DocumentViewSet):
-    document = UserDocument
-    serializer_class = UserListDocumentSerializer
-    permission_classes = AllowAny,
-    filter_backends = SearchFilterBackend,
-    search_fields = 'first_name', 'last_name', 'phone'
+# class UserDocumentView(DocumentViewSet):
+#     document = UserDocument
+#     serializer_class = UserListDocumentSerializer
+#     permission_classes = AllowAny,
+#     filter_backends = SearchFilterBackend,
+#     search_fields = 'first_name', 'last_name', 'phone'
 
 
 class LeadIncrementModelViewSet(ModelViewSet):
