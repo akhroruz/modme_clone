@@ -48,9 +48,8 @@ jobs:
           python3 manage.py makemigrations
           python3 manage.py migrate
           pytest --cov=./ --cov-report=xml
+          flake8
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-      - run: |
-          flake8
