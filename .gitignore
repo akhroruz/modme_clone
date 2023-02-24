@@ -233,8 +233,7 @@ TODO
 htmlcov
 .idea
 htmlcov/*
-.github
-.idea
+
 setup.cfg
 .pytest_cache
 pytest.ini

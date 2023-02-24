@@ -51,12 +51,3 @@ class GroupFilter(FilterSet):
     class Meta:
         model = Group
         fields = ('branch', 'status', 'teacher', 'courses', 'days', 'start_date', 'end_date')
-
-    # filter_overrides = {
-    #     ArrayField: {
-    #         'filter_class': CharFilter,
-    #         'extra': lambda f: {
-    #             'lookup_expr': 'icontains',
-    #         },
-    #     },
-    # }

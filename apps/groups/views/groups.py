@@ -28,7 +28,7 @@ class GroupModelViewSet(ModelViewSet):
         serializer = GroupListModelSerializer(instance=instance)
         return Response(serializer.data)
 
-    @action(methods=['GET'], detail=False, url_path='export', url_name='export')
+    @action(['GET'], False, 'export', 'export')
     def export_users_xls(self, request):
         columns = ['ID', 'Name', 'Course', 'Teacher', 'Days', 'From', 'To', 'Room']
         rows = Group.objects.values_list('id', 'name', 'course__name', 'teachers__first_name', 'days',

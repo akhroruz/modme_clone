@@ -17,7 +17,7 @@
     - limited administrator - (crud) teacher, (crud) course, (crud) group, branch itself
     - marketer - (crud) leads
     - cashier - (crud) students, reports
-5. [ ] test (pytest coverage 80% ^)
+5. [x] test (pytest coverage 80% ^)
 6. [ ] docker/docker compose
 7. [x] elasticsearch
 8. [ ] security
