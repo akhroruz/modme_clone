@@ -80,6 +80,21 @@ class TestBaseFixture:
         room = Room.objects.create(name='Room 1', branch=branch)
         return room
 
+    @pytest.fixture
+    def course(self, company):
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', open(image_path, 'rb').read(), 'image/png')
+        course = Course.objects.create(
+            name='Course 1',
+            price=2000,
+            description='Course description',
+            image=image,
+            lesson_duration=2,
+            course_duration=4,
+            company=company
+        )
+        return course
+
 
 @pytest.mark.django_db
 class TestBase(TestBaseFixture):

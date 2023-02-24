@@ -1,9 +1,12 @@
+import datetime
+
 import pytest
 from django.test import Client
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart  # noqa
 from rest_framework import status
 from rest_framework.reverse import reverse
 
+from groups.models import Group
 from shared.tests import TestBaseFixture
 from users.models import Archive, Blog, LeadIncrement, Lead
 
@@ -238,4 +241,157 @@ class TestArchiveModelViewSet(TestBaseFixture):
         count = Archive.objects.count()
         response = client.delete(url)
         assert Archive.objects.count() + 1 == count
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+@pytest.mark.django_db
+class TestGroupViewSet(TestBaseFixture):
+
+    @pytest.fixture
+    def group(self, room, branch, course, user):
+        group = Group.objects.create(
+            name='Python',
+            days=Group.DaysChoice.ODD_DAYS,
+            room=room,
+            start_time='14:00:00',
+            end_time='16:00:00',
+            course=course,
+            branch=branch,
+            start_date='2003-10-15',
+            end_date='2003-10-17',
+            tags=['tag1', 'tag2'],
+            teacher=user
+        )
+        group.students.add(user)
+        group.save()
+        return group
+
+    def test_group_list(self, client: Client, room, branch, course, user):
+        client.force_login(user)
+        url = reverse('group-list')
+        response = client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_group_create(self, client: Client, room, branch, course, user):
+        client.force_login(user)
+        data = {
+            'name': 'Java',
+            'days': Group.DaysChoice.ODD_DAYS,
+            'room': room.pk,
+            'teacher': [user.pk],
+            'start_time': '10:00:00',
+            'end_time': '12:00:00',
+            'course': course.pk,
+            'branch': branch.pk,
+            'start_date': '2003-10-10',
+            'end_date': '2003-10-12',
+            'tags': ['tag1', 'tag2'],
+            'students': [user.pk]
+        }
+
+        url = reverse('group-list')
+        prev_count = Group.objects.count()
+        response = client.post(url, data)
+        group = Group.objects.last()
+        assert data['branch'] == response.data['branch']
+        assert group.course == course
+        assert datetime.datetime.strptime(data['start_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
+            'start_time']
+        assert datetime.datetime.strptime(data['end_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
+            'end_time']
+        assert datetime.datetime.strptime(data['start_date'], '%Y-%m-%d').strftime('%Y-%m-%d') == response.data[
+            'start_date']
+        assert datetime.datetime.strptime(data['end_date'], '%Y-%m-%d').strftime('%Y-%m-%d') == response.data[
+            'end_date']
+
+        keys = {'name', 'days', 'start_time', 'end_time', 'start_date', 'end_date', 'tags', }
+        x = response.json()
+        assert len(keys.difference(set(x))) == 0
+        for key in keys:
+            assert data[key] == x[key]
+        assert Group.objects.count() == prev_count + 1
+        assert response.status_code == status.HTTP_201_CREATED
+
+    def test_put_group(self, client: Client, group, room, branch, course, user):
+        client.force_login(user)
+        data = {
+            'name': 'Python',
+            'days': group.DaysChoice.EVEN_DAYS,
+            'room': room.pk,
+            'teacher': user.pk,
+            'start_time': '14:00:00',
+            'end_time': '16:00:00',
+            'course': group.course.pk,
+            'branch': branch.pk,
+            'start_date': '2003-10-15',
+            'end_date': '2003-10-17',
+            'tags': ['tag3', 'tag4'],
+            'students': [user.pk]
+        }
+
+        url = '%s?branch=%s' % (reverse('group-detail', args=[group.pk]), branch.pk)
+        response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
+        group = Group.objects.last()
+        assert data['branch'] == response.data['branch']
+        assert group.course == course
+        assert datetime.datetime.strptime(data['start_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
+            'start_time']
+        assert datetime.datetime.strptime(data['end_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
+            'end_time']
+        assert datetime.datetime.strptime(data['start_date'], '%Y-%m-%d').strftime('%Y-%m-%d') == response.data[
+            'start_date']
+        assert datetime.datetime.strptime(data['end_date'], '%Y-%m-%d').strftime('%Y-%m-%d') == response.data[
+            'end_date']
+
+        keys = {'name', 'days', 'start_time', 'end_time', 'start_date', 'end_date', 'tags', }
+        x = response.json()
+        assert len(keys.difference(set(x))) == 0
+        for key in keys:
+            assert data[key] == x[key]
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_patch_group(self, client: Client, group, room, branch, course, user):
+        client.force_login(user)
+        data = {
+            'name': 'CSS',
+            'days': group.DaysChoice.EVEN_DAYS,
+            'room': room.pk,
+            'teacher': user.pk,
+            'start_time': '14:00:00',
+            'end_time': '16:00:00',
+            'course': group.course.pk,
+            'branch': branch.pk,
+            'start_date': '2003-10-15',
+            'end_date': '2003-10-17',
+            'tags': ['tag3', 'tag4'],
+            'students': [user.pk]
+        }
+
+        url = '%s?branch=%s' % (reverse('group-detail', args=[group.pk]), branch.pk)
+        response = client.patch(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
+        group = Group.objects.last()
+        assert data['branch'] == response.data['branch']
+        assert group.course == course
+        assert datetime.datetime.strptime(data['start_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
+            'start_time']
+        assert datetime.datetime.strptime(data['end_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
+            'end_time']
+        assert datetime.datetime.strptime(data['start_date'], '%Y-%m-%d').strftime('%Y-%m-%d') == response.data[
+            'start_date']
+        assert datetime.datetime.strptime(data['end_date'], '%Y-%m-%d').strftime('%Y-%m-%d') == response.data[
+            'end_date']
+
+        keys = {'name', 'days', 'start_time', 'end_time', 'start_date', 'end_date', 'tags', }
+        x = response.json()
+        assert len(keys.difference(set(x))) == 0
+        for key in keys:
+            assert data[key] == x[key]
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_delete_group(self, client: Client, user, branch, group):
+        client.force_login(user)
+        url = '%s?branch=%s' % (reverse('group-detail', args=[group.pk]), branch.pk)
+        prev_count = Group.objects.count()
+        response = client.delete(url)
+        assert Group.objects.count() + 1 == prev_count
         assert response.status_code == status.HTTP_204_NO_CONTENT
