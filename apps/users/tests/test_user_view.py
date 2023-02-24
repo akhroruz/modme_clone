@@ -1,9 +1,9 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group as Role
-from django.core.files.uploadedfile import SimpleUploadedFile  # noqa
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
-from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart  # noqa
+from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from rest_framework import status
 from rest_framework.reverse import reverse
 
@@ -62,58 +62,49 @@ class TestUserModelViewSet(TestBaseFixture):
         assert response.status_code == status.HTTP_200_OK
         assert User.objects.count() == response.data['count']
 
-    # def test_create_user(self, client, user, archive, branch, role):
-    #     image_path = MEDIA_ROOT + '/test.png'
-    #     image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
-    #     client.force_login(user)
-    #     data = {
-    #         'phone': '8888888',
-    #         'gender': user.GenderChoose.MALE,
-    #         'birth_date': '2003-12-01',
-    #         'photo': image,
-    #         'role': role,
-    #         'first_name': 'jack',
-    #         'password': '1',
-    #         'data': {}
-    #     }
-    #     url = '%s?branch=%s&user_type=%s' % (reverse('user-list'), branch.pk, role.name)
-    #     count = User.objects.count()
-    #     response = client.post(url, data)
-    #     new_count = User.objects.count()
-    #     x = response.json()
-    #     assert response.status_code == status.HTTP_201_CREATED
-    #     keys = {'first_name', 'phone', 'gender', 'birth_date', 'photo', 'data'}
-    #     assert len(keys.difference(set(x))) == 0
-    #     for key in keys:
-    #         assert x[key] == data[key]
-    #     assert count + 1 == new_count
+    def test_create_user(self, client, user, archive, branch, role):
+        client.force_login(user)
+        data = {
+            'phone': '8888889',
+            'gender': user.GenderChoose.MALE,
+            'birth_date': '2003-12-01',
+            'role': role,
+            'first_name': 'jack',
+            'password': '1',
+        }
+        url = '%s?branch=%s&user_type=%s' % (reverse('user-list'), branch.pk, role.name)
+        count = User.objects.count()
+        response = client.post(url, data)
+        x = response.json()
+        assert response.status_code == status.HTTP_201_CREATED
+        keys = {'first_name', 'phone', 'gender', 'birth_date'}
+        for key in keys:
+            assert data[key] == x[key]
+        assert count + 1 == User.objects.count()
 
     # def test_update_user(self, client: Client, user, branch, role):
     #     client.force_login(user)
     #     image_path = MEDIA_ROOT + '/test.png'
     #     image = SimpleUploadedFile('test.png', open(image_path, 'rb').read(), 'image/png')
     #     data = {
-    #         'phone': '555',
     #         'gender': User.GenderChoose.FEMALE,
     #         'birth_date': '1999-10-10',
     #         'photo': image,
-    #         'first_name': 'unnamed',
     #         'password': '1',
-    #         'data': {}
     #     }
     #
     #     url = reverse('user-detail', args=(user.pk,)) + f'?branch={branch.pk}&user_type={role.name}'
     #     response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
     #     assert response.status_code == status.HTTP_200_OK
     #     x = response.json()
-    #     keys = {'phone', 'first_name', 'gender', 'birth_date', 'photo', 'data', 'password'}
-    #     assert len(keys.difference(set(x))) == 0
+    #     keys = {'gender', 'birth_date', 'full_name'}
+    #     for key in keys:
+    #         assert data[key] == x[key]
 
     def test_patch_user(self, client: Client, user, branch, role):
         client.force_login(user)
         image_path = MEDIA_ROOT + '/test.png'
         image = SimpleUploadedFile('test.png', open(image_path, 'rb').read(), 'image/png')
-
         data = {
             'birth_date': '1000-10-10',
             'password': 'password1',
@@ -124,12 +115,10 @@ class TestUserModelViewSet(TestBaseFixture):
 
         url = reverse('user-detail', args=(user.pk,)) + f'?branch={branch.pk}&user_type={role.name}'
         response = client.patch(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
-
+        keys = 'birth_date', 'gender'
+        for key in keys:
+            assert data[key] == response.data[key]
         assert response.status_code == status.HTTP_200_OK
-        assert 'gender' in response.data
-        assert response.data['gender'] == user.GenderChoose.MALE
-        assert 'birth_date' in response.data
-        assert response.data['birth_date'] == data['birth_date']
 
     def test_delete_user(self, client: Client, user, branch, role, company):
         client.force_login(user)
