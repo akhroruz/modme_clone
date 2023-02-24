@@ -1,5 +1,7 @@
 # Modme Clone API
 
+[![codecov](https://codecov.io/github/akhroruz/modme_clone/branch/master/graph/badge.svg?token=2E37XZAA63)](https://codecov.io/github/akhroruz/modme_clone)
+
 ## TODO - Required
 
 1. [x] custom admin
@@ -42,3 +44,5 @@
 - ```make faker``` create random fake datas in database
 - ```make search_index``` to create and populate the Elasticsearch index and mapping
 - ```make ram``` remove all tables from the database
+
+![](https://codecov.io/github/akhroruz/modme_clone/branch/master/graphs/sunburst.svg?token=2E37XZAA63)
