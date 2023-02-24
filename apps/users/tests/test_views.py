@@ -328,7 +328,7 @@ class TestGroupViewSet(TestBaseFixture):
             'tags': ['tag3', 'tag4'],
             'students': [user.pk]
         }
-
+        # TODO: Brach REQUIRED in [PUT] but self VIEW INCORRECT url in swagger[http://127.0.0.1:8000/api/v1/group/1/]
         url = '%s?branch=%s' % (reverse('group-detail', args=[group.pk]), branch.pk)
         response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
         group = Group.objects.last()
