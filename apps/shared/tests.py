@@ -1,3 +1,5 @@
+from datetime import time, date
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission, Group as Role
@@ -94,6 +96,58 @@ class TestBaseFixture:
             company=company
         )
         return course
+
+    @pytest.fixture
+    def course(self, company):
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        course = Course.objects.create(
+            name='Backend Course',
+            price=1400000,
+            description='Smth about this course',
+            image=image,
+            lesson_duration=15,
+            course_duration=140,
+            company=company,
+        )
+        return course
+
+    @pytest.fixture
+    def group(self, branch, user, course, room):
+        group = Group.objects.create(
+            name='test_name',
+            days=Group.DaysChoice.ODD_DAYS,
+            status=Group.StatusChoice.ACTIVE,
+            room=room,
+            teacher=user,
+            start_time='09:00:00',
+            end_time='12:00:00',
+            course=course,
+            branch=branch,
+            start_date='2023-02-23',
+            end_date='2023-05-23',
+            tags=['test_tag1', 'tests_tag2', 'tests_tag3'],
+
+        )
+        student1 = User.objects.create(
+            phone='990675629',
+            password=123,
+            first_name='Mukhammad',
+            last_name='Jabborov',
+            is_staff=False,
+            is_superuser=False
+        )
+        student2 = User.objects.create(
+            phone='997755565',
+            password=123,
+            first_name='Toshpulat',
+            last_name='Eshonov',
+            is_staff=False,
+            is_superuser=False
+        )
+
+        group.students.add(student1, student2)
+        return group
 
 
 @pytest.mark.django_db

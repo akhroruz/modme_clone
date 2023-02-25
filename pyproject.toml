@@ -31,11 +31,11 @@ coverage = "^7.1.0"
 pytest = "^7.2.1"
 flake8 = "^6.0.0"
 setuptools = "^67.3.1"
-update = "^0.0.1"
 pytest-cov = "^4.0.0"
 xlrd = "^2.0.1"
 openpyxl = "^3.1.1"
 django-elasticsearch-dsl-drf = "^0.22.5"
+update = "^0.0.1"
 
 
 
