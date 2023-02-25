@@ -1,2 +1,3 @@
 
-# class TestBranchModelSerializer:
+class TestBranchModelSerializer:
+  pass
