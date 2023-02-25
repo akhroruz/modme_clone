@@ -1,3 +1,5 @@
+from datetime import date, time
+
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
@@ -173,21 +175,6 @@ class TestRoomModelViewSet(TestBaseFixture):
 
 @pytest.mark.django_db
 class TestHomeListAPIViewSet(TestBaseFixture):
-
-    @pytest.fixture
-    def course(self, company):
-        image_path = MEDIA_ROOT + '/test.png'
-        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
-        course = Course.objects.create(
-            name='Python Back End course',
-            price=1400000,
-            description='Smth about this course',
-            image=image,
-            lesson_duration=15,
-            course_duration=140,
-            company=company,
-        )
-        return course
 
     def test_list_home(self, client: Client, course):
         url = reverse('home')

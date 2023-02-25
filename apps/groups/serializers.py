@@ -43,7 +43,7 @@ class HolidayModelSerializer(ModelSerializer):
 class CourseListModelSerializer(ModelSerializer):
     class Meta:
         model = Course
-        fields = ('name', 'price')
+        fields = ('id', 'name', 'price')
 
 
 class GroupTeacherListModelSerializer(ModelSerializer):
