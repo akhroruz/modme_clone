@@ -160,7 +160,7 @@ REST_FRAMEWORK = {
     ),
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
 
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_PAGINATION_CLASS': 'shared.pagination.CustomPageNumberPagination',
     'PAGE_SIZE': 10
 }
 
