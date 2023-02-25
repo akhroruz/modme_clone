@@ -124,7 +124,7 @@ class Command(BaseCommand):
             birth_date=cycle(fake.date() for _ in range(u)),
             phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(u)),
             gender=cycle(fake.random_element(User.GenderChoose) for _ in range(100)),
-            role=cycle(Group.objects.all()),
+            role=cycle(Role.objects.all()),
             branch=cycle(Branch.objects.all()),
             archive=cycle(Archive.objects.all()),
             password=make_password('1'),

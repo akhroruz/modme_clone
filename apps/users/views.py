@@ -25,8 +25,16 @@ class UserModelViewSet(ModelViewSet):
     filterset_class = UserFilter
     ordering = ['first_name', 'last_name']
 
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+    def list(self, request, *args, **kwargs):
+        if not self.request.query_params.get('per_page'):
+            self.pagination_class = None
+        return super().list(request, *args, **kwargs)
+
+    # def paginate_queryset(self, queryset):
+    #     # if self.request.query_params.get('per')
+    #     if per_page := self.request.query_params.get('per_page'):
+    #         return super().paginate_queryset(queryset)
+    #     return queryset
 
     def get_serializer_class(self):
         if self.action == 'create':
