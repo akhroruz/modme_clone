@@ -2,7 +2,6 @@ import random
 from itertools import cycle
 
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import Group as Role
 from django.contrib.contenttypes.models import ContentType
 from django.core.management import BaseCommand
 from faker import Faker
@@ -38,7 +37,7 @@ class Command(BaseCommand):
         parser.add_argument('-hd', '--holiday', type=int, help='Define a holiday number prefix')
         parser.add_argument('-gr', '--Group', type=int, help='Define a group number prefix')
         parser.add_argument('-u', '--user', type=int, help='Define a user number prefix')
-        parser.add_argument('-uc', '--usercomment', type=int, help='Define a user comment number prefix')
+        parser.add_argument('-uc', '--user_comment', type=int, help='Define a user comment number prefix')
         parser.add_argument('-a', '--archive', type=int, help='Define a archive number prefix')
         parser.add_argument('-li', '--lead_increment', type=int, help='Define a lead increment number prefix')
         parser.add_argument('-l', '--lead', type=int, help='Define a lead number prefix')
@@ -114,7 +113,7 @@ class Command(BaseCommand):
             name=cycle(fake.first_name() for _ in range(a)),
             _quantity=a
         )
-        print(a, 'archives is being addded')
+        print(a, 'archives is being added')
 
         # user
         u = options.get('user', 15)
@@ -135,7 +134,7 @@ class Command(BaseCommand):
             _quantity=u
         )
 
-        print(u, 'users is being addded')
+        print(u, 'users is being added')
         users = User.objects.all()
         content_type = ContentType.objects.get_for_model(User)
 
@@ -155,7 +154,7 @@ class Command(BaseCommand):
             _quantity=li
         )
 
-        print(li, 'leads increments is being addded')
+        print(li, 'leads increments is being added')
 
         # lead
         lead = options.get('lead', 15)
@@ -167,7 +166,7 @@ class Command(BaseCommand):
             lead_increment=cycle(LeadIncrement.objects.all()),
             _quantity=lead
         )
-        print(lead, 'leads is being addded')
+        print(lead, 'leads is being added')
 
         # course group
         gr = options.get('Group', 15)
@@ -186,4 +185,4 @@ class Command(BaseCommand):
             make_m2m=True,
             _quantity=gr
         )
-        print(gr, 'groups is being addded')
+        print(gr, 'groups is being added')

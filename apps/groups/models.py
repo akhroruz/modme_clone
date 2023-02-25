@@ -51,10 +51,10 @@ class Course(BaseModel):  # checked
         return self.name
 
 
-class Holiday(BaseModel):  # dam olish kunlari
+class Holiday(BaseModel):  # noqa| dam olish kunlari
     name = CharField(max_length=255)
     holiday_date = DateField(null=True, blank=True)
-    affect_payment = BooleanField(default=False)  # to'lovga tasir qilishi
+    affect_payment = BooleanField(default=False)  # noqa| to'lovga tasir qilishi
     branch = ForeignKey('groups.Branch', CASCADE)
 
     def __str__(self):
@@ -68,17 +68,17 @@ class Group(BaseModel):  # checked
         DAY_OFF = 'day_off', 'Day off'
 
     class StatusChoice(TextChoices):
-        ARCHIVED = 'is_archived', 'Is Archived'  # arxivlangan gurux lar
-        COMPLETED = 'is_completed', 'Is Completed'  # yakunlangan gurux lar
-        ACTIVE = 'is_active', 'Is Active'  # faol gurux lar
+        ARCHIVED = 'is_archived', 'Is Archived'  # noqa| arxivlangan gurux lar
+        COMPLETED = 'is_completed', 'Is Completed'  # noqa| yakunlangan gurux lar
+        ACTIVE = 'is_active', 'Is Active'  # noqa| faol gurux lar
 
     name = CharField(max_length=255)
-    days = CharField(max_length=50, choices=DaysChoice.choices)  # dars bo'lish kunlari
+    days = CharField(max_length=50, choices=DaysChoice.choices)  # noqa| dars bo'lish kunlari
     status = CharField(max_length=25, choices=StatusChoice.choices, default=StatusChoice.ACTIVE)
     room = ForeignKey('groups.Room', CASCADE, 'groups')
     students = ManyToManyField('users.User')
     teacher = ForeignKey('users.User', SET_NULL, 'groups', null=True, blank=True)
-    start_time = TimeField(null=True, blank=True)  # dars boshlanish vaqti
+    start_time = TimeField(null=True, blank=True)  # noqa| dars boshlanish vaqti
     end_time = TimeField(null=True, blank=True)
     course = ForeignKey('groups.Course', SET_NULL, 'groups', null=True)
     branch = ForeignKey('groups.Branch', CASCADE, 'groups')
