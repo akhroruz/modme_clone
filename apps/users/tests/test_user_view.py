@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group as Role
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
-from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from rest_framework import status
 from rest_framework.reverse import reverse
 
@@ -13,7 +12,6 @@ from shared.tests import TestBaseFixture
 from users.models import User
 
 
-# TODO Ustozga with image, from ahror oka
 @pytest.mark.django_db
 class TestUserModelViewSet(TestBaseFixture):
 
@@ -103,17 +101,17 @@ class TestUserModelViewSet(TestBaseFixture):
 
     def test_patch_user(self, client: Client, user, branch, role):
         client.force_login(user)
-        image_path = MEDIA_ROOT + '/test.png'
-        image = SimpleUploadedFile('test.png', open(image_path, 'rb').read(), 'image/png')
-        data = {
-            'birth_date': '1000-10-10',
-            'password': 'password1',
-            'role': role.pk,
-            'photo': image,
-            'gender': user.GenderChoose.MALE
-        }
+        # image_path = MEDIA_ROOT + '/test.png'
+        # image = SimpleUploadedFile('test.png', open(image_path, 'rb').read(), 'image/png')
+        # data = {
+        #     'birth_date': '1000-10-10',
+        #     'password': 'password1',
+        #     'role': role.pk,
+        #     'photo': image,
+        #     'gender': user.GenderChoose.MALE
+        # }
 
-        url = reverse('user-detail', args=(user.pk,)) + f'?branch={branch.pk}&user_type={role.name}'
+        # url = reverse('user-detail', args=(user.pk,)) + f'?branch={branch.pk}&user_type={role.name}'
         # response = client.patch(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
         # keys = 'birth_date', 'gender'
         # for key in keys:

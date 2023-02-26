@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group as Role
 from rest_framework.serializers import ModelSerializer
-from groups.models import Branch, Room, Course, Holiday, Group, Company
-from users.models import User
+
+from groups.models import Branch, Room, Course, Holiday, Company
 
 
 class CompanyModelSerializer(ModelSerializer):
@@ -34,38 +34,6 @@ class HomeModelSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class HolidayModelSerializer(ModelSerializer):
-    class Meta:
-        model = Holiday
-        fields = '__all__'
-
-
-class CourseListModelSerializer(ModelSerializer):
-    class Meta:
-        model = Course
-        fields = ('id', 'name', 'price')
-
-
-class GroupTeacherListModelSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'full_name', 'phone')
-
-
-class GroupListModelSerializer(ModelSerializer):
-    class Meta:
-        model = Group
-        fields = '__all__'
-
-    def to_representation(self, instance: Group):
-        data = super().to_representation(instance)
-        data['students_count'] = instance.students_count
-        data['teacher'] = GroupTeacherListModelSerializer(instance.teacher).data
-        data['room'] = RoomListModelSerializer(instance.room).data
-        data['course'] = CourseListModelSerializer(instance.course).data
-        return data
-
-
 class HolidayListModelSerializer(ModelSerializer):
     class Meta:
         model = Holiday
@@ -78,7 +46,7 @@ class HolidayCreateModelSerializer(ModelSerializer):
         fields = 'name', 'holiday_date', 'affect_payment'
 
 
-class GroupModelSerializer(ModelSerializer):
+class RoleModelSerializer(ModelSerializer):
     class Meta:
         model = Role
         fields = '__all__'
