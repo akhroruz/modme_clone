@@ -23,7 +23,7 @@ class UserModelViewSet(ModelViewSet):
     filter_backends = CustomUserDjangoFilterBackend, OrderingFilter
     filterset_class = UserFilter
     ordering = ['first_name', 'last_name']
-    http_method_names = ('post', 'get', 'put')
+    http_method_names = ('post', 'get', 'put', 'delete')
 
     def list(self, request, *args, **kwargs):
         if not self.request.query_params.get('per_page'):

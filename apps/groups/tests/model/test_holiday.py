@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from groups.models import Branch, Holiday
+from groups.models import Branch, Holiday, Company
 
 
 @pytest.mark.django_db
