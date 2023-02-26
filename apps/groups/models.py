@@ -85,7 +85,6 @@ class Group(BaseModel):  # checked
     start_date = DateField(null=True, blank=True)
     end_date = DateField(null=True, blank=True)
     tags = ArrayField(CharField(max_length=255))
-
     # comment = GenericRelation('users.Comment')
 
     def __str__(self):

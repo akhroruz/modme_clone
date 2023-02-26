@@ -1,5 +1,3 @@
-from datetime import time, date
-
 import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission, Group as Role

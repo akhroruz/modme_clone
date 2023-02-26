@@ -2,12 +2,13 @@ import random
 from itertools import cycle
 
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import Group as Role
 from django.contrib.contenttypes.models import ContentType
 from django.core.management import BaseCommand
 from faker import Faker
 from model_bakery import baker
 
-from groups.models import Company, Branch, Course, Room, Group
+from groups.models import Company, Branch, Course, Room
 from users.models import User, LeadIncrement, Archive
 
 fake = Faker()
@@ -143,6 +144,7 @@ class Command(BaseCommand):
             text=fake.text(),
             content_type=content_type,
             object_id=cycle(users.values_list('pk', flat=True)),
+            creater=cycle(User.objects.all()),
             _quantity=15
         )
 

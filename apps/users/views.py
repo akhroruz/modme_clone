@@ -11,34 +11,36 @@ from groups.filters import CustomCompanyDjangoFilterBackend
 from shared.utils.export_excel import export_data_excel
 from users.filters import UserFilter, CustomUserDjangoFilterBackend
 from users.models import User, LeadIncrement, Lead, Archive, Blog
-from users.serializers import ArchiveListModelSerializer, UserListModelSerializer, UserCreateModelSerializer, \
+from users.serializers import ArchiveListModelSerializer, UserCreateModelSerializer, \
     LeadIncrementModelSerializer, LeadModelSerializer, UpdateProfileSerializer, BlogModelSerializer, \
-    ArchiveCreateModelSerializer
+    ArchiveCreateModelSerializer, StudentListModelSerializer, StaffListModelSerializer, StudentCreateModelSerializer
 
 
 class UserModelViewSet(ModelViewSet):
-    serializer_class = UserListModelSerializer
     queryset = User.objects.all()
     permission_classes = AllowAny,
     parser_classes = MultiPartParser, FormParser
     filter_backends = CustomUserDjangoFilterBackend, OrderingFilter
     filterset_class = UserFilter
     ordering = ['first_name', 'last_name']
+    http_method_names = ('post', 'get', 'put')
 
     def list(self, request, *args, **kwargs):
         if not self.request.query_params.get('per_page'):
             self.pagination_class = None
         return super().list(request, *args, **kwargs)
 
-    # def paginate_queryset(self, queryset):
-    #     # if self.request.query_params.get('per')
-    #     if per_page := self.request.query_params.get('per_page'):
-    #         return super().paginate_queryset(queryset)
-    #     return queryset
-
+    # TODO: Teacher required field'larni put, retieve da ishlatish
     def get_serializer_class(self):
+        user_type = self.request.query_params.get('user_type')
         if self.action == 'create':
+            if user_type == 'student':
+                return StudentCreateModelSerializer
             return UserCreateModelSerializer
+        elif self.action == 'list':
+            if user_type == 'student':
+                return StudentListModelSerializer
+            return StaffListModelSerializer
         return super().get_serializer_class()
 
     @action(['GET', 'POST'], False, 'trashed', 'trashed')

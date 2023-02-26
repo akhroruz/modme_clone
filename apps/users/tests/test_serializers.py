@@ -1,9 +1,6 @@
 import pytest
-from rest_framework import status
-from rest_framework.reverse import reverse
 
 from shared.tests import TestBaseFixture
-from users.models import User
 
 
 @pytest.mark.django_db
