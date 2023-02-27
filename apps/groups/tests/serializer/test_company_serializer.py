@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.serializers import Serializer
 
 
-class CompanySerializer(Serializer):  # noqa
+class CompanySerializer(serializers.Serializer):  # noqa
     name = serializers.CharField(max_length=255)
 
 
