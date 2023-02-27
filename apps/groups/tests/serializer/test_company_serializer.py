@@ -2,7 +2,7 @@ import pytest
 from rest_framework import serializers
 
 
-class CompanySerializer(Serializer):  # noqa
+class CompanySerializer(serializers.Serializer):  # noqa
     name = serializers.CharField(max_length=255)
 
 
