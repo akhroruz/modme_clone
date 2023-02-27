@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import IntegerField, CharField, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
     TimeField, DecimalField, DateField, BooleanField, CASCADE, ManyToManyField
@@ -85,7 +86,7 @@ class Group(BaseModel):  # checked
     start_date = DateField(null=True, blank=True)
     end_date = DateField(null=True, blank=True)
     tags = ArrayField(CharField(max_length=255))
-    # comment = GenericRelation('users.Comment')
+    comment = GenericRelation('users.Comment')
 
     def __str__(self):
         return self.name
@@ -106,3 +107,14 @@ class Lesson(BaseModel):
     title = CharField(max_length=255)
     course = ForeignKey('groups.Course', SET_NULL, null=True)
     group = ForeignKey('groups.Group', SET_NULL, null=True)
+
+
+class ArchiveReason(BaseModel):
+    name = CharField(max_length=255)
+    company = ForeignKey('groups.Company', CASCADE)
+
+# TODO: Teacher tushunmadik
+# https://api.modme.dev/v1/tags
+# class Tag(BaseModel):
+#     title = CharField(max_length=255)
+#     color = IntegerField

@@ -1,5 +1,6 @@
 import pytest
 from rest_framework import serializers
+from rest_framework.serializers import Serializer
 
 
 class CompanySerializer(Serializer):  # noqa

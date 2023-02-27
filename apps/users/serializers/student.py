@@ -3,40 +3,66 @@ from django.forms import model_to_dict
 from rest_framework.fields import SerializerMethodField, CharField
 from rest_framework.serializers import ModelSerializer
 
+from groups.models import Group, Room
 from users.models import Comment, User
 
 
 class StudentListCommentModelSerializer(ModelSerializer):
-    creater = SerializerMethodField()
+    creater = SerializerMethodField()  # noqa
 
     def get_creater(self, obj: Comment):  # noqa
         return model_to_dict(obj.creater, ('id', 'phone', 'first_name'))
 
     class Meta:
         model = Comment
-        fields = ('id', 'text', 'creater')
+        fields = ('id', 'text', 'creater')  # noqa
+
+
+class StudentRoomListModelSerializer(ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ('id', 'name')
+
+
+class StudentGroupListModelSerializer(ModelSerializer):
+    course = SerializerMethodField()
+    teacher = SerializerMethodField()
+
+    def get_course(self, obj: Group):  # noqa
+        return model_to_dict(obj.course, (
+            'id', 'name', 'description', 'lesson_duration', 'course_duration', 'price'
+        ))
+
+    def get_teacher(self, obj: Group):  # noqa
+        return model_to_dict(obj.teacher, ('id', 'first_name', 'phone'))
+
+    class Meta:
+        model = Group
+        fields = ('id', 'name', 'days', 'status', 'course', 'teacher')
+
+    def to_representation(self, instance: Group):
+        rep = super().to_representation(instance)
+        rep['rooms'] = StudentRoomListModelSerializer(instance.room).data
+        return rep
 
 
 class StudentListModelSerializer(ModelSerializer):
     branches = SerializerMethodField()
-    groups = SerializerMethodField()
 
     def get_branches(self, obj: User):  # noqa
         return obj.branch.values('id', 'name')
-
-    def get_groups(self, obj: User):  # noqa
-        return obj.groups.all()
 
     class Meta:
         model = User
         fields = (
             'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'data', 'is_archive',
-            'branches', 'groups')
+            'branches')
         read_only_fields = ('phone', 'full_name', 'id')
 
     def to_representation(self, instance: User):
         rep = super().to_representation(instance)
         rep['comment'] = StudentListCommentModelSerializer(instance.comment, many=True).data
+        rep['groups'] = StudentGroupListModelSerializer(instance.groups, many=True).data
         return rep
 
 

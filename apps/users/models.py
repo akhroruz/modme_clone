@@ -11,6 +11,7 @@ from users.managers import MyUserManager
 
 class Archive(BaseModel):
     name = CharField(max_length=100)
+    company = ForeignKey('groups.Company', CASCADE)
 
     def __str__(self):
         return self.name

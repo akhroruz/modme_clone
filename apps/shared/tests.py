@@ -105,7 +105,7 @@ class TestBaseFixture:
     #         description='Smth about this course',
     #         image=image,
     #         lesson_duration=15,
-    #         course_duration=140,
+    #         course_duration=140,d
     #         company=company,
     #     )
     #     return course
