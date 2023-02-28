@@ -1,9 +1,7 @@
-from datetime import date, time
-
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
-from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart  # noqa
+from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from rest_framework import status
 from rest_framework.reverse import reverse
 

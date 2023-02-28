@@ -2,6 +2,7 @@ import random
 from itertools import cycle
 
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import Group as Role
 from django.contrib.contenttypes.models import ContentType
 from django.core.management import BaseCommand
 from faker import Faker
@@ -134,7 +135,6 @@ class Command(BaseCommand):
             _quantity=u
         )
 
-        print(u, 'users is being added')
         users = User.objects.all()
         content_type = ContentType.objects.get_for_model(User)
 
@@ -143,8 +143,11 @@ class Command(BaseCommand):
             text=fake.text(),
             content_type=content_type,
             object_id=cycle(users.values_list('pk', flat=True)),
-            _quantity=15
+            creater=cycle(User.objects.all()),
+            _quantity=20
         )
+
+        print(u, 'users is being added')
 
         # lead increment
         li = options.get('lead_increment', 15)
@@ -181,8 +184,19 @@ class Command(BaseCommand):
             students=cycle(User.objects.all()),
             course=cycle(Course.objects.all()),
             room=cycle(Room.objects.all()),
-            # comment=cycle(ContentType.objects.get_for_model(Course).model_class().objects.all()),
             make_m2m=True,
             _quantity=gr
+        )
+
+        groups = Group.objects.all()
+        content_type = ContentType.objects.get_for_model(Group)
+
+        baker.make(
+            'users.Comment',
+            text=fake.text(),
+            content_type=content_type,
+            object_id=cycle(groups.values_list('pk', flat=True)),
+            creater=cycle(User.objects.all()),
+            _quantity=20
         )
         print(gr, 'groups is being added')

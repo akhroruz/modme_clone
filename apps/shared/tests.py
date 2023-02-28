@@ -1,5 +1,3 @@
-from datetime import time, date
-
 import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission, Group as Role
@@ -97,20 +95,20 @@ class TestBaseFixture:
         )
         return course
 
-    @pytest.fixture
-    def course(self, company):
-        image_path = MEDIA_ROOT + '/test.png'
-        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
-        course = Course.objects.create(
-            name='Backend Course',
-            price=1400000,
-            description='Smth about this course',
-            image=image,
-            lesson_duration=15,
-            course_duration=140,
-            company=company,
-        )
-        return course
+    # @pytest.fixture
+    # def course(self, company):
+    #     image_path = MEDIA_ROOT + '/test.png'
+    #     image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+    #     course = Course.objects.create(
+    #         name='Backend Course',
+    #         price=1400000,
+    #         description='Smth about this course',
+    #         image=image,
+    #         lesson_duration=15,
+    #         course_duration=140,d
+    #         company=company,
+    #     )
+    #     return course
 
     @pytest.fixture
     def group(self, branch, user, course, room):

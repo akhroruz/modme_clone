@@ -11,6 +11,7 @@ from users.managers import MyUserManager
 
 class Archive(BaseModel):
     name = CharField(max_length=100)
+    company = ForeignKey('groups.Company', CASCADE)
 
     def __str__(self):
         return self.name
@@ -60,6 +61,7 @@ class Comment(BaseModel):
     content_type = ForeignKey('contenttypes.ContentType', CASCADE)
     object_id = PositiveIntegerField()
     content_object = GenericForeignKey()
+    creater = ForeignKey('users.User', SET_NULL, null=True)
 
 
 class Lead(BaseModel):

@@ -31,5 +31,3 @@ test:
 	coverage report --omit='*/migrations/*,*/__init__.py'
 	coverage html --omit='*/migrations/*,*/__init__.py,core/' && open htmlcov/index.html
 
-#test:
-#	pytest && open htmlcov/index.html
