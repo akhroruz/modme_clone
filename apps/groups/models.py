@@ -112,9 +112,3 @@ class Lesson(BaseModel):
 class ArchiveReason(BaseModel):
     name = CharField(max_length=255)
     company = ForeignKey('groups.Company', CASCADE)
-
-# TODO: Teacher tushunmadik
-# https://api.modme.dev/v1/tags
-# class Tag(BaseModel):
-#     title = CharField(max_length=255)
-#     color = IntegerField

@@ -66,20 +66,19 @@ class StudentListModelSerializer(ModelSerializer):
         return rep
 
 
-# TODO: Teacher create action'da user_type qanday aniqlash mumkin.
 class StudentCreateModelSerializer(ModelSerializer):
+    user_type = CharField(write_only=True)
     password = CharField(write_only=True, required=False)
 
     class Meta:
         model = User
         fields = (
-            'branch', 'comment', 'data', 'birth_date', 'gender', 'groups', 'first_name', 'password', 'phone')
+            'branch', 'data', 'birth_date', 'user_type',
+            'gender', 'groups', 'first_name', 'password', 'phone'
+        )
 
     def create(self, validated_data):
-        if validated_data['password']:
+        validated_data.pop('user_type')
+        if validated_data.get('password'):
             validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
-
-    def to_internal_value(self, data):
-        data['user_type'] = 'student'
-        return super().to_internal_value(data)

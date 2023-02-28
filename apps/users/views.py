@@ -1,4 +1,5 @@
 from django.db.models import F
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import UpdateAPIView
@@ -19,26 +20,27 @@ from users.serializers import ArchiveListModelSerializer, UserCreateModelSeriali
 # https://api.modme.dev/v1/user?user_type=student&per_page=50&page=1&branch_id=189
 class UserModelViewSet(ModelViewSet):
     queryset = User.objects.all()
+    serializer_class = StaffListModelSerializer
     parser_classes = MultiPartParser, FormParser
-    filter_backends = CustomUserDjangoFilterBackend, OrderingFilter
+    filter_backends = DjangoFilterBackend, OrderingFilter
     filterset_class = UserFilter
     ordering = ['first_name', 'last_name']
     http_method_names = ('post', 'get', 'put')
 
     def list(self, request, *args, **kwargs):
         params = self.request.query_params
-        if not (params.get('per_page') and params.get('per_page')):
+        if not (params.get('page') and params.get('per_page')):
             self.pagination_class = None
         return super().list(request, *args, **kwargs)
 
-    # TODO: Teacher required field'larni put, retieve'da ishlatish
     def get_serializer_class(self):
-        user_type = self.request.query_params.get('user_type')
+        user_type = self.request.POST.get('user_type')
         if self.action == 'create':
             if user_type == 'student':
                 return StudentCreateModelSerializer
             return UserCreateModelSerializer
-        elif self.action == 'list':
+        elif self.action in ('list', 'retrieve'):
+            self.filter_backends = CustomUserDjangoFilterBackend, OrderingFilter
             if user_type == 'student':
                 return StudentListModelSerializer
             return StaffListModelSerializer

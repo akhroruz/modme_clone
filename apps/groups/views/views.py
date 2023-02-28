@@ -77,5 +77,6 @@ class ArchiveReasonsModelViewSet(ModelViewSet):
     # permission_classes = [IsAdministrator, CustomDjangoObjectPermissions]
     # http_method_names = ['get', 'post', 'put', 'patch']
 
-# TODO: Teacher tuhunarsiz
+#
 # https://api.modme.dev/v1/company/subdomain/demo
+# https://api.modme.dev/v1/auth/me

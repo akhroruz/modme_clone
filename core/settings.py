@@ -187,7 +187,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'UPDATE_LAST_LOGIN': True,
-    "TOKEN_OBTAIN_SERIALIZER": "shared.serializers.MyTokenObtainPairSerializer",
+    "TOKEN_OBTAIN_SERIALIZER": "shared.utils.serializers.MyTokenObtainPairSerializer",
 
 }
 

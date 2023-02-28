@@ -1,3 +1,4 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -7,6 +8,18 @@ from groups.filters import CustomGroupDjangoFilterBackend, GroupFilter
 from groups.models import Group
 from groups.serializers import GroupListModelSerializer
 from shared.utils.export_excel import export_data_excel
+
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.response import Response
+
+branch_id = openapi.Parameter(
+    'branch',
+    openapi.IN_QUERY,
+    'Branch ID',
+    True,
+    type=openapi.TYPE_INTEGER
+)
 
 
 class GroupModelViewSet(ModelViewSet):
@@ -18,11 +31,11 @@ class GroupModelViewSet(ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         params = self.request.query_params
-        if not (params.get('per_page') and params.get('per_page')):
+        if not (params.get('page') and params.get('per_page')):
             self.pagination_class = None
         return super().list(request, *args, **kwargs)
 
-    # TODO: Teacher retrieve'da required field'ni berishda xatolik
+    @swagger_auto_schema(manual_parameters=[branch_id])
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = GroupListModelSerializer(instance=instance)
