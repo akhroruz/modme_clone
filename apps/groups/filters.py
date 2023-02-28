@@ -21,24 +21,24 @@ class CustomGroupDjangoFilterBackend(DjangoFilterBackend):
 
         if not filter_set.is_valid() and self.raise_exception:
             raise translate_validation(filter_set.errors)
-        return  filter_set.qs
+        return filter_set.qs
 
 
 class CustomCompanyDjangoFilterBackend(DjangoFilterBackend):
 
     def filter_queryset(self, request, queryset, view):
 
-        filter_set =  self.get_filterset(request, queryset, view)
+        filter_set = self.get_filterset(request, queryset, view)
         query_params = request.query_params
         if not query_params.get('company'):
             raise ValidationError({'success': False, 'error': {'company': ['The company field is required.']}})
 
-        if  filter_set is None:
+        if filter_set is None:
             return queryset
 
         if not filter_set.is_valid() and self.raise_exception:
             raise translate_validation(filter_set.errors)
-        return  filter_set.qs
+        return filter_set.qs
 
 
 class GroupFilter(FilterSet):
