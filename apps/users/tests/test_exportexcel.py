@@ -6,7 +6,6 @@ from rest_framework import status
 from shared.tests import TestBaseFixture
 
 
-# TODO: ahror_oka
 @pytest.mark.django_db
 class TestExportExcel(TestBaseFixture):
 

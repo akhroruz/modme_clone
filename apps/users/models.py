@@ -22,6 +22,10 @@ class User(AbstractUser, BaseModel):
         MALE = 'male', 'Male'
         FEMALE = 'female', 'Female'
 
+    class UserTypeChoice(TextChoices):
+        STUDENT = 'student', 'Student'
+        TEACHER = 'teacher', 'Teacher'
+
     email = None
     username = None
     groups = None
@@ -38,6 +42,7 @@ class User(AbstractUser, BaseModel):
     data = JSONField(null=True, blank=True)  # social account
     deleted_at = DateTimeField(null=True)
     comment = GenericRelation('users.Comment')
+    user_type = CharField(max_length=10, choices=UserTypeChoice.choices, blank=True, null=True)
 
     EMAIL_FIELD = None
     USERNAME_FIELD = 'phone'

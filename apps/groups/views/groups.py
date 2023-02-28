@@ -10,15 +10,10 @@ from groups.models import Group
 from groups.serializers import GroupListModelSerializer
 from shared.utils.export_excel import export_data_excel
 
-branch_id = openapi.Parameter(
-    'branch',
-    openapi.IN_QUERY,
-    'Branch ID',
-    True,
-    type=openapi.TYPE_INTEGER
-)
+branch_id = openapi.Parameter('branch', openapi.IN_QUERY, 'Branch ID', True, type=openapi.TYPE_INTEGER)
 
 
+# https://api.modme.dev/v1/group?branch_id=189&per_page=200&page=1
 class GroupModelViewSet(ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupListModelSerializer

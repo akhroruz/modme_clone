@@ -1,5 +1,7 @@
 from django.db.models import F
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import UpdateAPIView
@@ -12,19 +14,19 @@ from groups.filters import CustomCompanyDjangoFilterBackend
 from shared.utils.export_excel import export_data_excel
 from users.filters import UserFilter, CustomUserDjangoFilterBackend
 from users.models import User, LeadIncrement, Lead, Archive, Blog
-from users.serializers import ArchiveListModelSerializer, UserCreateModelSerializer, LeadIncrementModelSerializer, \
+from users.serializers import ArchiveListModelSerializer, LeadIncrementModelSerializer, \
     LeadModelSerializer, UpdateProfileSerializer, BlogModelSerializer, ArchiveCreateModelSerializer, \
-    StudentListModelSerializer, StaffListModelSerializer, StudentCreateModelSerializer
+    StudentListModelSerializer, StaffListModelSerializer, StudentCreateModelSerializer, StaffCreateModelSerializer
 
 
 # https://api.modme.dev/v1/user?user_type=student&per_page=50&page=1&branch_id=189
 class UserModelViewSet(ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = StaffListModelSerializer
+    serializer_class = StaffCreateModelSerializer
     parser_classes = MultiPartParser, FormParser
     filter_backends = DjangoFilterBackend, OrderingFilter
     filterset_class = UserFilter
-    ordering = ['first_name', 'last_name']
+    ordering = ('first_name', 'last_name')
     http_method_names = ('post', 'get', 'put')
 
     def list(self, request, *args, **kwargs):
@@ -33,12 +35,19 @@ class UserModelViewSet(ModelViewSet):
             self.pagination_class = None
         return super().list(request, *args, **kwargs)
 
+    branch_id = openapi.Parameter('branch', openapi.IN_QUERY, 'Branch ID', True, type=openapi.TYPE_INTEGER)
+    user_type = openapi.Parameter('user_type', openapi.IN_QUERY, 'User Type', True, type=openapi.TYPE_STRING)
+
+    @swagger_auto_schema(manual_parameters=[branch_id, user_type])
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
     def get_serializer_class(self):
         user_type = self.request.POST.get('user_type')
         if self.action == 'create':
             if user_type == 'student':
                 return StudentCreateModelSerializer
-            return UserCreateModelSerializer
+            return StaffCreateModelSerializer
         elif self.action in ('list', 'retrieve'):
             self.filter_backends = CustomUserDjangoFilterBackend, OrderingFilter
             if user_type == 'student':
@@ -103,6 +112,12 @@ class BlogModelViewSet(ModelViewSet):
     serializer_class = BlogModelSerializer
     filter_backends = CustomCompanyDjangoFilterBackend,
     filterset_fields = 'company',  # noqa
+
+    company = openapi.Parameter('company', openapi.IN_QUERY, 'Company ID', True, type=openapi.TYPE_INTEGER)
+
+    @swagger_auto_schema(manual_parameters=[company])
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
     def get_queryset(self):
         qs = super().get_queryset()

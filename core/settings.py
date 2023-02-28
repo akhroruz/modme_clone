@@ -187,7 +187,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'UPDATE_LAST_LOGIN': True,
-    "TOKEN_OBTAIN_SERIALIZER": "shared.utils.serializers.MyTokenObtainPairSerializer",
+    "TOKEN_OBTAIN_SERIALIZER": "shared.serializers.MyTokenObtainPairSerializer",
 
 }
 
@@ -202,10 +202,10 @@ JAZZMIN_SETTINGS = {
     "site_icon": None,
     "welcome_sign": "Welcome to the Modme admin",
     "copyright": "Modme Ltd",
-    "search_model": ["users.User", "auth.Group"],
+    "search_model": ("users.User", "auth.Group"),
     "user_avatar": None,
     "topmenu_links": [
-        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Home", "url": "admin:index", "permissions": ("auth.view_user",)},
         {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
         {"model": "users.User"},
         {"app": "users"}
@@ -218,7 +218,7 @@ JAZZMIN_SETTINGS = {
     "navigation_expanded": True,
     "hide_apps": [],
     "hide_models": [],
-    "order_with_respect_to": ["auth", "users", "books.author", "books.book"],
+    "order_with_respect_to": ("auth", "users", "books.author", "books.book"),
     "icons": {
         "auth": "fas fa-users-cog",
         "users.user": "fas fa-user",
@@ -251,43 +251,39 @@ CKEDITOR_CONFIGS = {
         'toolbar_Custom': [
             {
                 'name': 'document',
-                'items': ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates']
+                'items': ('Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates')
             },
             {
                 'name': 'clipboard',
-                'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
+                'items': ('Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo')
             },
-            {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
+            {'name': 'editing', 'items': ('Find', 'Replace', '-', 'SelectAll')},
             {'name': 'forms',
-             'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
-                       'HiddenField']},
+             'items': ('Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+                       'HiddenField')},
             '/',
             {'name': 'basicstyles',
-             'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+             'items': ('Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat')},
             {'name': 'paragraph',
-             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+             'items': ('NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
                        'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
-                       'Language']},
-            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+                       'Language')},
+            {'name': 'links', 'items': ('Link', 'Unlink', 'Anchor')},
             {'name': 'insert',
-             'items': ['Image', 'Youtube', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak',
-                       'Iframe']},
+             'items': (
+                 'Image', 'Youtube', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak',
+                 'Iframe')},
             '/',
-            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
-            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
-            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
-            {'name': 'about', 'items': ['CodeSnippet']},
-            {'name': 'about', 'items': ['About']},
-            '/',  # put this to force next toolbar on new line
-            {'name': 'yourcustomtools', 'items': [
-                # put the name of your editor.ui.addButton here
-                'Preview',
-                'Maximize',
-
-            ]},
+            {'name': 'styles', 'items': ('Styles', 'Format', 'Font', 'FontSize')},
+            {'name': 'colors', 'items': ('TextColor', 'BGColor')},
+            {'name': 'tools', 'items': ('Maximize', 'ShowBlocks')},
+            {'name': 'about', 'items': ('CodeSnippet',)},
+            {'name': 'about', 'items': ('About',)},
+            '/',
+            {'name': 'yourcustomtools', 'items': ('Preview', 'Maximize')},
         ],
-        'toolbar': 'Custom',  # put selected toolbar config here
-        'toolbarGroups': [{'name': 'document', 'groups': ['mode', 'document', 'doctools']}],
+        'toolbar': 'Custom',
+        'toolbarGroups': [{'name': 'document', 'groups': ('mode', 'document', 'doctools')}],
         'height': 200,
         'width': '130%',
         'filebrowserWindowHeight': 100,
@@ -295,22 +291,23 @@ CKEDITOR_CONFIGS = {
         'toolbarCanCollapse': True,
         'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
         'tabSpaces': 4,
-        'extraPlugins': ','.join([
-            'uploadimage',  # the upload image feature
-            # your extra plugins here
-            'div',
-            'autolink',
-            'autoembed',
-            'embedsemantic',
-            'autogrow',
-            'devtools',
-            'widget',
-            'lineutils',
-            'clipboard',
-            'dialog',
-            'dialogui',
-            'elementspath',
-            'codesnippet',
-        ]),
+        'extraPlugins': ','.join(
+            (
+                'uploadimage',
+                'div',
+                'autolink',
+                'autoembed',
+                'embedsemantic',
+                'autogrow',
+                'devtools',
+                'widget',
+                'lineutils',
+                'clipboard',
+                'dialog',
+                'dialogui',
+                'elementspath',
+                'codesnippet',
+            )
+        ),
     }
 }

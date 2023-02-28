@@ -1,35 +1,8 @@
-from django.contrib.auth.hashers import make_password
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import ListField, CharField, IntegerField
+from rest_framework.fields import IntegerField
 from rest_framework.serializers import ModelSerializer
 
-from groups.models import Group
 from users.models import User, Blog
-
-
-class UserCreateRoleModelSerializer(ModelSerializer):
-    class Meta:
-        model = Group
-        fields = ('name',)
-
-
-class UserCreateModelSerializer(ModelSerializer):
-    role = ListField(write_only=True)
-    password = CharField(write_only=True, required=False)
-    user_type = CharField(write_only=True)
-
-    class Meta:
-        model = User
-        fields = (
-            'branch',
-            'phone', 'user_type', 'first_name', 'gender',
-            'birth_date', 'photo', 'data', 'role', 'password'
-        )
-
-    def create(self, validated_data):
-        validated_data['role'] = Group.objects.filter(name__in=validated_data['role'][0].split(','))
-        validated_data['password'] = make_password(validated_data['password'])
-        return super().create(validated_data)
 
 
 class UpdateProfileSerializer(ModelSerializer):
