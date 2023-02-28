@@ -1,3 +1,4 @@
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
@@ -8,10 +9,6 @@ from groups.filters import CustomGroupDjangoFilterBackend, GroupFilter
 from groups.models import Group
 from groups.serializers import GroupListModelSerializer
 from shared.utils.export_excel import export_data_excel
-
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework.response import Response
 
 branch_id = openapi.Parameter(
     'branch',
