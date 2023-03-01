@@ -2,7 +2,6 @@ from rest_framework.generics import ListAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated, DjangoObjectPermissions
 from rest_framework.viewsets import ModelViewSet
-
 from groups.filters import CustomCompanyDjangoFilterBackend, CustomBranchDjangoFilterBackend
 from groups.models import Branch, Room, Course, Company, Holiday
 from groups.serializers import BranchModelSerializer, RoomListModelSerializer, HomeModelSerializer, \
@@ -50,7 +49,8 @@ class HomeListAPIView(ListAPIView):
 class CompanyModelViewSet(ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanyModelSerializer
-    permission_classes = IsAuthenticated, DjangoObjectPermissions, IsAdministrator
+    parser_classes = (MultiPartParser,)
+    # permission_classes = IsAuthenticated, DjangoObjectPermissions, IsAdministrator
 
 
 # https://api.modme.dev/v1/course?company_id=131
