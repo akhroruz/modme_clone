@@ -143,7 +143,7 @@ class Command(BaseCommand):
             text=fake.text(),
             content_type=content_type,
             object_id=cycle(users.values_list('pk', flat=True)),
-            creater=cycle(User.objects.all()),
+            author=cycle(User.objects.all()),
             _quantity=20
         )
 
@@ -196,7 +196,7 @@ class Command(BaseCommand):
             text=fake.text(),
             content_type=content_type,
             object_id=cycle(groups.values_list('pk', flat=True)),
-            creater=cycle(User.objects.all()),
+            author=cycle(User.objects.all()),
             _quantity=20
         )
         print(gr, 'groups is being added')

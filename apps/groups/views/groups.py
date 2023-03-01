@@ -7,7 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from groups.filters import CustomGroupDjangoFilterBackend, GroupFilter
 from groups.models import Group
-from groups.serializers import GroupListModelSerializer
+from groups.serializers import GroupListModelSerializer, GroupAddStudentModelSerializer
 from shared.utils.export_excel import export_data_excel
 
 branch_id = openapi.Parameter('branch', openapi.IN_QUERY, 'Branch ID', True, type=openapi.TYPE_INTEGER)
@@ -40,3 +40,12 @@ class GroupModelViewSet(ModelViewSet):
             'id', 'name', 'course__name', 'teachers__first_name', 'days', 'start_date', 'end_date', 'room__name'
         )
         return export_data_excel(columns, rows)
+
+    # https://api.modme.dev/v1/group/13119/students/31739
+    # TODO: Teacher 404 error qaytariyapti shu api
+    @action(['POST'], True, 'students/<int:student_id>', 'students', serializer_class=GroupAddStudentModelSerializer)
+    def add_students(self, request, pk=None, student_id=None):
+        pass
+        # serializer = GroupAddStudentModelSerializer(request.data)
+        # serializer.save()
+        # Group.objects.filter(id=pk).create(students=student_id, start_date)

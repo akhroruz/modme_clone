@@ -13,14 +13,14 @@ class GroupRoomListModelSerializer(ModelSerializer):
 
 
 class GroupListCommentModelSerializer(ModelSerializer):
-    creater = SerializerMethodField()  # noqa
+    author = SerializerMethodField()
 
-    def get_creater(self, obj: Comment):  # noqa
-        return model_to_dict(obj.creater, ('id', 'phone', 'first_name'))
+    def get_author(self, obj: Comment):  # noqa
+        return model_to_dict(obj.author, ('id', 'phone', 'first_name'))
 
     class Meta:
         model = Comment
-        fields = ('id', 'text', 'creater')  # noqa
+        fields = ('id', 'text', 'author')
 
 
 class GroupListModelSerializer(ModelSerializer):
@@ -28,9 +28,7 @@ class GroupListModelSerializer(ModelSerializer):
     teacher = SerializerMethodField()
 
     def get_course(self, obj: Group):  # noqa
-        return model_to_dict(obj.course, (
-            'id', 'name', 'description', 'lesson_duration', 'course_duration', 'price'
-        ))
+        return model_to_dict(obj.course, ('id', 'name', 'description', 'lesson_duration', 'course_duration', 'price'))
 
     def get_teacher(self, obj: Group):  # noqa
         return model_to_dict(obj.teacher, ('id', 'first_name', 'phone'))
@@ -47,3 +45,9 @@ class GroupListModelSerializer(ModelSerializer):
         data['rooms'] = GroupRoomListModelSerializer(instance.room).data
         data['comment'] = GroupListCommentModelSerializer(instance.comment, many=True).data
         return data
+
+
+class GroupAddStudentModelSerializer(ModelSerializer):
+    class Meta:
+        model = Group
+        fields = 'start_date',
