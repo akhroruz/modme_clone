@@ -1,3 +1,5 @@
+from datetime import time
+
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
@@ -211,7 +213,13 @@ class TestCompanyModelViewSet(TestBaseFixture):
         client.force_login(user)
         url = reverse('company-list')
         data = {
-            'name': 'Company test 1'
+            'name': 'PDP',
+            'logo': 'test_logo.png',
+            'colors': 'Red',
+            'start_working_time': time(hour=9, minute=00),
+            'end_working_time': time(hour=12, minute=00),
+            'phone': '991212334',
+            'company_oferta': 'test_logo.png'
         }
         previous_count = Company.objects.count()
         response = client.post(url, data)
@@ -221,6 +229,12 @@ class TestCompanyModelViewSet(TestBaseFixture):
 
         item = response.json()
         assert item['name'] == data['name']
+        assert item['logo'] == data['logo']
+        assert item['colors'] == data['colors']
+        assert item['start_working_time'] == data['start_working_time']
+        assert item['end_working_time'] == data['end_working_time']
+        assert item['phone'] == data['phone']
+        assert item['company_oferta'] == data['company_oferta']
 
     def test_retrieve_company(self, client: Client, company, user):
         client.force_login(user)
@@ -236,19 +250,32 @@ class TestCompanyModelViewSet(TestBaseFixture):
         client.force_login(user)
         url = reverse('company-detail', args=(company.id,))
         data = {
-            'name': 'Updated new name'
+            'name': 'PDP',
+            'logo': 'test_logo.png',
+            'colors': 'Red',
+            'start_working_time': time(hour=9, minute=00),
+            'end_working_time': time(hour=12, minute=00),
+            'phone': '991212334',
+            'company_oferta': 'test_logo.png'
         }
         response = client.put(url, data, "application/json")
         assert response.status_code == status.HTTP_200_OK
 
         item = response.json()
         assert item['name'] == data['name']
+        assert item['logo'] == data['logo']
+        assert item['colors'] == data['colors']
+        assert item['start_working_time'] == data['start_working_time']
+        assert item['end_working_time'] == data['end_working_time']
+        assert item['phone'] == data['phone']
+        assert item['company_oferta'] == data['company_oferta']
 
-    def test_delete_company(self, client: Client, company, user):
-        client.force_login(user)
-        url = reverse('company-detail', args=(company.id,))
-        previous_count = Company.objects.count()
-        response = client.delete(url)
 
-        assert response.status_code == status.HTTP_204_NO_CONTENT
-        assert previous_count - 1 == Company.objects.count()
+def test_delete_company(self, client: Client, company, user):
+    client.force_login(user)
+    url = reverse('company-detail', args=(company.id,))
+    previous_count = Company.objects.count()
+    response = client.delete(url)
+
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+    assert previous_count - 1 == Company.objects.count()
