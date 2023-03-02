@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, time
 import pytest
 from django.contrib.auth.models import Group as Role
 from groups.models import Company, Branch
@@ -9,7 +9,15 @@ from users.models import Archive, User
 class TestUserModel:
 
     def test_create_user(self):
-        company_data = {'name': 'test_company'}
+        company_data = {
+            'name': 'PDP',
+            'logo': 'test_logo.png',
+            'colors': 'Red',
+            'start_working_time': time(hour=9, minute=00),
+            'end_working_time': time(hour=12, minute=00),
+            'phone': '991212334',
+            'company_oferta': 'test_logo.png'
+        }
         company = Company.objects.create(**company_data)
 
         branch_data = {
@@ -22,7 +30,10 @@ class TestUserModel:
         }
         branch = Branch.objects.create(**branch_data)
 
-        archive_data = {'name': 'PDP'}
+        archive_data = {
+            'name': 'PDP',
+            'company': company
+        }
         archive = Archive.objects.create(**archive_data)
 
         role_data = {'name': 'test_name'}
