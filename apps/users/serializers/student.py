@@ -55,7 +55,7 @@ class StudentListModelSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'data', 'is_archive',
+            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'data',
             'branches')
         read_only_fields = ('phone', 'full_name', 'id')
 

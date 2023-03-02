@@ -30,7 +30,6 @@ class TestUserModel:
 
         data = {
             'phone': '3232923',
-            'is_archive': True,
             'archive': archive,
             'birth_date': date(2002, 12, 25),
             'gender': 'Male',
@@ -45,7 +44,6 @@ class TestUserModel:
         user.role.add(role)
 
         assert user.phone == data['phone']
-        assert user.is_archive
         assert user.birth_date == data['birth_date']
         assert user.gender == data['gender']
         assert user.photo == data['photo']

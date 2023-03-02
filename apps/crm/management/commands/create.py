@@ -9,7 +9,7 @@ from faker import Faker
 from model_bakery import baker
 
 from groups.models import Company, Branch, Course, Room, Group
-from users.models import User, LeadIncrement, Archive
+from users.models import User, LeadIncrement
 
 fake = Faker()
 
@@ -25,7 +25,6 @@ class Command(BaseCommand):
     * Course group      -> 15
     * User              -> 15
     * User comment      -> 15
-    * Archive           -> 15
     * Lead              -> 15
     * Lead increment    -> 15
     '''
@@ -39,7 +38,6 @@ class Command(BaseCommand):
         parser.add_argument('-gr', '--Group', type=int, help='Define a group number prefix')
         parser.add_argument('-u', '--user', type=int, help='Define a user number prefix')
         parser.add_argument('-uc', '--user_comment', type=int, help='Define a user comment number prefix')
-        parser.add_argument('-a', '--archive', type=int, help='Define a archive number prefix')
         parser.add_argument('-li', '--lead_increment', type=int, help='Define a lead increment number prefix')
         parser.add_argument('-l', '--lead', type=int, help='Define a lead number prefix')
 
@@ -107,15 +105,6 @@ class Command(BaseCommand):
         )
         print(r, 'holidays is being added')
 
-        # archive
-        a = options.get('archive', 15)
-        baker.make(
-            'users.Archive',
-            name=cycle(fake.first_name() for _ in range(a)),
-            _quantity=a
-        )
-        print(a, 'archives is being added')
-
         # user
         u = options.get('user', 15)
         baker.make(
@@ -127,10 +116,9 @@ class Command(BaseCommand):
             gender=cycle(fake.random_element(User.GenderChoose) for _ in range(100)),
             role=cycle(Role.objects.all()),
             branch=cycle(Branch.objects.all()),
-            archive=cycle(Archive.objects.all()),
             password=make_password('1'),
+            deleted_at=cycle(random.choice((fake.past_datetime(), None)) for _ in range(u)),
             photo='media/img.png',
-            is_archive=False,
             make_m2m=True,
             _quantity=u
         )
