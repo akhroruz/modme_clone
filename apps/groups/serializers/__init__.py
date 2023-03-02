@@ -3,4 +3,5 @@ from groups.serializers.course import CourseListModelSerializer, CourseCreateMod
 from groups.serializers.group import GroupListModelSerializer
 from groups.serializers.holiday import HolidayListModelSerializer, HolidayCreateModelSerializer
 from groups.serializers.room import RoomListModelSerializer, RoomCreateModelSerializer
-from groups.serializers.serializers import CompanyModelSerializer, RoleModelSerializer, HomeModelSerializer
+from groups.serializers.serializers import CompanyModelSerializer, \
+    RoleModelSerializer, HomeModelSerializer

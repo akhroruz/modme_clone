@@ -13,9 +13,9 @@ from rest_framework.viewsets import ModelViewSet
 from groups.filters import CustomCompanyDjangoFilterBackend
 from shared.utils.export_excel import export_data_excel
 from users.filters import UserFilter, CustomUserDjangoFilterBackend
-from users.models import User, LeadIncrement, Lead, Archive, Blog
-from users.serializers import ArchiveListModelSerializer, LeadIncrementModelSerializer, \
-    LeadModelSerializer, UpdateProfileSerializer, BlogModelSerializer, ArchiveCreateModelSerializer, \
+from users.models import User, LeadIncrement, Lead, Blog
+from users.serializers import LeadIncrementModelSerializer, \
+    LeadModelSerializer, UpdateProfileSerializer, BlogModelSerializer, \
     StudentListModelSerializer, StaffListModelSerializer, StudentCreateModelSerializer, StaffCreateModelSerializer
 
 
@@ -27,7 +27,7 @@ class UserModelViewSet(ModelViewSet):
     filter_backends = DjangoFilterBackend, OrderingFilter
     filterset_class = UserFilter
     ordering = ('first_name', 'last_name')
-    http_method_names = ('post', 'get', 'put')
+    http_method_names = ('post', 'get', 'put','patch')
 
     def list(self, request, *args, **kwargs):
         params = self.request.query_params
@@ -55,20 +55,23 @@ class UserModelViewSet(ModelViewSet):
             return StaffListModelSerializer
         return super().get_serializer_class()
 
-    @action(['GET', 'POST'], False, 'trashed', 'trashed')
+    @action(['GET'], False, 'trashed', 'trashed')
     def get_trashed(self, request):
-        if self.request.method == 'GET':
-            serializer = ArchiveListModelSerializer(Archive.objects.all(), many=True)
-        else:
-            serializer = ArchiveCreateModelSerializer(request.data)
-            serializer.save()
+        queryset = User.objects.filter(deleted_at__isnull=True)
+        serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
-    @action(['GET'], False, 'export', 'export')
-    def export_users_xls(self, request):
-        columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
-        rows = User.objects.values_list('id', 'first_name', 'phone', 'birth_date', 'comment', 'balance')
-        return export_data_excel(columns, rows)
+    # @action(['PATCH'], True, 'trashed', 'trashed')
+    # def trash(self, request, pk):
+    #     user = User.objects.get(pk=pk).update()
+    #     print('PATCH')
+
+
+@action(['GET'], False, 'export', 'export')
+def export_users_xls(self, request):
+    columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
+    rows = User.objects.values_list('id', 'first_name', 'phone', 'birth_date', 'comment', 'balance')
+    return export_data_excel(columns, rows)
 
 
 # class UserDocumentView(DocumentViewSet):

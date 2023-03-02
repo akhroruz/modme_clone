@@ -1,4 +1,3 @@
-from users.serializers.archive import ArchiveCreateModelSerializer, ArchiveListModelSerializer
 from users.serializers.lead import LeadIncrementModelSerializer, LeadModelSerializer
 from users.serializers.staff import StaffListModelSerializer, StaffCreateModelSerializer
 from users.serializers.student import StudentListModelSerializer, StudentCreateModelSerializer

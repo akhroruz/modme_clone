@@ -9,14 +9,6 @@ from shared.models import BaseModel
 from users.managers import MyUserManager
 
 
-class Archive(BaseModel):
-    name = CharField(max_length=100)
-    company = ForeignKey('groups.Company', CASCADE)
-
-    def __str__(self):
-        return self.name
-
-
 class User(AbstractUser, BaseModel):
     class GenderChoose(TextChoices):
         MALE = 'male', 'Male'
@@ -31,8 +23,6 @@ class User(AbstractUser, BaseModel):
     groups = None
 
     phone = CharField(max_length=15, unique=True)
-    is_archive = BooleanField(default=False)
-    archive = ForeignKey(Archive, SET_NULL, null=True, blank=True)
     birth_date = DateField(blank=True, null=True)
     gender = CharField(max_length=25, choices=GenderChoose.choices, blank=True, null=True)
     photo = ImageField(max_length=100, upload_to='profiles/', default='media/img.png', blank=True, null=True)
@@ -41,6 +31,7 @@ class User(AbstractUser, BaseModel):
     branch = ManyToManyField('groups.Branch')
     data = JSONField(null=True, blank=True)  # social account
     deleted_at = DateTimeField(null=True)
+    destroyer = ForeignKey('users.User', SET_NULL, null=True)
     comment = GenericRelation('users.Comment')
     user_type = CharField(max_length=10, choices=UserTypeChoice.choices, blank=True, null=True)
 
@@ -66,7 +57,7 @@ class Comment(BaseModel):
     content_type = ForeignKey('contenttypes.ContentType', CASCADE)
     object_id = PositiveIntegerField()
     content_object = GenericForeignKey()
-    creater = ForeignKey('users.User', SET_NULL, null=True)
+    author = ForeignKey('users.User', SET_NULL, null=True)
 
 
 class Lead(BaseModel):

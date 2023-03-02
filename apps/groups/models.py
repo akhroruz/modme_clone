@@ -8,7 +8,20 @@ from shared.models import BaseModel
 
 
 class Company(BaseModel):  # checked
+    class ColorChoice(TextChoices):
+        PURPLE = 'purple', 'Purple'
+        BLUE = 'blue', 'Blue'
+        GREEN = 'green', 'Green'
+        ORANGE = 'orange', 'Orange'
+        RED = 'red', 'Red'
+
     name = CharField(max_length=255)
+    logo = ImageField(max_length=100, upload_to='profiles/company/', default='media/img.png', blank=True, null=True)
+    colors = CharField(max_length=100, choices=ColorChoice.choices, null=True, blank=True)
+    start_working_time = TimeField(null=True, blank=True)
+    end_working_time = TimeField(null=True, blank=True)
+    phone = CharField(max_length=15, unique=True)
+    company_oferta = ImageField(max_length=100, upload_to='oferta/', blank=True, null=True)
 
     def __str__(self):
         return self.name

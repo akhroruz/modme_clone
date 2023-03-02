@@ -1,3 +1,5 @@
+from datetime import time
+
 import pytest
 
 from groups.models import Company
@@ -8,7 +10,15 @@ from users.models import User, Blog
 class TestBlogModel:
 
     def test_create_blog(self):
-        company_data = {'name': 'test_company'}
+        company_data = {
+            'name': 'PDP',
+            'logo': 'test_logo.png',
+            'colors': 'Red',
+            'start_working_time': time(hour=9, minute=00,second=00),
+            'end_working_time': time(hour=12, minute=00,second=00),
+            'phone': '991212334',
+            'company_oferta': 'test_logo.png'
+        }
         company = Company.objects.create(**company_data)
         user_data = {'phone': 1234567, 'password': 'pass'}
         user = User.objects.create_user(**user_data)

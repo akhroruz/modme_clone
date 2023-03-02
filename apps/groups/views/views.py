@@ -12,8 +12,6 @@ from groups.serializers import BranchModelSerializer, RoomListModelSerializer, H
     CompanyModelSerializer, BranchListModelSerializer, RoomCreateModelSerializer, CourseCreateModelSerializer, \
     CourseListModelSerializer, HolidayCreateModelSerializer, HolidayListModelSerializer
 from shared.permissions import IsAdministrator
-from users.models import Archive
-from users.serializers import ArchiveListModelSerializer
 
 
 # https://api.modme.dev/v1/branch?company_id=131
@@ -63,6 +61,7 @@ class HomeListAPIView(ListAPIView):
 class CompanyModelViewSet(ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanyModelSerializer
+    parser_classes = (MultiPartParser,)
     permission_classes = IsAuthenticated, DjangoObjectPermissions, IsAdministrator
 
 
@@ -111,15 +110,27 @@ class HolidayModelViewSet(ModelViewSet):
             return HolidayListModelSerializer
         return super().get_serializer_class()
 
-
 # https://api.modme.dev/v1/archiveReasons?company_id=131
-class ArchiveReasonsModelViewSet(ModelViewSet):
-    queryset = Archive.objects.all()
-    serializer_class = ArchiveListModelSerializer
-    filter_backends = CustomCompanyDjangoFilterBackend,
-    filterset_fields = 'company',
-    # permission_classes = [IsAdministrator, CustomDjangoObjectPermissions]
-    # http_method_names = ['get', 'post', 'put', 'patch']
+# class ArchiveReasonsModelViewSet(ModelViewSet):
+#     queryset = Archive.objects.all()
+#     serializer_class = ArchiveListModelSerializer
+#     filter_backends = CustomCompanyDjangoFilterBackend,
+#     filterset_fields = 'company',
+#     # permission_classes = [IsAdministrator, CustomDjangoObjectPermissions]
+#     # http_method_names = ['get', 'post', 'put', 'patch']
+#
+#     company_id = openapi.Parameter('company', openapi.IN_QUERY, 'Company ID', True, type=openapi.TYPE_INTEGER)
+#
+#     def get_serializer_class(self):
+#         if self.action == 'list':
+#             return ArchiveListModelSerializer
+#         return super().get_serializer_class()
+#
+#     @swagger_auto_schema(manual_parameters=[company_id])
+#     def retrieve(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         serializer = ArchiveListModelSerializer(instance=instance)
+#         return Response(serializer.data)
 
 # https://api.modme.dev/v1/company/subdomain/demo
 # https://api.modme.dev/v1/auth/me
