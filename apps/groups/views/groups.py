@@ -7,10 +7,10 @@ from rest_framework.viewsets import ModelViewSet
 
 from groups.filters import CustomGroupDjangoFilterBackend, GroupFilter
 from groups.models import Group
-from groups.serializers import GroupListModelSerializer, GroupAddStudentModelSerializer
+from groups.serializers import GroupListModelSerializer
 from shared.utils.export_excel import export_data_excel
-
-branch_id = openapi.Parameter('branch', openapi.IN_QUERY, 'Branch ID', True, type=openapi.TYPE_INTEGER)
+from users.models import User
+from users.serializers import StudentListModelSerializer
 
 
 # https://api.modme.dev/v1/group?branch_id=189&per_page=200&page=1
@@ -27,6 +27,8 @@ class GroupModelViewSet(ModelViewSet):
             self.pagination_class = None
         return super().list(request, *args, **kwargs)
 
+    branch_id = openapi.Parameter('branch', openapi.IN_QUERY, 'Branch ID', True, type=openapi.TYPE_INTEGER)
+
     @swagger_auto_schema(manual_parameters=[branch_id])
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -42,10 +44,16 @@ class GroupModelViewSet(ModelViewSet):
         return export_data_excel(columns, rows)
 
     # https://api.modme.dev/v1/group/13119/students/31739
-    # TODO: Teacher 404 error qaytariyapti shu api
-    @action(['POST'], True, 'students/<int:student_id>', 'students', serializer_class=GroupAddStudentModelSerializer)
+    @action(['POST'], True, 'students/(?P<student_id>\d+)', 'students',
+            serializer_class=None)
     def add_students(self, request, pk=None, student_id=None):
-        pass
-        # serializer = GroupAddStudentModelSerializer(request.data)
-        # serializer.save()
-        # Group.objects.filter(id=pk).create(students=student_id, start_date)
+        """
+        API to add a **student** to a group.
+        """
+        student = User.objects.get(id=student_id)
+        if student.role.filter(name='student').exists():
+            group = Group.objects.get(id=pk)
+            group.students.add(student)
+            group.save()
+            return Response(StudentListModelSerializer(student).data)
+        return Response({'status': 'Error'})

@@ -8,14 +8,14 @@ from users.models import Comment, User
 
 
 class StudentListCommentModelSerializer(ModelSerializer):
-    creater = SerializerMethodField()  # noqa
+    author = SerializerMethodField()  # noqa
 
-    def get_creater(self, obj: Comment):  # noqa
-        return model_to_dict(obj.creater, ('id', 'phone', 'first_name'))
+    def get_author(self, obj: Comment):  # noqa
+        return model_to_dict(obj.author, ('id', 'phone', 'first_name'))
 
     class Meta:
         model = Comment
-        fields = ('id', 'text', 'creater')  # noqa
+        fields = ('id', 'text', 'author')  # noqa
 
 
 class StudentRoomListModelSerializer(ModelSerializer):
