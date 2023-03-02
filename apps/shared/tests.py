@@ -95,6 +95,16 @@ class TestBaseFixture:
         )
         return course
 
+    @pytest.fixture
+    def holiday(self, branch):
+        holiday = Holiday.objects.create(
+            name='new year',
+            holiday_date='2023-12-12',
+            affect_payment=False,
+            branch=branch
+        )
+        return holiday
+
     # @pytest.fixture
     # def course(self, company):
     #     image_path = MEDIA_ROOT + '/test.png'

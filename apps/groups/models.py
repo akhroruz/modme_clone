@@ -1,7 +1,8 @@
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import ArrayField
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import IntegerField, CharField, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
-    TimeField, DecimalField, DateField, BooleanField, CASCADE, ManyToManyField
+    TimeField, DateField, BooleanField, CASCADE, ManyToManyField
 
 from shared.models import BaseModel
 
@@ -41,7 +42,8 @@ class Room(BaseModel):  # checked
 
 class Course(BaseModel):  # checked
     name = CharField(max_length=255)
-    price = DecimalField(max_digits=10, decimal_places=2)
+    min_max_validators = MinValueValidator(0), MaxValueValidator(10_000_000)
+    price = IntegerField(validators=min_max_validators)
     description = TextField(null=True, blank=True)
     image = ImageField(upload_to='courses/', null=True, blank=True)
     lesson_duration = IntegerField()

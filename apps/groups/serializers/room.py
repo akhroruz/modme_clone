@@ -6,7 +6,7 @@ from groups.models import Room
 class RoomCreateModelSerializer(ModelSerializer):
     class Meta:
         model = Room
-        fields = '__all__'
+        fields = 'name', 'branch'
 
 
 class RoomListModelSerializer(ModelSerializer):

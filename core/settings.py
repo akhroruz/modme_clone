@@ -202,7 +202,7 @@ JAZZMIN_SETTINGS = {
     "site_icon": None,
     "welcome_sign": "Welcome to the Modme admin",
     "copyright": "Modme Ltd",
-    "search_model": ("users.User", "auth.Group"),
+    "search_model": "users.User",
     "user_avatar": None,
     "topmenu_links": [
         {"name": "Home", "url": "admin:index", "permissions": ("auth.view_user",)},
