@@ -47,11 +47,6 @@ class StudentGroupListModelSerializer(ModelSerializer):
 
 
 class StudentListModelSerializer(ModelSerializer):
-    branches = SerializerMethodField()
-
-    def get_branches(self, obj: User):  # noqa
-        return obj.branch.values('id', 'name')
-
     class Meta:
         model = User
         fields = (
@@ -80,5 +75,5 @@ class StudentCreateModelSerializer(ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('user_type')
         if validated_data.get('password'):
-            validated_data['password'] = make_password(validated_data['password'])
+            validated_data['password'] = make_password(validated_data.get('password'))
         return super().create(validated_data)

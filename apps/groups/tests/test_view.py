@@ -144,6 +144,7 @@ class TestCompanyModelViewSet(TestBaseFixture):
             'company_oferta': 'test_logo.png'
         }
         previous_count = Company.objects.count()
+
         response = client.post(url, data)
 
         assert response.status_code == status.HTTP_201_CREATED

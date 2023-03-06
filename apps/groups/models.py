@@ -2,7 +2,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import IntegerField, CharField, ImageField, TextField, ForeignKey, SET_NULL, TextChoices, \
-    TimeField, DateField, BooleanField, CASCADE, ManyToManyField
+    TimeField, DateField, BooleanField, CASCADE, ManyToManyField, FileField
 
 from shared.models import BaseModel
 
@@ -21,7 +21,7 @@ class Company(BaseModel):  # checked
     start_working_time = TimeField(null=True, blank=True)
     end_working_time = TimeField(null=True, blank=True)
     phone = CharField(max_length=15, unique=True)
-    company_oferta = ImageField(max_length=100, upload_to='oferta/', blank=True, null=True)
+    company_oferta = FileField(upload_to='oferta/', blank=True, null=True)
 
     def __str__(self):
         return self.name

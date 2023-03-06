@@ -48,6 +48,7 @@ class Command(BaseCommand):
         baker.make(
             'groups.Company',
             name=cycle(fake.company() for _ in range(c)),
+            phone=cycle(random.choice(company_code) + str(fake.random_number(digits=7)).zfill(7) for _ in range(c)),
             _quantity=c
         )
         print(c, 'companies is being added')
@@ -71,7 +72,6 @@ class Command(BaseCommand):
         course = options.get('course', 15)
         baker.make(
             'groups.Course',
-            # branch=cycle(Branch.objects.all()),
             name=cycle(fake.first_name() for _ in range(course)),
             price=cycle(fake.pyint() * 100 for _ in range(course)),
             company=cycle(Company.objects.all()),
@@ -119,6 +119,7 @@ class Command(BaseCommand):
             password=make_password('1'),
             deleted_at=cycle(random.choice((fake.past_datetime(), None)) for _ in range(u)),
             photo='media/img.png',
+            user_type=cycle(User.UserTypeChoice),
             make_m2m=True,
             _quantity=u
         )
@@ -164,6 +165,7 @@ class Command(BaseCommand):
         baker.make(
             'groups.Group',
             name=cycle(fake.first_name() for _ in range(gr)),
+            days=cycle(fake.random_element(Group.DaysChoice) for _ in range(gr)),
             status=cycle(fake.random_element(User.GenderChoose) for _ in range(100)),
             start_date=cycle(fake.date() for _ in range(gr)),
             end_date=cycle(fake.date() for _ in range(gr)),

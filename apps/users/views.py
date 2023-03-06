@@ -1,3 +1,4 @@
+import pandas as pd
 from django.db.models import F
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
@@ -7,23 +8,18 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from tablib import Dataset
 
 from groups.filters import CustomCompanyDjangoFilterBackend
 from shared.utils.export_excel import export_data_excel
-from shared.utils.resources import LeadResource
 from users.filters import UserFilter, CustomUserDjangoFilterBackend
+from users.models import Lead
 from users.models import User, LeadIncrement, Blog
 from users.serializers import LeadIncrementModelSerializer, \
     LeadModelSerializer, UpdateProfileSerializer, BlogModelSerializer, \
     StudentListModelSerializer, StaffListModelSerializer, StudentCreateModelSerializer, StaffCreateModelSerializer
-from django.shortcuts import render
-import pandas as pd
-from django.core.files.storage import FileSystemStorage
-from rest_framework.response import Response
-
-from users.models import Lead
+from users.serializers.lead import LeadImportSerializer
 
 
 # https://api.modme.dev/v1/user?user_type=student&per_page=50&page=1&branch_id=189
@@ -35,6 +31,11 @@ class UserModelViewSet(ModelViewSet):
     filterset_class = UserFilter
     ordering = ('first_name', 'last_name')
     http_method_names = ('post', 'get', 'put', 'patch')
+
+    def filter_queryset(self, queryset):
+        if self.action in ('list', 'retrieve'):
+            self.filter_backends = CustomUserDjangoFilterBackend, OrderingFilter
+        return super().filter_queryset(queryset)
 
     def list(self, request, *args, **kwargs):
         params = self.request.query_params
@@ -56,7 +57,6 @@ class UserModelViewSet(ModelViewSet):
                 return StudentCreateModelSerializer
             return StaffCreateModelSerializer
         elif self.action in ('list', 'retrieve'):
-            self.filter_backends = CustomUserDjangoFilterBackend, OrderingFilter
             if user_type == 'student':
                 return StudentListModelSerializer
             return StaffListModelSerializer
@@ -68,12 +68,11 @@ class UserModelViewSet(ModelViewSet):
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
-
-@action(['GET'], False, 'export', 'export')
-def export_users_xls(request):
-    columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
-    rows = User.objects.values_list('id', 'first_name', 'phone', 'birth_date', 'comment', 'balance')
-    return export_data_excel(columns, rows)
+    @action(['GET'], False, 'export', 'export')
+    def export_users_xls(self, request):
+        columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
+        rows = User.objects.values_list('id', 'first_name', 'phone', 'birth_date', 'comment', 'balance')
+        return export_data_excel(columns, rows)
 
 
 # class UserDocumentView(DocumentViewSet):
@@ -106,22 +105,30 @@ class LeadModelViewSet(ModelViewSet):
 
     @action(['GET'], False, 'export', 'export')
     def export_leads_xls(self, request):
-        columns = ['Id', 'Full_Name', 'Comment', 'Phone', 'Status', 'Lead_increment']
+        columns = ['Id', 'Full_Name', 'Comment', 'Phone', 'Status', 'Source']
         rows = Lead.objects.values_list(
-            'id', 'full_name', 'comment', 'phone', 'status', 'lead_increment'
+            'id', 'full_name', 'comment', 'phone', 'status', 'lead_increment__name'
         )
         return export_data_excel(columns, rows)
 
-    @action(['POST'], False, 'import', 'import')
-    def import_excel(self,request):
-        if request.method == 'POST':
-            dataset = Dataset()
-            # new_employee = request.FILES['myfile']
-            result = LeadResource.import_data(dataset, dry_run=True)
-            if not result.has_errors():
-                LeadResource.import_data(dataset, dry_run=False)
-        return request
+    @swagger_auto_schema(operation_description='Upload file')
+    @action(['POST'], False, parser_classes=(MultiPartParser,), serializer_class=LeadImportSerializer)
+    def import_data(self, request):
+        file = request.FILES['file']
+        df = pd.read_excel(file)
 
+        data = []
+        for index, row in df.iterrows():
+            source = LeadIncrement.objects.create(name=row['Source'])
+            data.append(Lead(
+                full_name=row['Full_Name'],
+                comment=row['Comment'],
+                phone=row['Phone'],
+                status=row['Status'],
+                lead_increment=source,
+            ))
+        Lead.objects.bulk_create(data)
+        return Response({'message': 'Data imported successfully'})
 
 
 class UpdateProfileView(UpdateAPIView):

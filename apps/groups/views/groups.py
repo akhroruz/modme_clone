@@ -1,7 +1,8 @@
+from django_filters import OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -17,9 +18,13 @@ from users.serializers import StudentListModelSerializer
 class GroupModelViewSet(ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupListModelSerializer
-    permission_classes = AllowAny,
-    filter_backends = CustomGroupDjangoFilterBackend,
+    filter_backends = DjangoFilterBackend, OrderingFilter
     filterset_class = GroupFilter
+
+    def filter_queryset(self, queryset):
+        if self.action in ('list', 'retrieve'):
+            self.filter_backends = CustomGroupDjangoFilterBackend, OrderingFilter
+        return super().filter_queryset(queryset)
 
     def list(self, request, *args, **kwargs):
         params = self.request.query_params
@@ -44,7 +49,7 @@ class GroupModelViewSet(ModelViewSet):
         return export_data_excel(columns, rows)
 
     # https://api.modme.dev/v1/group/13119/students/31739
-    @action(['POST'], True, 'students/(?P<student_id>\d+)', 'students', # noqa
+    @action(['POST'], True, 'students/(?P<student_id>\d+)', 'students',  # noqa
             serializer_class=None)
     def add_students(self, request, pk=None, student_id=None):
         """

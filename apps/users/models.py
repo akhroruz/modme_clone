@@ -28,7 +28,7 @@ class User(AbstractUser, BaseModel):
     photo = ImageField(max_length=100, upload_to='profiles/', default='media/img.png', blank=True, null=True)
     balance = IntegerField(default=0, blank=True)
     role = ManyToManyField('auth.Group')
-    branch = ManyToManyField('groups.Branch')
+    branch = ManyToManyField('groups.Branch', 'branches')
     data = JSONField(null=True, blank=True)  # social account
     deleted_at = DateTimeField(null=True)
     destroyer = ForeignKey('users.User', SET_NULL, null=True)
@@ -50,6 +50,17 @@ class User(AbstractUser, BaseModel):
     @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
+
+    @property
+    def number_of_groups(self):
+        return self.groups.count()
+
+    @property
+    def roles(self):
+        return self.role.values('id', 'name')
+
+    def company_id(self):
+        return self.branch.first().company_id
 
 
 class Comment(BaseModel):

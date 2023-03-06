@@ -4,6 +4,7 @@ from django.forms import model_to_dict
 from rest_framework.fields import SerializerMethodField, ListField, CharField, ChoiceField
 from rest_framework.serializers import ModelSerializer
 
+from groups.models import Branch
 from users.models import Comment, User
 
 
@@ -18,30 +19,24 @@ class StaffListCommentModelSerializer(ModelSerializer):
         fields = ('id', 'text', 'author')
 
 
+class StaffListBranchModelSerializer(ModelSerializer):
+    class Meta:
+        model = Branch
+        fields = ('id', 'name')
+
+
 class StaffListModelSerializer(ModelSerializer):
-    roles = SerializerMethodField()
-    branches = SerializerMethodField()
-    company_id = SerializerMethodField()
-
-    def get_roles(self, obj: User):  # noqa
-        return obj.role.values('id', 'name')
-
-    def get_branches(self, obj: User):  # noqa
-        return obj.branch.values('id', 'name')
-
-    def get_company_id(self, obj: User):
-        return obj.branch.first().company_id
-
     class Meta:
         model = User
         fields = (
-            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'company_id', 'deleted_at', 'data',
-            'roles', 'branches')
+            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'data',
+            'roles', 'number_of_groups', 'company_id')
         read_only_fields = ('phone', 'full_name', 'id')
 
     def to_representation(self, instance: User):
         rep = super().to_representation(instance)
         rep['comment'] = StaffListCommentModelSerializer(instance.comment, many=True).data
+        rep['branches'] = StaffListBranchModelSerializer(instance.branch, many=True).data
         return rep
 
 

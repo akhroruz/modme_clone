@@ -62,7 +62,7 @@ class CompanyModelViewSet(ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanyModelSerializer
     parser_classes = (MultiPartParser,)
-    permission_classes = IsAuthenticated, DjangoObjectPermissions, IsAdministrator
+    # permission_classes = IsAuthenticated, DjangoObjectPermissions, IsAdministrator
 
 
 # https://api.modme.dev/v1/course?company_id=131
