@@ -14,8 +14,8 @@ class TestBlogModel:
             'name': 'PDP',
             'logo': 'test_logo.png',
             'colors': 'Red',
-            'start_working_time': time(hour=9, minute=00,second=00),
-            'end_working_time': time(hour=12, minute=00,second=00),
+            'start_working_time': time(hour=9, minute=00, second=00),
+            'end_working_time': time(hour=12, minute=00, second=00),
             'phone': '991212334',
             'company_oferta': 'test_logo.png'
         }

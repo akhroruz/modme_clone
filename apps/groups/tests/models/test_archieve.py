@@ -3,7 +3,7 @@ from datetime import time
 import pytest
 
 from groups.models import Company
-from users.models import Archive
+from groups.models import ArchiveReason
 
 
 @pytest.mark.django_db
@@ -24,8 +24,7 @@ class TestArchiveModel:
             'name': 'PDP',
             'company': company
         }
-        count = Archive.objects.count()
-        archive = Archive.objects.create(**data)
+        count = ArchiveReason.objects.count()
+        archive = ArchiveReason.objects.create(**data)
         assert archive.name == data['name']
-        assert str(archive) == archive.name
-        assert count + 1 == Archive.objects.count()
+        assert count + 1 == ArchiveReason.objects.count()

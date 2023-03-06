@@ -1,8 +1,10 @@
 import xlwt
 from django.http import HttpResponse
 
+from users.models import Lead
 
-def export_data_excel(columns, rows):
+
+def export_data_excel(columns, rows): # noqa
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="users.xlsx"'
 
@@ -25,3 +27,5 @@ def export_data_excel(columns, rows):
             ws.write(row_num, col_num, row[col_num], font_style)
     wb.save(response)
     return response
+
+

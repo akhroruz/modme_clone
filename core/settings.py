@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'users.apps.UsersConfig',
     'payments.apps.PaymentsConfig',
     'crm.apps.CrmConfig',
+    'import_export',
 
     # third - party
     'drf_yasg',

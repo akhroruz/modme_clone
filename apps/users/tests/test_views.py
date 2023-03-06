@@ -1,13 +1,15 @@
 import datetime
+from datetime import time
+
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 import pytest
 from django.test import Client
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from groups.models import Group
+from groups.models import Group, ArchiveReason, Company
 from shared.tests import TestBaseFixture
-from users.models import Archive, Blog, LeadIncrement, Lead
+from users.models import Blog, LeadIncrement, Lead
 
 
 @pytest.mark.django_db
@@ -206,15 +208,28 @@ class TestArchiveModelViewSet(TestBaseFixture):
         url = reverse('archive_reasons-list')
         response = client.get(url)
         assert response.status_code == status.HTTP_200_OK
-        assert Archive.objects.count() == response.data['count']
+        assert ArchiveReason.objects.count() == response.data['count']
 
     def test_create_archive(self, client: Client, user):
         client.force_login(user)
-        data = {'name': 'new_archive_list'}
+        company_data = {
+            'name': 'PDP',
+            'logo': 'test_logo.png',
+            'colors': 'Red',
+            'start_working_time': time(hour=9, minute=00),
+            'end_working_time': time(hour=12, minute=00),
+            'phone': '991212334',
+            'company_oferta': 'test_logo.png'
+        }
+        company = Company.objects.create(**company_data)
+        data = {
+            'name': 'new_archive_list',
+            'company': company
+        }
         url = reverse('archive_reasons-list')
-        count = Archive.objects.count()
+        count = ArchiveReason.objects.count()
         response = client.post(url, data)
-        assert Archive.objects.count() - 1 == count
+        assert ArchiveReason.objects.count() - 1 == count
         assert response.data['name'] == data['name']
         assert response.status_code == status.HTTP_201_CREATED
 
@@ -237,9 +252,9 @@ class TestArchiveModelViewSet(TestBaseFixture):
     def test_delete_archive(self, client: Client, user, archive):
         client.force_login(user)
         url = reverse('archive_reasons-detail', args=(archive.pk,))
-        count = Archive.objects.count()
+        count = ArchiveReason.objects.count()
         response = client.delete(url)
-        assert Archive.objects.count() + 1 == count
+        assert ArchiveReason.objects.count() + 1 == count
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
 

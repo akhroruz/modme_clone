@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.db.models import TextChoices, CharField, IntegerField, DateField, ImageField, JSONField, \
     TextField, DateTimeField, ManyToManyField, ForeignKey, CASCADE, BooleanField, SET_NULL, BigIntegerField, \
-    PositiveIntegerField
+    PositiveIntegerField, Model, FileField
 
 from shared.models import BaseModel
 from users.managers import MyUserManager
@@ -98,3 +98,7 @@ class Blog(BaseModel):
 
     class Meta:
         ordering = ('-created_at',)
+
+
+class ExcelFile(Model):
+    file = FileField(upload_to='excel')

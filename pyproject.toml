@@ -36,6 +36,7 @@ xlrd = "^2.0.1"
 openpyxl = "^3.1.1"
 django-elasticsearch-dsl-drf = "^0.22.5"
 update = "^0.0.1"
+django-import-export = "^3.1.0"
 
 
 

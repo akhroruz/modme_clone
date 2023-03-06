@@ -49,4 +49,3 @@ class TestCompanyModelSerializer:
         serializer = CompanyModelSerializer(data=company_data)
         assert serializer.is_valid() is False
         assert 'colors' in serializer.errors
-

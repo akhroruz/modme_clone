@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.db.models import F
+from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -7,16 +9,24 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from groups.filters import CustomCompanyDjangoFilterBackend
 from shared.utils.export_excel import export_data_excel
 from users.filters import UserFilter, CustomUserDjangoFilterBackend
-from users.models import User, LeadIncrement, Lead, Blog
+from users.models import User, LeadIncrement, Lead, Blog, ExcelFile
 from users.serializers import LeadIncrementModelSerializer, \
     LeadModelSerializer, UpdateProfileSerializer, BlogModelSerializer, \
     StudentListModelSerializer, StaffListModelSerializer, StudentCreateModelSerializer, StaffCreateModelSerializer
+
+import xlrd
+from django.http import HttpResponseBadRequest, HttpResponse
+
+import pandas as pd
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+from users.models import Lead
 
 
 # https://api.modme.dev/v1/user?user_type=student&per_page=50&page=1&branch_id=189
@@ -27,7 +37,7 @@ class UserModelViewSet(ModelViewSet):
     filter_backends = DjangoFilterBackend, OrderingFilter
     filterset_class = UserFilter
     ordering = ('first_name', 'last_name')
-    http_method_names = ('post', 'get', 'put','patch')
+    http_method_names = ('post', 'get', 'put', 'patch')
 
     def list(self, request, *args, **kwargs):
         params = self.request.query_params
@@ -60,11 +70,6 @@ class UserModelViewSet(ModelViewSet):
         queryset = User.objects.filter(deleted_at__isnull=True)
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
-
-    # @action(['PATCH'], True, 'trashed', 'trashed')
-    # def trash(self, request, pk):
-    #     user = User.objects.get(pk=pk).update()
-    #     print('PATCH')
 
 
 @action(['GET'], False, 'export', 'export')
@@ -101,6 +106,28 @@ class LeadModelViewSet(ModelViewSet):
             'data': self.get_serializer(qs, many=True).data
         }
         return Response(data)
+
+    @action(['POST'], False, 'import', 'import')
+    def import_data(self, request):
+        if request.method == 'POST':
+            file = request.FILES['files.xlsx']
+            obj = ExcelFile.objects.create(
+                file=file
+            )
+            path = str(obj.file)
+            print(f'{settings.BASE_DIR}/{path}')
+            df = pd.read_excel(path)
+            for d in df.values:
+                print(d)
+        return
+
+    @action(['GET'], False, 'export', 'export')
+    def export_leads_xls(self, request):
+        columns = ['Id', 'Full_Name', 'Comment', 'Phone', 'Status', 'Lead_increment']
+        rows = Lead.objects.values_list(
+            'id', 'full_name', 'comment', 'phone', 'status', 'lead_increment'
+        )
+        return export_data_excel(columns, rows)
 
 
 class UpdateProfileView(UpdateAPIView):

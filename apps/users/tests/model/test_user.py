@@ -1,8 +1,8 @@
 from datetime import date, time
 import pytest
 from django.contrib.auth.models import Group as Role
-from groups.models import Company, Branch
-from users.models import Archive, User
+from groups.models import Company, Branch, ArchiveReason
+from users.models import User
 
 
 @pytest.mark.django_db
@@ -34,7 +34,7 @@ class TestUserModel:
             'name': 'PDP',
             'company': company
         }
-        archive = Archive.objects.create(**archive_data)
+        archive = ArchiveReason.objects.create(**archive_data)
 
         role_data = {'name': 'test_name'}
         role = Role.objects.create(**role_data)

@@ -44,7 +44,7 @@ class GroupModelViewSet(ModelViewSet):
         return export_data_excel(columns, rows)
 
     # https://api.modme.dev/v1/group/13119/students/31739
-    @action(['POST'], True, 'students/(?P<student_id>\d+)', 'students',
+    @action(['POST'], True, 'students/(?P<student_id>\d+)', 'students', # noqa
             serializer_class=None)
     def add_students(self, request, pk=None, student_id=None):
         """
