@@ -1,7 +1,6 @@
 import xlwt
 from django.http import HttpResponse
 
-from users.models import Lead
 
 
 def export_data_excel(columns, rows): # noqa
@@ -27,5 +26,3 @@ def export_data_excel(columns, rows): # noqa
             ws.write(row_num, col_num, row[col_num], font_style)
     wb.save(response)
     return response
-
-

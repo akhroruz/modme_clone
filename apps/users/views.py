@@ -1,6 +1,4 @@
-from django.conf import settings
 from django.db.models import F
-from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -10,20 +8,19 @@ from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
+from tablib import Dataset
 
 from groups.filters import CustomCompanyDjangoFilterBackend
 from shared.utils.export_excel import export_data_excel
+from shared.utils.resources import LeadResource
 from users.filters import UserFilter, CustomUserDjangoFilterBackend
-from users.models import User, LeadIncrement, Lead, Blog, ExcelFile
+from users.models import User, LeadIncrement, Blog
 from users.serializers import LeadIncrementModelSerializer, \
     LeadModelSerializer, UpdateProfileSerializer, BlogModelSerializer, \
     StudentListModelSerializer, StaffListModelSerializer, StudentCreateModelSerializer, StaffCreateModelSerializer
-
-import xlrd
-from django.http import HttpResponseBadRequest, HttpResponse
-
+from django.shortcuts import render
 import pandas as pd
-from rest_framework.views import APIView
+from django.core.files.storage import FileSystemStorage
 from rest_framework.response import Response
 
 from users.models import Lead
@@ -73,7 +70,7 @@ class UserModelViewSet(ModelViewSet):
 
 
 @action(['GET'], False, 'export', 'export')
-def export_users_xls(self, request):
+def export_users_xls(request):
     columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
     rows = User.objects.values_list('id', 'first_name', 'phone', 'birth_date', 'comment', 'balance')
     return export_data_excel(columns, rows)
@@ -107,20 +104,6 @@ class LeadModelViewSet(ModelViewSet):
         }
         return Response(data)
 
-    @action(['POST'], False, 'import', 'import')
-    def import_data(self, request):
-        if request.method == 'POST':
-            file = request.FILES['files.xlsx']
-            obj = ExcelFile.objects.create(
-                file=file
-            )
-            path = str(obj.file)
-            print(f'{settings.BASE_DIR}/{path}')
-            df = pd.read_excel(path)
-            for d in df.values:
-                print(d)
-        return
-
     @action(['GET'], False, 'export', 'export')
     def export_leads_xls(self, request):
         columns = ['Id', 'Full_Name', 'Comment', 'Phone', 'Status', 'Lead_increment']
@@ -128,6 +111,17 @@ class LeadModelViewSet(ModelViewSet):
             'id', 'full_name', 'comment', 'phone', 'status', 'lead_increment'
         )
         return export_data_excel(columns, rows)
+
+    @action(['POST'], False, 'import', 'import')
+    def import_excel(self,request):
+        if request.method == 'POST':
+            dataset = Dataset()
+            # new_employee = request.FILES['myfile']
+            result = LeadResource.import_data(dataset, dry_run=True)
+            if not result.has_errors():
+                LeadResource.import_data(dataset, dry_run=False)
+        return request
+
 
 
 class UpdateProfileView(UpdateAPIView):
