@@ -59,8 +59,13 @@ class User(AbstractUser, BaseModel):
     def roles(self):
         return self.role.values('id', 'name')
 
+    @property
     def company_id(self):
         return self.branch.first().company_id
+
+    @property
+    def branches(self):
+        return self.branch.values('id', 'name')
 
 
 class Comment(BaseModel):
