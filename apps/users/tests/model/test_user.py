@@ -1,7 +1,7 @@
 from datetime import date, time
 import pytest
 from django.contrib.auth.models import Group as Role
-from groups.models import Company, Branch, ArchiveReason
+from groups.models import Company, Branch
 from users.models import User
 
 
@@ -30,18 +30,16 @@ class TestUserModel:
         }
         branch = Branch.objects.create(**branch_data)
 
-        archive_data = {
-            'name': 'PDP',
-            'company': company
-        }
-        archive = ArchiveReason.objects.create(**archive_data)
+        # archive_data = {
+        #     'name': 'PDP',
+        #     'company': company
+        # }
 
         role_data = {'name': 'test_name'}
         role = Role.objects.create(**role_data)
 
         data = {
             'phone': '3232923',
-            'archive': archive,
             'birth_date': date(2002, 12, 25),
             'gender': 'Male',
             'photo': 'test_photo.png',

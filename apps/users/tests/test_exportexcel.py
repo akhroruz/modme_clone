@@ -1,9 +1,9 @@
-import pytest
-from django.test import Client
-from django.urls import reverse
-from rest_framework import status
-
-from shared.tests import TestBaseFixture
+# import pytest
+# from django.test import Client
+# from django.urls import reverse
+# from rest_framework import status
+#
+# from shared.tests import TestBaseFixture
 
 # @pytest.mark.django_db
 # class TestExportExcel(TestBaseFixture):

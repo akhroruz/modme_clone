@@ -14,12 +14,14 @@ from rest_framework.viewsets import ModelViewSet
 from groups.filters import CustomCompanyDjangoFilterBackend
 from shared.utils.export_excel import export_data_excel
 from users.filters import UserFilter, CustomUserDjangoFilterBackend
-from users.models import Lead
-from users.models import User, LeadIncrement, Blog
+from users.models import User, LeadIncrement, Lead, Blog
 from users.serializers import LeadIncrementModelSerializer, \
     LeadModelSerializer, UpdateProfileSerializer, BlogModelSerializer, \
     StudentListModelSerializer, StaffListModelSerializer, StudentCreateModelSerializer, StaffCreateModelSerializer
+
+from users.serializers.archive import ArchiveUserCreateModelSerializer
 from users.serializers.lead import LeadImportSerializer
+from users.serializers.user import UserDeleteModelSerializer
 
 
 # https://api.modme.dev/v1/user?user_type=student&per_page=50&page=1&branch_id=189
@@ -30,7 +32,27 @@ class UserModelViewSet(ModelViewSet):
     filter_backends = DjangoFilterBackend, OrderingFilter
     filterset_class = UserFilter
     ordering = ('first_name', 'last_name')
-    http_method_names = ('post', 'get', 'put', 'patch')
+    http_method_names = ('post', 'get', 'put', 'patch', 'delete')
+
+    reason_id = openapi.Parameter('reason', openapi.IN_QUERY, 'Reason ID', True, type=openapi.TYPE_INTEGER)
+
+    def get_serializer(self, *args, **kwargs):
+        if self.action == 'destroy':
+            return UserDeleteModelSerializer
+        return super().get_serializer(*args, **kwargs)
+
+    @swagger_auto_schema(manual_parameters=[reason_id])
+    def destroy(self, request, *args, **kwargs):
+        reason = request.query_params.get('reason')
+        user = self.get_queryset().filter(id=self.kwargs.get('pk'))
+        serializer = ArchiveUserCreateModelSerializer(user, reason)
+        serializer.save()  # TODO:
+        return super().destroy(request, *args, **kwargs)
+
+    # def perform_destroy(self, instance):
+    #     serializer = ArchiveUserCreateModelSerializer(instance)
+    #     serializer.save()
+    #     super().perform_destroy(instance)
 
     def filter_queryset(self, queryset):
         if self.action in ('list', 'retrieve'):
@@ -62,17 +84,20 @@ class UserModelViewSet(ModelViewSet):
             return StaffListModelSerializer
         return super().get_serializer_class()
 
-    @action(['GET'], False, 'trashed', 'trashed')
+    @action(('GET',), False, 'trashed', 'trashed')
     def get_trashed(self, request):
         queryset = User.objects.filter(deleted_at__isnull=True)
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
-    @action(['GET'], False, 'export', 'export')
+    @action(('GET',), False, 'export', 'export')
     def export_users_xls(self, request):
         columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
         rows = User.objects.values_list('id', 'first_name', 'phone', 'birth_date', 'comment', 'balance')
         return export_data_excel(columns, rows)
+
+    # @action(('DELETE',), True)
+    # def delete_user(self, request, id, reason_id):
 
 
 # class UserDocumentView(DocumentViewSet):

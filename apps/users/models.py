@@ -9,6 +9,42 @@ from shared.models import BaseModel
 from users.managers import MyUserManager
 
 
+class ArchivedUser(BaseModel):
+    class GenderChoose(TextChoices):
+        MALE = 'male', 'Male'
+        FEMALE = 'female', 'Female'
+
+    class UserTypeChoice(TextChoices):
+        STUDENT = 'student', 'Student'
+        TEACHER = 'teacher', 'Teacher'
+
+    first_name = CharField(max_length=150, blank=True)
+    last_name = CharField(max_length=150, blank=True)
+    phone = CharField(max_length=15, unique=True)
+    birth_date = DateField(blank=True, null=True)
+    gender = CharField(max_length=25, choices=GenderChoose.choices, blank=True, null=True)
+    photo = ImageField(max_length=100, upload_to='profiles/', default='media/img.png', blank=True, null=True)
+    balance = IntegerField(default=0, blank=True)
+    role = ManyToManyField('auth.Group')
+    branch = ManyToManyField('groups.Branch')
+    data = JSONField(null=True, blank=True)  # social account
+    deleted_at = DateTimeField(auto_now=True)
+    destroyer = ForeignKey('users.User', SET_NULL, null=True)
+    comment = GenericRelation('users.Comment')
+    user_type = CharField(max_length=10, choices=UserTypeChoice.choices, blank=True, null=True)
+    archive_reason = ForeignKey('groups.ArchiveReason', SET_NULL, null=True)
+
+    class Meta:
+        ordering = ('id',)
+
+    def __str__(self):
+        return f'{self.phone}'
+
+    @property
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
+
 class User(AbstractUser, BaseModel):
     class GenderChoose(TextChoices):
         MALE = 'male', 'Male'
@@ -29,9 +65,7 @@ class User(AbstractUser, BaseModel):
     balance = IntegerField(default=0, blank=True)
     role = ManyToManyField('auth.Group')
     branch = ManyToManyField('groups.Branch', 'branches')
-    data = JSONField(null=True, blank=True)  # social account
-    deleted_at = DateTimeField(null=True)
-    destroyer = ForeignKey('users.User', SET_NULL, null=True)
+    data = JSONField(null=True, blank=True)
     comment = GenericRelation('users.Comment')
     user_type = CharField(max_length=10, choices=UserTypeChoice.choices, blank=True, null=True)
 
