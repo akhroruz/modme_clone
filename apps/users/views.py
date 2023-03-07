@@ -34,14 +34,9 @@ class UserModelViewSet(ModelViewSet):
     ordering = ('first_name', 'last_name')
     http_method_names = ('post', 'get', 'put', 'patch', 'delete')
 
-    # reason_id = openapi.Parameter('reason', openapi.IN_QUERY, 'Reason ID', True, type=openapi.TYPE_INTEGER)
+    reason_id = openapi.Parameter('reason', openapi.IN_QUERY, 'Reason ID', True, type=openapi.TYPE_INTEGER)
 
-    def get_serializer_class(self):
-        if self.action == '':
-            return UserDeleteModelSerializer
-        return super().get_serializer_class()
-
-    # @swagger_auto_schema(manual_parameters=[reason_id])
+    @swagger_auto_schema(manual_parameters=[reason_id])
     def destroy(self, request, *args, **kwargs):
         reason = request.query_params.get('reason')
         user = self.get_queryset().filter(id=self.kwargs.get('pk'))
