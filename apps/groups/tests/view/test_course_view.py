@@ -15,7 +15,7 @@ class TestCourseModelViewSet(TestBaseFixture):
         keys = {'id', 'name', 'image', 'description', 'lesson_duration', 'course_duration', 'price'}
         client.force_login(user)
         url = reverse('course-list') + f'?company={course.company.pk}'
-        response = client.get(url)
+        response = client.get(url)  # noqa
         assert response.status_code == status.HTTP_200_OK
         assert response.data['count'] == Course.objects.count()
         item = response.data['results'][0]
