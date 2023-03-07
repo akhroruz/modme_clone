@@ -136,10 +136,10 @@ class LeadIncrement(BaseModel):
 class Blog(BaseModel):
     title = CharField(max_length=255)
     text = RichTextUploadingField()
-    public = BooleanField(default=False)
+    public = BooleanField(default=False)  # TODO
     created_by = ForeignKey('users.User', SET_NULL, 'created_by', null=True, blank=True)
     updated_by = ForeignKey('users.User', SET_NULL, 'updated_by', null=True, blank=True)
-    visible_all = BooleanField(default=False, blank=True, null=True)
+    visible_all = BooleanField(default=False, blank=True, null=True)  # TODO
     view_count = BigIntegerField(default=0, blank=True, null=True)
     company = ForeignKey('groups.Company', CASCADE)
 
@@ -150,5 +150,5 @@ class Blog(BaseModel):
         ordering = ('-created_at',)
 
 
-class ExcelFile(Model):
+class ExcelFile(Model):  # TODO
     file = FileField(upload_to='excel')
