@@ -20,6 +20,12 @@ class BranchModelViewSet(ModelViewSet):
     filterset_fields = 'company',
     parser_classes = (MultiPartParser,)
 
+    company = openapi.Parameter('company', openapi.IN_QUERY, 'Company ID', True, type=openapi.TYPE_INTEGER)
+
+    @swagger_auto_schema(manual_parameters=[company])
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
     def get_serializer_class(self):
         if self.action == 'list':
             return BranchListModelSerializer

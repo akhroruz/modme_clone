@@ -6,7 +6,7 @@ from groups.models import Branch
 class BranchModelSerializer(ModelSerializer):
     class Meta:
         model = Branch
-        fields = '__all__'
+        fields = ('name', 'address', 'company', 'about', 'phone', 'image')
 
 
 class BranchListModelSerializer(ModelSerializer):

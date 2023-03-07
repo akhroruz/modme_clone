@@ -11,10 +11,10 @@ from shared.tests import TestBaseFixture
 @pytest.mark.django_db
 class TestCourseModelViewSet(TestBaseFixture):
 
-    def test_course_list(self, user, client: Client, course, company):
+    def test_course_list(self, user, client: Client, company):
         keys = {'id', 'name', 'image', 'description', 'lesson_duration', 'course_duration', 'price'}
         client.force_login(user)
-        url = reverse('course-list') + f'?company={course.company.pk}'
+        url = reverse('course-list') + f'?company={company.pk}'
         response = client.get(url)  # noqa
         assert response.status_code == status.HTTP_200_OK
         assert response.data['count'] == Course.objects.count()
