@@ -1,3 +1,4 @@
+import pandas as pd
 from django.db.models import F
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
@@ -18,6 +19,10 @@ from users.serializers import LeadIncrementModelSerializer, \
     LeadModelSerializer, UpdateProfileSerializer, BlogModelSerializer, \
     StudentListModelSerializer, StaffListModelSerializer, StudentCreateModelSerializer, StaffCreateModelSerializer
 
+from users.serializers.archive import ArchiveUserCreateModelSerializer
+from users.serializers.lead import LeadImportSerializer
+from users.serializers.user import UserDeleteModelSerializer
+
 
 # https://api.modme.dev/v1/user?user_type=student&per_page=50&page=1&branch_id=189
 class UserModelViewSet(ModelViewSet):
@@ -27,7 +32,27 @@ class UserModelViewSet(ModelViewSet):
     filter_backends = DjangoFilterBackend, OrderingFilter
     filterset_class = UserFilter
     ordering = ('first_name', 'last_name')
-    http_method_names = ('post', 'get', 'put','patch')
+    http_method_names = ('post', 'get', 'put', 'patch', 'delete')
+
+    reason_id = openapi.Parameter('reason', openapi.IN_QUERY, 'Reason ID', True, type=openapi.TYPE_INTEGER)
+
+    @swagger_auto_schema(manual_parameters=[reason_id])
+    def destroy(self, request, *args, **kwargs):
+        reason = request.query_params.get('reason')
+        user = self.get_queryset().filter(id=self.kwargs.get('pk'))
+        serializer = ArchiveUserCreateModelSerializer(user, reason)
+        serializer.save()  # TODO:
+        return super().destroy(request, *args, **kwargs)
+
+    # def perform_destroy(self, instance):
+    #     serializer = ArchiveUserCreateModelSerializer(instance)
+    #     serializer.save()
+    #     super().perform_destroy(instance)
+
+    def filter_queryset(self, queryset):
+        if self.action in ('list', 'retrieve'):
+            self.filter_backends = CustomUserDjangoFilterBackend, OrderingFilter
+        return super().filter_queryset(queryset)
 
     def list(self, request, *args, **kwargs):
         params = self.request.query_params
@@ -49,29 +74,25 @@ class UserModelViewSet(ModelViewSet):
                 return StudentCreateModelSerializer
             return StaffCreateModelSerializer
         elif self.action in ('list', 'retrieve'):
-            self.filter_backends = CustomUserDjangoFilterBackend, OrderingFilter
             if user_type == 'student':
                 return StudentListModelSerializer
             return StaffListModelSerializer
         return super().get_serializer_class()
 
-    @action(['GET'], False, 'trashed', 'trashed')
+    @action(('GET',), False, 'trashed', 'trashed')
     def get_trashed(self, request):
         queryset = User.objects.filter(deleted_at__isnull=True)
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
-    # @action(['PATCH'], True, 'trashed', 'trashed')
-    # def trash(self, request, pk):
-    #     user = User.objects.get(pk=pk).update()
-    #     print('PATCH')
+    @action(('GET',), False, 'export', 'export')
+    def export_users_xls(self, request):
+        columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
+        rows = User.objects.values_list('id', 'first_name', 'phone', 'birth_date', 'comment', 'balance')
+        return export_data_excel(columns, rows)
 
-
-@action(['GET'], False, 'export', 'export')
-def export_users_xls(self, request):
-    columns = ['ID', 'Name', 'Phone', 'Birthday', 'Comments', 'Balance']
-    rows = User.objects.values_list('id', 'first_name', 'phone', 'birth_date', 'comment', 'balance')
-    return export_data_excel(columns, rows)
+    # @action(('DELETE',), True)
+    # def delete_user(self, request, id, reason_id):
 
 
 # class UserDocumentView(DocumentViewSet):
@@ -101,6 +122,33 @@ class LeadModelViewSet(ModelViewSet):
             'data': self.get_serializer(qs, many=True).data
         }
         return Response(data)
+
+    @action(['GET'], False, 'export', 'export')
+    def export_leads_xls(self, request):
+        columns = ['Id', 'Full_Name', 'Comment', 'Phone', 'Status', 'Source']
+        rows = Lead.objects.values_list(
+            'id', 'full_name', 'comment', 'phone', 'status', 'lead_increment__name'
+        )
+        return export_data_excel(columns, rows)
+
+    @swagger_auto_schema(operation_description='Upload file')
+    @action(['POST'], False, parser_classes=(MultiPartParser,), serializer_class=LeadImportSerializer)
+    def import_data(self, request):
+        file = request.FILES['file']
+        df = pd.read_excel(file)
+
+        data = []
+        for index, row in df.iterrows():
+            source = LeadIncrement.objects.create(name=row['Source'])
+            data.append(Lead(
+                full_name=row['Full_Name'],
+                comment=row['Comment'],
+                phone=row['Phone'],
+                status=row['Status'],
+                lead_increment=source,
+            ))
+        Lead.objects.bulk_create(data)
+        return Response({'message': 'Data imported successfully'})
 
 
 class UpdateProfileView(UpdateAPIView):

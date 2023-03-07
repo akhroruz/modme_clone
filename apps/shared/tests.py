@@ -8,7 +8,7 @@ from django.test import Client
 
 from core.settings import MEDIA_ROOT
 from groups.models import Group, Course, Room, Holiday, Branch, Company
-from users.models import Lead, LeadIncrement, User, Archive, Blog
+from users.models import Lead, LeadIncrement, User, Blog
 
 
 class TestBaseFixture:
@@ -54,13 +54,6 @@ class TestBaseFixture:
         return lead
 
     @pytest.fixture
-    def archive(self):
-        archive = Archive.objects.create(
-            name="archive1"
-        )
-        return archive
-
-    @pytest.fixture
     def branch(self, company):
         image_path = MEDIA_ROOT + '/test.png'
         image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
@@ -104,21 +97,6 @@ class TestBaseFixture:
             branch=branch
         )
         return holiday
-
-    # @pytest.fixture
-    # def course(self, company):
-    #     image_path = MEDIA_ROOT + '/test.png'
-    #     image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
-    #     course = Course.objects.create(
-    #         name='Backend Course',
-    #         price=1400000,
-    #         description='Smth about this course',
-    #         image=image,
-    #         lesson_duration=15,
-    #         course_duration=140,d
-    #         company=company,
-    #     )
-    #     return course
 
     @pytest.fixture
     def group(self, branch, user, course, room):
@@ -219,10 +197,6 @@ class TestBase(TestBaseFixture):
             Q(
                 codename__in=('view_group', 'change_group', 'delete_group', 'add_group'),
                 content_type=ContentType.objects.get_for_model(Group)
-            ) |
-            Q(
-                codename__in=('view_archive', 'change_archive', 'delete_archive', 'add_archive'),
-                content_type=ContentType.objects.get_for_model(Archive)
             ) |
             Q(
                 codename__in=('view_room', 'change_room', 'delete_room', 'add_room'),

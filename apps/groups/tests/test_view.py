@@ -144,19 +144,20 @@ class TestCompanyModelViewSet(TestBaseFixture):
             'company_oferta': 'test_logo.png'
         }
         previous_count = Company.objects.count()
+
         response = client.post(url, data)
 
         assert response.status_code == status.HTTP_201_CREATED
         assert previous_count + 1 == Company.objects.count()
 
         item = response.json()
-        assert item['name'] == data['name']
+        assert item['name'] == data['name']  # noqa
         assert item['logo'] == data['logo']
         assert item['colors'] == data['colors']
         assert item['start_working_time'] == data['start_working_time']
         assert item['end_working_time'] == data['end_working_time']
         assert item['phone'] == data['phone']
-        assert item['company_oferta'] == data['company_oferta']
+        assert item['company_oferta'] == data['company_oferta']  # noqa
 
     def test_retrieve_company(self, client: Client, company, user):
         client.force_login(user)
@@ -178,19 +179,19 @@ class TestCompanyModelViewSet(TestBaseFixture):
             'start_working_time': time(hour=9, minute=00),
             'end_working_time': time(hour=12, minute=00),
             'phone': '991212334',
-            'company_oferta': 'test_logo.png'
+            'company_oferta': 'test_logo.png'   # noqa
         }
         response = client.put(url, data, "application/json")
         assert response.status_code == status.HTTP_200_OK
 
-        item = response.json()
+        item = response.json()   # noqa
         assert item['name'] == data['name']
         assert item['logo'] == data['logo']
         assert item['colors'] == data['colors']
         assert item['start_working_time'] == data['start_working_time']
         assert item['end_working_time'] == data['end_working_time']
         assert item['phone'] == data['phone']
-        assert item['company_oferta'] == data['company_oferta']
+        assert item['company_oferta'] == data['company_oferta'] # noqa
 
 
 def test_delete_company(self, client: Client, company, user):

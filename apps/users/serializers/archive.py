@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from users.models import User
+from users.models import User, ArchivedUser
 
 
 class ArchiveUserListModelSerializer(ModelSerializer):
@@ -8,8 +8,11 @@ class ArchiveUserListModelSerializer(ModelSerializer):
         model = User
         fields = ('id', 'full_name')
 
-    # def to_representation(self, instance: Archive):
-    #     rep = super().to_representation(instance)
-    #     rep['users'] = ArchiveUserListModelSerializer(User.objects.filter(is_archive=True), many=True).data
-    #     return rep
 
+class ArchiveUserCreateModelSerializer(ModelSerializer):
+    class Meta:
+        model = ArchivedUser
+        fields = '__all__'
+
+    def create(self, validated_data):
+        return super().create(validated_data)

@@ -2,12 +2,13 @@ import xlwt
 from django.http import HttpResponse
 
 
-def export_data_excel(columns, rows):
+
+def export_data_excel(columns, rows, file_name: str ='Users'): # noqa
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="users.xlsx"'
+    response['Content-Disposition'] = f'attachment; filename="{file_name}.xlsx"'
 
     wb = xlwt.Workbook(encoding='utf-8')
-    ws = wb.add_sheet('Users')
+    ws = wb.add_sheet(file_name)
 
     row_num = 0
 

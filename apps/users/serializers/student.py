@@ -47,16 +47,11 @@ class StudentGroupListModelSerializer(ModelSerializer):
 
 
 class StudentListModelSerializer(ModelSerializer):
-    branches = SerializerMethodField()
-
-    def get_branches(self, obj: User):  # noqa
-        return obj.branch.values('id', 'name')
-
     class Meta:
         model = User
         fields = (
-            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'data',
-            'branches')
+            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'data',
+            'branch')
         read_only_fields = ('phone', 'full_name', 'id')
 
     def to_representation(self, instance: User):
@@ -80,5 +75,5 @@ class StudentCreateModelSerializer(ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('user_type')
         if validated_data.get('password'):
-            validated_data['password'] = make_password(validated_data['password'])
+            validated_data['password'] = make_password(validated_data.get('password'))
         return super().create(validated_data)
