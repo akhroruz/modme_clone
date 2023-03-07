@@ -1,15 +1,15 @@
-import pytest
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group as Role
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import Client
-from rest_framework import status
-from rest_framework.reverse import reverse
-
-from core.settings import MEDIA_ROOT
-from groups.models import Group, Room
-from shared.tests import TestBaseFixture
-from users.models import User
+# import pytest
+# from django.contrib.auth import get_user_model
+# from django.contrib.auth.models import Group as Role
+# from django.core.files.uploadedfile import SimpleUploadedFile
+# from django.test import Client
+# from rest_framework import status
+# from rest_framework.reverse import reverse
+#
+# from core.settings import MEDIA_ROOT
+# from groups.models import Group, Room
+# from shared.tests import TestBaseFixture
+# from users.models import User
 
 
 # @pytest.mark.django_db

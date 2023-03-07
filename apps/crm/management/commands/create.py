@@ -117,7 +117,7 @@ class Command(BaseCommand):
             role=cycle(Role.objects.all()),
             branch=cycle(Branch.objects.all()),
             password=make_password('1'),
-            deleted_at=cycle(random.choice((fake.past_datetime(), None)) for _ in range(u)),
+            # deleted_at=cycle(random.choice((fake.past_datetime(), None)) for _ in range(u)),
             photo='media/img.png',
             user_type=cycle(User.UserTypeChoice),
             make_m2m=True,

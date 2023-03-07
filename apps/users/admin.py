@@ -16,7 +16,7 @@ class LeadIncrementAdmin(ModelAdmin):
 @admin.register(User)
 class UserAdmin(ModelAdmin):
     list_display = ('first_name', 'gender', 'photo', 'branches', 'roles')
-    exclude = ('group', 'last_login', 'date_joined', 'deleted_at')
+    exclude = ('group', 'last_login', 'date_joined')
 
     def branches(self, obj: User):  # noqa
         return ",".join([b.name for b in obj.branch.all()])

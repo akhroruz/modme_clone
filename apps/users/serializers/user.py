@@ -1,6 +1,6 @@
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import IntegerField
-from rest_framework.serializers import ModelSerializer
+from rest_framework.fields import IntegerField, CharField
+from rest_framework.serializers import ModelSerializer, Serializer
 
 from users.models import User, Blog
 
@@ -30,7 +30,12 @@ class BlogModelSerializer(ModelSerializer):
             'company': {'required': True},
         }
 
+
 # class UserListDocumentSerializer(DocumentSerializer):
 #     class Meta:
 #         document = UserDocument
 #         fields = ('first_name', 'last_name', 'phone')
+
+class UserDeleteModelSerializer(Serializer):
+    reason_id = IntegerField()
+    comment = CharField(max_length=255)

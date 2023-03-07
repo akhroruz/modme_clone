@@ -29,8 +29,8 @@ class StaffListModelSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'data',
-            'roles', 'number_of_groups', 'company_id')
+            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'data',
+            'roles', 'number_of_groups', 'company_id', 'branch')
         read_only_fields = ('phone', 'full_name', 'id')
 
     def to_representation(self, instance: User):

@@ -50,8 +50,8 @@ class StudentListModelSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'deleted_at', 'data',
-            'branches')
+            'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'data',
+            'branch')
         read_only_fields = ('phone', 'full_name', 'id')
 
     def to_representation(self, instance: User):
