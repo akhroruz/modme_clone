@@ -9,7 +9,7 @@ from rest_framework.reverse import reverse
 
 from groups.models import Group, ArchiveReason, Company
 from shared.tests import TestBaseFixture
-from users.models import Blog, LeadIncrement, Lead
+from users.models import Blog, LeadIncrement, Lead, User
 
 
 @pytest.mark.django_db
@@ -257,28 +257,8 @@ class TestLeadModelViewSet(TestBaseFixture):
 #         assert ArchiveReason.objects.count() + 1 == count
 #         assert response.status_code == status.HTTP_204_NO_CONTENT
 
-
 @pytest.mark.django_db
 class TestGroupViewSet(TestBaseFixture):
-
-    @pytest.fixture
-    def group(self, room, branch, course, user):
-        group = Group.objects.create(
-            name='Python',
-            days=Group.DaysChoice.ODD_DAYS,
-            room=room,
-            start_time='14:00:00',
-            end_time='16:00:00',
-            course=course,
-            branch=branch,
-            start_date='2003-10-15',
-            end_date='2003-10-17',
-            tags=['tag1', 'tag2'],
-            teacher=user
-        )
-        group.students.add(user)
-        group.save()
-        return group
 
     def test_group_list(self, client: Client, room, branch, course, user):
         client.force_login(user)
@@ -286,26 +266,42 @@ class TestGroupViewSet(TestBaseFixture):
         response = client.get(url)
         assert response.status_code == status.HTTP_200_OK
 
-    def test_group_create(self, client: Client, room, branch, course, user):
+    def test_group_create(self, client: Client, room, branch, course, user, group):
         client.force_login(user)
         data = {
             'name': 'Java',
             'days': Group.DaysChoice.ODD_DAYS,
             'room': room.pk,
-            'teacher': [user.pk],
+            'teacher': user,
             'start_time': '10:00:00',
             'end_time': '12:00:00',
-            'course': course.pk,
+            'course': course,
             'branch': branch.pk,
             'start_date': '2003-10-10',
             'end_date': '2003-10-12',
             'tags': ['tag1', 'tag2'],
-            'students': [user.pk]
         }
+        student1 = User.objects.create(
+            phone='99067556',
+            password=123,
+            first_name='Mukhammad',
+            last_name='Jabborov',
+            is_staff=False,
+            is_superuser=False
+        )
+        student2 = User.objects.create(
+            phone='997755545',
+            password=123,
+            first_name='Toshpulat',
+            last_name='Eshonov',
+            is_staff=False,
+            is_superuser=False
+        )
 
         url = reverse('group-list')
         prev_count = Group.objects.count()
         response = client.post(url, data)
+        # group.students.add(student1, student2)
         group = Group.objects.last()
         assert data['branch'] == response.data['branch']
         assert group.course == course

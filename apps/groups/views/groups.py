@@ -4,6 +4,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.viewsets import ModelViewSet
 
 from groups.filters import CustomGroupDjangoFilterBackend, GroupFilter
@@ -56,9 +57,9 @@ class GroupModelViewSet(ModelViewSet):
         API to add a **student** to a group.
         """
         student = User.objects.get(id=student_id)
-        if student.role.filter(name='student').exists():
+        if student.role.filter(user__user_type='student').exists():
             group = Group.objects.get(id=pk)
             group.students.add(student)
             group.save()
             return Response(StudentListModelSerializer(student).data)
-        return Response({'status': 'Error'})
+        return Response({'status': 'Error'}, status=HTTP_400_BAD_REQUEST)

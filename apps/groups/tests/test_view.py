@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import time, datetime
 
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -134,14 +134,18 @@ class TestCompanyModelViewSet(TestBaseFixture):
     def test_create_company(self, client: Client, company, user):
         client.force_login(user)
         url = reverse('company-list')
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        file_path = MEDIA_ROOT + '/test'
+        file = SimpleUploadedFile('test', content=open(file_path, 'rb').read(), content_type='file/txt')
         data = {
             'name': 'PDP',
-            'logo': 'test_logo.png',
-            'colors': 'Red',
-            'start_working_time': time(hour=9, minute=00),
-            'end_working_time': time(hour=12, minute=00),
+            'logo': image,
+            'colors': Company.ColorChoice.RED,
+            'start_working_time': str(time(hour=9, minute=00)),
+            'end_working_time': str(time(hour=12, minute=00)),
             'phone': '991212334',
-            'company_oferta': 'test_logo.png'
+            'company_oferta': file
         }
         previous_count = Company.objects.count()
 
@@ -149,15 +153,17 @@ class TestCompanyModelViewSet(TestBaseFixture):
 
         assert response.status_code == status.HTTP_201_CREATED
         assert previous_count + 1 == Company.objects.count()
+        assert datetime.strptime(data['start_working_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
+            'start_working_time']
+        assert datetime.strptime(data['end_working_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
+            'end_working_time']
 
         item = response.json()
-        assert item['name'] == data['name']  # noqa
-        assert item['logo'] == data['logo']
-        assert item['colors'] == data['colors']
-        assert item['start_working_time'] == data['start_working_time']
-        assert item['end_working_time'] == data['end_working_time']
-        assert item['phone'] == data['phone']
-        assert item['company_oferta'] == data['company_oferta']  # noqa
+        keys = {'name', 'colors', 'start_working_time', 'end_working_time', 'phone'}
+
+        assert len(keys.difference(set(response.json()))) == 0
+        for key in keys:
+            assert item[key] == data[key]
 
     def test_retrieve_company(self, client: Client, company, user):
         client.force_login(user)
@@ -172,26 +178,30 @@ class TestCompanyModelViewSet(TestBaseFixture):
     def test_update_company(self, client: Client, company, user):
         client.force_login(user)
         url = reverse('company-detail', args=(company.id,))
+        image_path = MEDIA_ROOT + '/test.png'
+        image = SimpleUploadedFile('test.png', content=open(image_path, 'rb').read(), content_type='image/jpeg')
+        file_path = MEDIA_ROOT + '/test'
+        file = SimpleUploadedFile('test', content=open(file_path, 'rb').read(), content_type='file/txt')
         data = {
             'name': 'PDP',
-            'logo': 'test_logo.png',
-            'colors': 'Red',
-            'start_working_time': time(hour=9, minute=00),
-            'end_working_time': time(hour=12, minute=00),
+            'logo': image,
+            'colors': Company.ColorChoice.RED,
+            'start_working_time': str(time(hour=9, minute=00)),
+            'end_working_time': str(time(hour=12, minute=00)),
             'phone': '991212334',
-            'company_oferta': 'test_logo.png'   # noqa
+            'company_oferta': file  # noqa
         }
-        response = client.put(url, data, "application/json")
+        response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
         assert response.status_code == status.HTTP_200_OK
 
-        item = response.json()   # noqa
-        assert item['name'] == data['name']
-        assert item['logo'] == data['logo']
-        assert item['colors'] == data['colors']
-        assert item['start_working_time'] == data['start_working_time']
-        assert item['end_working_time'] == data['end_working_time']
-        assert item['phone'] == data['phone']
-        assert item['company_oferta'] == data['company_oferta'] # noqa
+        item = response.json()
+        keys = {'name', 'colors', 'start_working_time', 'end_working_time', 'phone'}
+
+        assert len(keys.difference(set(response.json()))) == 0
+        # assert time.strftime(data['start_working_time'], '%H:%M:%S')
+        # assert time.strftime(data['end_working_time'], '%H:%M:%S')
+        for key in keys:
+            assert item[key] == data[key]
 
 
 def test_delete_company(self, client: Client, company, user):
