@@ -45,7 +45,6 @@ class TestUserModel:
             'photo': 'test_photo.png',
             'balance': 550,
             'data': {'social_account': 'twitter', 'password': '1'},
-            'deleted_at': date(2022, 12, 25),
         }
         user_count = User.objects.count()
         user = User.objects.create(**data)
@@ -58,5 +57,4 @@ class TestUserModel:
         assert user.photo == data['photo']
         assert user.balance == data['balance']
         assert user.data == data['data']
-        assert user.deleted_at == data['deleted_at']
         assert user_count + 1 == User.objects.count()

@@ -51,7 +51,7 @@ class StudentListModelSerializer(ModelSerializer):
         model = User
         fields = (
             'id', 'full_name', 'gender', 'birth_date', 'phone', 'photo', 'balance', 'data',
-            'branches')
+            'branch')
         read_only_fields = ('phone', 'full_name', 'id')
 
     def to_representation(self, instance: User):
