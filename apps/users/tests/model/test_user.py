@@ -36,7 +36,7 @@ class TestUserModel:
         data = {
             'phone': '3232923',
             'birth_date': date(2002, 12, 25),
-            'gender': 'Male',
+            'gender': User.GenderChoose.MALE,
             'photo': 'test_photo.png',
             'balance': 550,
             'data': {'social_account': 'twitter', 'password': '1'},
