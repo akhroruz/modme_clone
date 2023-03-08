@@ -30,11 +30,6 @@ class TestUserModel:
         }
         branch = Branch.objects.create(**branch_data)
 
-        # archive_data = {
-        #     'name': 'PDP',
-        #     'company': company
-        # }
-
         role_data = {'name': 'test_name'}
         role = Role.objects.create(**role_data)
 

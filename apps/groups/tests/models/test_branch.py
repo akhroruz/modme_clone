@@ -1,4 +1,5 @@
 import pytest
+from datetime import time
 
 from groups.models import Company, Branch
 
@@ -6,7 +7,17 @@ from groups.models import Company, Branch
 @pytest.mark.django_db
 class TestBranchModel:
     def test_branch(self):
-        company = Company.objects.create(name='Test Company')
+        company_data = {
+            'name': 'PDP',
+            'logo': 'test_logo.png',
+            'colors': 'Red',
+            'start_working_time': time(hour=9, minute=00),
+            'end_working_time': time(hour=12, minute=00),
+            'phone': '991212334',
+            'company_oferta': 'test_logo.png'
+
+        }
+        company = Company.objects.create(**company_data)
         data = {
             'name': 'Test Branch',
             'address': 'Test Address',

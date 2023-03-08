@@ -7,9 +7,9 @@ from groups.models import ArchiveReason
 
 
 @pytest.mark.django_db
-class TestArchiveModel:
+class TestArchiveReasonModel:
 
-    def test_create_archive(self):
+    def test_create_archive_reason(self):
         company_data = {
             'name': 'PDP',
             'logo': 'test_logo.png',
@@ -21,7 +21,7 @@ class TestArchiveModel:
         }
         company = Company.objects.create(**company_data)
         data = {
-            'name': 'PDP',
+            'name': 'ill',
             'company': company
         }
         count = ArchiveReason.objects.count()
