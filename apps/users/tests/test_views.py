@@ -1,12 +1,13 @@
 import datetime
+from datetime import time
 
+from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 import pytest
 from django.test import Client
-from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from groups.models import Group
+from groups.models import Group, ArchiveReason, Company
 from shared.tests import TestBaseFixture
 from users.models import Blog, LeadIncrement, Lead, User
 
@@ -271,11 +272,11 @@ class TestGroupViewSet(TestBaseFixture):
             'name': 'Java',
             'days': Group.DaysChoice.ODD_DAYS,
             'room_id': room.pk,
-            'teacher_id': user.pk,
+            'teacher': user,
             'start_time': '10:00:00',
             'end_time': '12:00:00',
-            'course_id': course.pk,
-            'branch_id': branch.pk,
+            'course': course,
+            'branch': branch.pk,
             'start_date': '2003-10-10',
             'end_date': '2003-10-12',
             'tags': ['tag1', 'tag2'],
@@ -320,6 +321,7 @@ class TestGroupViewSet(TestBaseFixture):
         for key in keys:
             assert data[key] == x[key]
         assert Group.objects.count() == prev_count + 1
+        assert response.status_code == status.HTTP_201_CREATED
 
     def test_put_group(self, client: Client, group, room, branch, course, user):
         client.force_login(user)

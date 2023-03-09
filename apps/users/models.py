@@ -110,8 +110,8 @@ class Comment(BaseModel):
     author = ForeignKey('users.User', SET_NULL, null=True)
 
 
-class Lead(BaseModel):
-    class LeadStatus(TextChoices):
+class Lead(BaseModel):  # TODO
+    class LeadStatus(TextChoices):  # TODO
         REQUESTS = 'requests', 'Requests'
         PENDING = 'pending', 'Pending'
         COLLECT = 'collect', 'Collect'
@@ -126,7 +126,7 @@ class Lead(BaseModel):
         return f'{self.full_name} | {self.phone}'
 
 
-class LeadIncrement(BaseModel):
+class LeadIncrement(BaseModel):  # TODO
     name = CharField(max_length=255)
 
     def __str__(self):
