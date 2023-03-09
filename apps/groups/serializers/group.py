@@ -41,7 +41,8 @@ class GroupListModelSerializer(ModelSerializer):
     class Meta:
         model = Group
         fields = (
-            'id', 'branch', 'days', 'room', 'status', 'course', 'teacher', 'start_date', 'end_date', 'start_time',
+            'id', 'name', 'branch', 'days', 'room', 'status', 'course', 'teacher', 'start_date', 'end_date',
+            'start_time',
             'end_time', 'students_count',
             'created_at', 'updated_at', 'tags')
 
