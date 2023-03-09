@@ -65,7 +65,6 @@ class TestBaseFixture:
             about='Something about this branch',
             company=company,
             image=image
-
         )
         return branch
 
