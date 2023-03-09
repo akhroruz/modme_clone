@@ -1,5 +1,4 @@
-from django_filters import OrderingFilter
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend  # OrderingFilter
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
@@ -19,12 +18,12 @@ from users.serializers import StudentListModelSerializer
 class GroupModelViewSet(ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupListModelSerializer
-    filter_backends = DjangoFilterBackend, OrderingFilter
+    filter_backends = DjangoFilterBackend,
     filterset_class = GroupFilter
 
     def filter_queryset(self, queryset):
         if self.action in ('list', 'retrieve'):
-            self.filter_backends = CustomGroupDjangoFilterBackend, OrderingFilter
+            self.filter_backends = CustomGroupDjangoFilterBackend,
         return super().filter_queryset(queryset)
 
     def list(self, request, *args, **kwargs):

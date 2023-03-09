@@ -92,7 +92,7 @@
 #     #     }
 #     #
 #     #     url = reverse('user-detail', args=(user.pk,)) + f'?branch={branch.pk}&user_type={role.name}'
-    #     response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
+#     response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
 #     #     assert response.status_code == status.HTTP_200_OK
 #     #     x = response.json()
 #     #     keys = {'gender', 'birth_date', 'full_name'}

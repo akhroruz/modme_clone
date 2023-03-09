@@ -115,21 +115,17 @@ class TestBaseFixture:
             tags=['test_tag1', 'tests_tag2', 'tests_tag3'],
 
         )
-        student1 = User.objects.create(
+        student1 = User.objects.create_user(
             phone='990675629',
-            password=123,
+            password='123',
             first_name='Mukhammad',
             last_name='Jabborov',
-            is_staff=False,
-            is_superuser=False
         )
-        student2 = User.objects.create(
+        student2 = User.objects.create_user(
             phone='997755565',
-            password=123,
+            password='123',
             first_name='Toshpulat',
             last_name='Eshonov',
-            is_staff=False,
-            is_superuser=False
         )
 
         group.students.add(student1, student2)

@@ -1,13 +1,10 @@
-import datetime
-from datetime import time
-
-from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 import pytest
 from django.test import Client
+from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart  # noqa
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from groups.models import Group, ArchiveReason, Company
+from groups.models import Group
 from shared.tests import TestBaseFixture
 from users.models import Blog, LeadIncrement, Lead, User
 
@@ -201,69 +198,13 @@ class TestLeadModelViewSet(TestBaseFixture):
 
 
 @pytest.mark.django_db
-# class TestArchiveModelViewSet(TestBaseFixture):
-#
-#     def test_archive_list(self, client: Client, user):
-#         client.force_login(user)
-#         url = reverse('archive_reasons-list')
-#         response = client.get(url)
-#         assert response.status_code == status.HTTP_200_OK
-#         assert ArchiveReason.objects.count() == response.data['count']
-#
-#     def test_create_archive(self, client: Client, user):
-#         client.force_login(user)
-#         company_data = {
-#             'name': 'PDP',
-#             'logo': 'test_logo.png',
-#             'colors': 'Red',
-#             'start_working_time': time(hour=9, minute=00),
-#             'end_working_time': time(hour=12, minute=00),
-#             'phone': '991212334',
-#             'company_oferta': 'test_logo.png'
-#         }
-#         company = Company.objects.create(**company_data)
-#         data = {
-#             'name': 'new_archive_list',
-#             'company': company
-#         }
-#         url = reverse('archive_reasons-list')
-#         count = ArchiveReason.objects.count()
-#         response = client.post(url, data)
-#         assert ArchiveReason.objects.count() - 1 == count
-#         assert response.data['name'] == data['name']
-#         assert response.status_code == status.HTTP_201_CREATED
-#
-#     def test_update_archive(self, client: Client, user, archive):
-#         client.force_login(user)
-#         data = {'name': 'updated_archive_list'}
-#         url = reverse('archive_reasons-detail', args=(archive.pk,))
-#         response = client.put(url, data, 'application/json')
-#         assert response.data['name'] == data['name']
-#         assert response.status_code == status.HTTP_200_OK
-#
-#     def test_patch_archive(self, client: Client, user, archive):
-#         client.force_login(user)
-#         data = {'name': 'patched_archive_list'}
-#         url = reverse('archive_reasons-detail', args=(archive.pk,))
-#         response = client.patch(url, data, 'application/json')
-#         assert response.data['name'] == data['name']
-#         assert response.status_code == status.HTTP_200_OK
-#
-#     def test_delete_archive(self, client: Client, user, archive):
-#         client.force_login(user)
-#         url = reverse('archive_reasons-detail', args=(archive.pk,))
-#         count = ArchiveReason.objects.count()
-#         response = client.delete(url)
-#         assert ArchiveReason.objects.count() + 1 == count
-#         assert response.status_code == status.HTTP_204_NO_CONTENT
-
-@pytest.mark.django_db
 class TestGroupViewSet(TestBaseFixture):
 
-    def test_group_list(self, client: Client, room, branch, course, user):
+    def test_group_list(self, client: Client, room, branch, user, group):
         client.force_login(user)
-        url = reverse('group-list')
+        url = reverse('group-list') + f'?branch={branch.pk}'
         response = client.get(url)
+        # x = response.json() i will add ...
         assert response.status_code == status.HTTP_200_OK
 
     def test_group_create(self, client: Client, room, branch, course, user, group):
@@ -282,20 +223,20 @@ class TestGroupViewSet(TestBaseFixture):
             'tags': ['tag1', 'tag2'],
         }
         student1 = User.objects.create_user(
-            phone='99067556',
-            password='123',
-            first_name='Botirjon 1'
+            phone='9994',
+            password='123456tttt',
+            first_name='fake 1'
         )
         student1.branch.add(branch)
         student2 = User.objects.create_user(
-            phone='997755545',
-            password='123',
-            first_name='Botirjon 2'
+            phone='9995',
+            password='12345678aa',
+            first_name='John 2'
         )
         student2.branch.add(branch)
         group.students.add(student1, student2)
 
-        url = reverse('group-list') + f'?branch={branch.pk}&room={room.id}'
+        url = reverse('group-list') + f'?branch={branch.pk}&room={room.pk}'
         prev_count = Group.objects.count()
         response = client.post(url, data)
         assert response.status_code == status.HTTP_201_CREATED
@@ -303,7 +244,7 @@ class TestGroupViewSet(TestBaseFixture):
         assert data['branch'] == response.data['branch']
         assert group.course == course
 
-        keys = {'name', 'days', 'start_time', 'end_time', 'start_date', 'end_date', 'tags', }
+        keys = {'name', 'days', 'start_time', 'end_time', 'start_date', 'end_date', 'tags'}
         x = response.json()
         assert len(keys.difference(set(x))) == 0
         for key in keys:
@@ -315,34 +256,26 @@ class TestGroupViewSet(TestBaseFixture):
         client.force_login(user)
         data = {
             'name': 'Python',
-            'days': group.DaysChoice.EVEN_DAYS,
+            'days': Group.DaysChoice.ODD_DAYS,
             'room': room.pk,
             'teacher': user.pk,
-            'start_time': '14:00:00',
-            'end_time': '16:00:00',
-            'course': group.course.pk,
+            'start_time': '20:00:00',
+            'end_time': '23:00:00',
+            'course': course.pk,
             'branch': branch.pk,
-            'start_date': '2003-10-15',
-            'end_date': '2003-10-17',
-            'tags': ['tag3', 'tag4'],
-            'students': [user.pk]
+            'start_date': '2000-10-10',
+            'end_date': '2022-10-12',
+            'tags': ['tag5', 'tag6'],
         }
-
-        url = '%s?branch=%s' % (reverse('group-detail', args=[group.pk]), branch.pk)
+        url = reverse('group-detail', args=(group.pk,)) + f'?branch={branch.pk}&room={room.pk}'
         response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
+        assert response.status_code == status.HTTP_200_OK
         group = Group.objects.last()
+
         assert data['branch'] == response.data['branch']
         assert group.course == course
-        assert datetime.datetime.strptime(data['start_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
-            'start_time']
-        assert datetime.datetime.strptime(data['end_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
-            'end_time']
-        assert datetime.datetime.strptime(data['start_date'], '%Y-%m-%d').strftime('%Y-%m-%d') == response.data[
-            'start_date']
-        assert datetime.datetime.strptime(data['end_date'], '%Y-%m-%d').strftime('%Y-%m-%d') == response.data[
-            'end_date']
 
-        keys = {'name', 'days', 'start_time', 'end_time', 'start_date', 'end_date', 'tags', }
+        keys = {'name', 'days', 'start_time', 'end_time', 'start_date', 'end_date', 'tags'}
         x = response.json()
         assert len(keys.difference(set(x))) == 0
         for key in keys:
@@ -353,43 +286,21 @@ class TestGroupViewSet(TestBaseFixture):
         client.force_login(user)
         data = {
             'name': 'CSS',
-            'days': group.DaysChoice.EVEN_DAYS,
-            'room': room.pk,
-            'teacher': user.pk,
-            'start_time': '14:00:00',
-            'end_time': '16:00:00',
-            'course': group.course.pk,
-            'branch': branch.pk,
-            'start_date': '2003-10-15',
-            'end_date': '2003-10-17',
-            'tags': ['tag3', 'tag4'],
-            'students': [user.pk]
+            'days': group.DaysChoice.ODD_DAYS,
         }
 
-        url = '%s?branch=%s' % (reverse('group-detail', args=[group.pk]), branch.pk)
+        url = reverse('group-detail', args=(group.pk,)) + f'?branch={branch.pk}&room={room.pk}'
         response = client.patch(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
-        group = Group.objects.last()
-        assert data['branch'] == response.data['branch']
-        assert group.course == course
-        assert datetime.datetime.strptime(data['start_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
-            'start_time']
-        assert datetime.datetime.strptime(data['end_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
-            'end_time']
-        assert datetime.datetime.strptime(data['start_date'], '%Y-%m-%d').strftime('%Y-%m-%d') == response.data[
-            'start_date']
-        assert datetime.datetime.strptime(data['end_date'], '%Y-%m-%d').strftime('%Y-%m-%d') == response.data[
-            'end_date']
-
-        keys = {'name', 'days', 'start_time', 'end_time', 'start_date', 'end_date', 'tags', }
+        assert response.status_code == status.HTTP_200_OK
+        keys = {'name', 'days'}
         x = response.json()
         assert len(keys.difference(set(x))) == 0
-        for key in keys:
-            assert data[key] == x[key]
-        assert response.status_code == status.HTTP_200_OK
+        assert data['name'] == x['name']
+        assert data['days'] == x['days']
 
-    def test_delete_group(self, client: Client, user, branch, group):
+    def test_delete_group(self, client: Client, user, branch, group, room):
         client.force_login(user)
-        url = '%s?branch=%s' % (reverse('group-detail', args=[group.pk]), branch.pk)
+        url = reverse('group-detail', args=(group.pk,)) + f'?branch={branch.pk}&room={room.pk}'
         prev_count = Group.objects.count()
         response = client.delete(url)
         assert Group.objects.count() + 1 == prev_count

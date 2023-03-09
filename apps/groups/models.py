@@ -141,7 +141,7 @@ class ArchiveReason(BaseModel):
 '''
 
 '''
-# get
+get
     {
         "id": 35,
         "name": null,
@@ -151,9 +151,9 @@ class ArchiveReason(BaseModel):
         "updated_at": "2022-08-10 19:52"
     },
 
-
-# postda 
+post
 {
+
     "company_id": 131,
     "text": "botirali dan userlarga sms shablon",
     "updated_at": "2023-03-04 10:33",

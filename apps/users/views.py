@@ -18,10 +18,8 @@ from users.models import User, LeadIncrement, Lead, Blog
 from users.serializers import LeadIncrementModelSerializer, \
     LeadModelSerializer, UpdateProfileSerializer, BlogModelSerializer, \
     StudentListModelSerializer, StaffListModelSerializer, StudentCreateModelSerializer, StaffCreateModelSerializer
-
 from users.serializers.archive import ArchiveUserCreateModelSerializer
 from users.serializers.lead import LeadImportSerializer
-from users.serializers.user import UserDeleteModelSerializer
 
 
 # https://api.modme.dev/v1/user?user_type=student&per_page=50&page=1&branch_id=189
