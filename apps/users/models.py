@@ -150,5 +150,4 @@ class Blog(BaseModel):
         ordering = ('-created_at',)
 
 
-class ExcelFile(Model):  # TODO
-    file = FileField(upload_to='excel')
+
