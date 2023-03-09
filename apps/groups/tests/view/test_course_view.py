@@ -11,7 +11,7 @@ from shared.tests import TestBaseFixture
 @pytest.mark.django_db
 class TestCourseModelViewSet(TestBaseFixture):
 
-    def test_course_list(self, user, client: Client, company):
+    def test_course_list(self, user, client: Client, company, course):
         keys = {'id', 'name', 'image', 'description', 'lesson_duration', 'course_duration', 'price'}
         client.force_login(user)
         url = reverse('course-list') + f'?company={company.pk}'

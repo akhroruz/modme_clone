@@ -225,6 +225,7 @@ core/.env
 !**/media/
 !**/media/profile.jpg
 !**/media/test.png
+!**/media/test
 
 **/migrations/**
 !**/migrations/
