@@ -297,11 +297,12 @@ class TestGroupViewSet(TestBaseFixture):
             is_staff=False,
             is_superuser=False
         )
+        group.students.add(student1, student2)
 
-        url = reverse('group-list')
+        url = reverse('group-list') + f'?branch={branch.pk}'
         prev_count = Group.objects.count()
         response = client.post(url, data)
-        # group.students.add(student1, student2)
+        assert response.status_code == status.HTTP_201_CREATED
         group = Group.objects.last()
         assert data['branch'] == response.data['branch']
         assert group.course == course

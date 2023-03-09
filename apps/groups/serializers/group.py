@@ -36,13 +36,14 @@ class GroupListModelSerializer(ModelSerializer):
     class Meta:
         model = Group
         fields = (
-            'id', 'branch', 'days', 'status', 'course', 'teacher', 'start_date', 'end_date', 'start_time', 'end_time',
+            'id', 'branch', 'days', 'room', 'status', 'course', 'teacher', 'start_date', 'end_date', 'start_time',
+            'end_time', 'students_count',
             'created_at', 'updated_at', 'tags')
 
     def to_representation(self, instance: Group):
         data = super().to_representation(instance)
-        data['students_count'] = instance.students_count
-        data['rooms'] = GroupRoomListModelSerializer(instance.room).data
+        # data['students_count'] = instance.students_count
+        data['room'] = GroupRoomListModelSerializer(instance.room).data
         data['comment'] = GroupListCommentModelSerializer(instance.comment, many=True).data
         return data
 
