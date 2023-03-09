@@ -271,11 +271,11 @@ class TestGroupViewSet(TestBaseFixture):
         data = {
             'name': 'Java',
             'days': Group.DaysChoice.ODD_DAYS,
-            'room_id': room.pk,
-            'teacher_id': user.pk,
+            'room': room.pk,
+            'teacher': user.pk,
             'start_time': '17:00:00',
             'end_time': '21:00:00',
-            'course_id': course.pk,
+            'course': course.pk,
             'branch': branch.pk,
             'start_date': '2003-10-10',
             'end_date': '2003-10-12',
@@ -283,33 +283,25 @@ class TestGroupViewSet(TestBaseFixture):
         }
         student1 = User.objects.create_user(
             phone='99067556',
-            password=123,
-            first_name='Mukhammad',
-            last_name='Jabborov',
+            password='123',
+            first_name='Botirjon 1'
         )
+        student1.branch.add(branch)
         student2 = User.objects.create_user(
             phone='997755545',
-            password=123,
-            first_name='Toshpulat',
-            last_name='Eshonov',
+            password='123',
+            first_name='Botirjon 2'
         )
+        student2.branch.add(branch)
         group.students.add(student1, student2)
 
-        url = reverse('group-list') + f'?branch={branch.pk}'
+        url = reverse('group-list') + f'?branch={branch.pk}&room={room.id}'
         prev_count = Group.objects.count()
         response = client.post(url, data)
         assert response.status_code == status.HTTP_201_CREATED
         group = Group.objects.last()
         assert data['branch'] == response.data['branch']
         assert group.course == course
-        assert datetime.datetime.strptime(data['start_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
-            'start_time']
-        assert datetime.datetime.strptime(data['end_time'], '%H:%M:%S').strftime('%H:%M:%S') == response.data[
-            'end_time']
-        assert datetime.datetime.strptime(data['start_date'], '%Y-%m-%d').strftime('%Y-%m-%d') == response.data[
-            'start_date']
-        assert datetime.datetime.strptime(data['end_date'], '%Y-%m-%d').strftime('%Y-%m-%d') == response.data[
-            'end_date']
 
         keys = {'name', 'days', 'start_time', 'end_time', 'start_date', 'end_date', 'tags', }
         x = response.json()

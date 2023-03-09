@@ -24,14 +24,19 @@ class GroupListCommentModelSerializer(ModelSerializer):
 
 
 class GroupListModelSerializer(ModelSerializer):
-    course = SerializerMethodField()
-    teacher = SerializerMethodField()
-
-    def get_course(self, obj: Group):  # noqa
-        return model_to_dict(obj.course, ('id', 'name', 'description', 'lesson_duration', 'course_duration', 'price'))
-
-    def get_teacher(self, obj: Group):  # noqa
-        return model_to_dict(obj.teacher, ('id', 'first_name', 'phone'))
+    # course = SerializerMethodField()
+    # teacher = SerializerMethodField()
+    #
+    # def get_course(self, obj: Group):  # noqa
+    #     if obj.course:
+    #         return model_to_dict(obj.course,
+    #                              ('id', 'name', 'description', 'lesson_duration', 'course_duration', 'price'))
+    #     return None
+    #
+    # def get_teacher(self, obj: Group):  # noqa
+    #     if obj.teacher:
+    #         return model_to_dict(obj.teacher, ('id', 'first_name', 'phone'))
+    #     return None
 
     class Meta:
         model = Group
@@ -43,6 +48,9 @@ class GroupListModelSerializer(ModelSerializer):
     def to_representation(self, instance: Group):
         data = super().to_representation(instance)
         data['students_count'] = instance.students_count
+        data['course'] = model_to_dict(instance.course,
+                                       ('id', 'name', 'description', 'lesson_duration', 'course_duration', 'price'))
+        data['teacher'] = model_to_dict(instance.teacher, ('id', 'first_name', 'phone'))
         data['rooms'] = GroupRoomListModelSerializer(instance.room).data
         data['comment'] = GroupListCommentModelSerializer(instance.comment, many=True).data
         return data
