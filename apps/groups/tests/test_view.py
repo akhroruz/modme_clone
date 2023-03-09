@@ -203,12 +203,11 @@ class TestCompanyModelViewSet(TestBaseFixture):
         for key in keys:
             assert item[key] == data[key]
 
+    def test_delete_company(self, client: Client, company, user):
+        client.force_login(user)
+        url = reverse('company-detail', args=(company.id,))
+        previous_count = Company.objects.count()
+        response = client.delete(url)
 
-def test_delete_company(self, client: Client, company, user):
-    client.force_login(user)
-    url = reverse('company-detail', args=(company.id,))
-    previous_count = Company.objects.count()
-    response = client.delete(url)
-
-    assert response.status_code == status.HTTP_204_NO_CONTENT
-    assert previous_count - 1 == Company.objects.count()
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert previous_count - 1 == Company.objects.count()

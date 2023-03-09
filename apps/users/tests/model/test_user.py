@@ -30,18 +30,13 @@ class TestUserModel:
         }
         branch = Branch.objects.create(**branch_data)
 
-        # archive_data = {
-        #     'name': 'PDP',
-        #     'company': company
-        # }
-
         role_data = {'name': 'test_name'}
         role = Role.objects.create(**role_data)
 
         data = {
             'phone': '3232923',
             'birth_date': date(2002, 12, 25),
-            'gender': 'Male',
+            'gender': User.GenderChoose.MALE,
             'photo': 'test_photo.png',
             'balance': 550,
             'data': {'social_account': 'twitter', 'password': '1'},

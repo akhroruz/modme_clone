@@ -82,8 +82,8 @@
 #
 #     # def test_update_user(self, client: Client, user, branch, role):
 #     #     client.force_login(user)
-#     #     image_path = MEDIA_ROOT + '/test.png'
-#     #     image = SimpleUploadedFile('test.png', open(image_path, 'rb').read(), 'image/png')
+#         image_path = MEDIA_ROOT + '/test.png'
+#         image = SimpleUploadedFile('test.png', open(image_path, 'rb').read(), 'image/png')
 #     #     data = {
 #     #         'gender': User.GenderChoose.FEMALE,
 #     #         'birth_date': '1999-10-10',
@@ -92,7 +92,7 @@
 #     #     }
 #     #
 #     #     url = reverse('user-detail', args=(user.pk,)) + f'?branch={branch.pk}&user_type={role.name}'
-#     #     response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
+    #     response = client.put(url, encode_multipart(BOUNDARY, data), MULTIPART_CONTENT)
 #     #     assert response.status_code == status.HTTP_200_OK
 #     #     x = response.json()
 #     #     keys = {'gender', 'birth_date', 'full_name'}
