@@ -272,30 +272,26 @@ class TestGroupViewSet(TestBaseFixture):
             'name': 'Java',
             'days': Group.DaysChoice.ODD_DAYS,
             'room_id': room.pk,
-            'teacher': user,
-            'start_time': '10:00:00',
-            'end_time': '12:00:00',
-            'course': course,
+            'teacher_id': user.pk,
+            'start_time': '17:00:00',
+            'end_time': '21:00:00',
+            'course_id': course.pk,
             'branch': branch.pk,
             'start_date': '2003-10-10',
             'end_date': '2003-10-12',
             'tags': ['tag1', 'tag2'],
         }
-        student1 = User.objects.create(
+        student1 = User.objects.create_user(
             phone='99067556',
             password=123,
             first_name='Mukhammad',
             last_name='Jabborov',
-            is_staff=False,
-            is_superuser=False
         )
-        student2 = User.objects.create(
+        student2 = User.objects.create_user(
             phone='997755545',
             password=123,
             first_name='Toshpulat',
             last_name='Eshonov',
-            is_staff=False,
-            is_superuser=False
         )
         group.students.add(student1, student2)
 
