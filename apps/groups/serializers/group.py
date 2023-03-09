@@ -36,7 +36,8 @@ class GroupListModelSerializer(ModelSerializer):
     class Meta:
         model = Group
         fields = (
-            'id', 'branch', 'days', 'status', 'course', 'teacher', 'start_date', 'end_date', 'start_time', 'end_time',
+            'id', 'branch', 'days', 'room', 'status', 'course', 'teacher', 'start_date', 'end_date', 'start_time',
+            'end_time',
             'created_at', 'updated_at', 'tags')
 
     def to_representation(self, instance: Group):
