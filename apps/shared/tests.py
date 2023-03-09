@@ -80,7 +80,7 @@ class TestBaseFixture:
         course = Course.objects.create(
             name='Course 1',
             price=2000,
-            description='Course description',
+            description='Course dpkescription',
             image=image,
             lesson_duration=2,
             course_duration=4,
