@@ -43,7 +43,7 @@ class GroupListModelSerializer(ModelSerializer):
     def to_representation(self, instance: Group):
         data = super().to_representation(instance)
         data['students_count'] = instance.students_count
-        data['rooms'] = GroupRoomListModelSerializer(instance.room).data
+        data['room'] = GroupRoomListModelSerializer(instance.room).data
         data['comment'] = GroupListCommentModelSerializer(instance.comment, many=True).data
         return data
 

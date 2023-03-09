@@ -1,13 +1,12 @@
 import datetime
-from datetime import time
 
-from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 import pytest
 from django.test import Client
+from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from groups.models import Group, ArchiveReason, Company
+from groups.models import Group
 from shared.tests import TestBaseFixture
 from users.models import Blog, LeadIncrement, Lead, User
 
@@ -297,11 +296,12 @@ class TestGroupViewSet(TestBaseFixture):
             is_staff=False,
             is_superuser=False
         )
+        group.students.add(student1, student2)
 
-        url = reverse('group-list')
+        url = reverse('group-list') + f'?branch={branch.pk}'
         prev_count = Group.objects.count()
         response = client.post(url, data)
-        # group.students.add(student1, student2)
+        assert response.status_code == status.HTTP_201_CREATED
         group = Group.objects.last()
         assert data['branch'] == response.data['branch']
         assert group.course == course
@@ -320,7 +320,6 @@ class TestGroupViewSet(TestBaseFixture):
         for key in keys:
             assert data[key] == x[key]
         assert Group.objects.count() == prev_count + 1
-        assert response.status_code == status.HTTP_201_CREATED
 
     def test_put_group(self, client: Client, group, room, branch, course, user):
         client.force_login(user)

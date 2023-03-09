@@ -127,3 +127,38 @@ class Lesson(BaseModel):
 class ArchiveReason(BaseModel):
     name = CharField(max_length=255)
     company = ForeignKey('groups.Company', CASCADE)
+
+
+# Shablon datas
+'''
+{
+    "company_id": 131,
+    "text": "botir",
+    "updated_at": "2023-03-03 20:43",
+    "created_at": "2023-03-03 20:43",
+    "id": 42
+}
+'''
+
+'''
+# get
+    {
+        "id": 35,
+        "name": null,
+        "text": "Make payment on time",
+        "company_id": 131,
+        "created_at": "2022-08-10 19:52",
+        "updated_at": "2022-08-10 19:52"
+    },
+
+
+# postda 
+{
+    "company_id": 131,
+    "text": "botirali dan userlarga sms shablon",
+    "updated_at": "2023-03-04 10:33",
+    "created_at": "2023-03-04 10:33",
+    "id": 43
+}
+
+'''
