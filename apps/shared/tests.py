@@ -14,8 +14,9 @@ from users.models import Lead, LeadIncrement, User, Blog
 class TestBaseFixture:
 
     @pytest.fixture
-    def user(self):
+    def user(self, branch):
         user = get_user_model().objects.create_user(phone='901001010', password='1', is_superuser=True, is_staff=True)
+        user.branch.add(branch)
         return user
 
     @pytest.fixture
